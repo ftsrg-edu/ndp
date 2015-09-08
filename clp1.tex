@@ -1,0 +1,218 @@
+\section{Constraint Logic Programming (CLP)}
+
+A \emph{CLP} (\emph{Constraint Logic Programming}) a logikai programozás
+egy új irányzata. Alapvetõ tulajdonsága, hogy a program tartalmazhat
+változók értékeire való megszorításokat, \emph{korlát}okat
+(\emph{constraint}). Az alábbi táblázatban összefoglaljuk a legelterjedtebb
+logikai programozási nyelv, a Prolog alapelemeit és ezek CLP megfelelõit.
+
+\btab{l|l}
+Prolog                 & CLP \\
+\hline
+hívás                  & hívás vagy constraint \\
+egyesítés              & korlátmegoldás (constraint solving) \\
+válasz-behelyettesítés & válasz-korlát
+\etab
+
+A továbbiakban a CLP séma és a Prolog nyelv ötvözésébõl keletkezett
+programozási eszközökkel fogunk foglalkozni.
+
+\subsection{A CLP nyelv elemei}
+
+Minden CLP megvalósítás egy $\mathcal{X}$ adattartományon és az ezen
+értelmezett korlátokra (relációkra) vonatkozó ,,erõs'' következtetési
+mechanizmus. Az $\mathcal{X}$ adattartomány különféle megválasztásaiból
+más-más CLP sémák adódnak. Néhány példa:
+
+\bul
+\item $\mathcal{X}$ = $\set{R}$ vagy $\set{Q}$ (racionális vagy valós számok).\\
+Itt korlátoknak tekinthetjük a racionális vagy valós számok közt fennálló
+lineáris egyenlõségeket egyenlõtlenségeket, következtetési mechanizmusnak
+pedig a Gauss-eliminációt és a szimplex módszert.
+
+\item $\mathcal{X}$ = FD (egész számok véges tartománya, angolul FD =
+Finite Domain). \\
+Korlátoknak vehetjük a különféle aritmetikai és kombinatorikai
+relációkat, következtetési mechanizmusnak pedig a mesterséges intelligencia
+kutatásokból ismert CSP (Constraint Solving Problem, korlátkielégítési
+probléma) módszereket.
+
+\item $\mathcal{X}$ = $\set{B}$ (logikai igaz és hamis értékek). \\
+Itt a
+korlátok a predikátum kalkulusban fennálló relációk, a következtetési
+mechanizmus pedig szintén a mesterséges intelligencia területéhez
+tartozó SAT (satisfiability, Boole-kielégíthetõség) módszer.
+\eul
+
+A függvényeket és a relációkat CLP-ben - a Prolog-tól eltérõen
+- nem szintaktikusan, hanem szemantikusan kezeljük, a Prologban a
+program dolga, hogy jelentést tulajdonítson egy függvény
+(struktúra) - kifejezésnek (pl. az \cd{is/2} predikátum).  A Prolog
+csak a szintaktikus egyesítést (a \cd{=/2} mûveletet) ismeri, ami
+például az \cd{X+2=Y+3} kifejezést sikertelenül próbálja
+feldolgozni, így a hívás meghiúsul. Ha ezt a kifejezést egy
+alaphalmaz, domain felett nézzük, pl. a valós számok fölött
+(CLP($R$)), akkor azt a matematikailag helyes megoldást kapjuk, hogy
+\cd{X=Y+1}. Ahhoz, hogy ezt az eredményt kaphassuk, szükség van a
+\emph{korlátmegoldó}ra (\emph{constraint solver}), ami a változókból,
+értékekbõl, függvényekbõl és a relációkból álló korlátokat ki tudja
+értékelni, és ellenõrizni tudja a konzisztenciájukat. Ha egy új
+korlát hozzávételével a tár inkonzisztenssé válna, azt a
+korlátmegoldó észreveszi, és a programnak az aktuális
+végrehajtási ága meghiúsul. Ilyenkor a Prolog végrehajtás szabályai szerint
+visszalépés következik be.
+\br
+A fent elmondottak formalizálva a következõképpen néznek ki:
+\br
+Egy CLP rendszer egy $\tuple{\mathcal{D},\mathcal{F},\mathcal{R},\mathcal{S}}$
+struktúrával írható le, ahol az egyes elemek jelentése:
+
+\bul
+\item $\mathcal{D}$ -- egy tartomány, pl. a valós számok ($\set{R}$),
+a racionális számok ($\set{Q}$), az egész számok ($\set{N}$),
+a Boole-értékek ($\set{B}$), karakterfüzérek, listák, Prolog végrehajtási
+fák (Herbrand-fák, $\set{H}$) tartománya
+\item $\mathcal{F}$ -- a fenti tartományon értelmezett függvények halmaza,
+pl. $+ , - , *, \land, \lor$
+\item $\mathcal{R}$ -- a fenti tartományon értelmezett relációk halmaza,
+pl. $=, \neq, <, >, \in$
+\item $\mathcal{S}$ -- egy korlátmegoldó algoritmus $\tuple{\mathcal{D},
+\mathcal{F},\mathcal{R}}$-re, azaz a $\mathcal{D}$ tartományon értelmezett
+$\mathcal{F} \cup \mathcal{R}$ halmazbeli jelekbõl felépített korlátokra 
+\eul
+
+\subsection{CLP szintaxis és deklaratív szemantika}
+
+{\bf Szintaxis:}
+
+\btab{l|l}
+     program: &  klózok halmaza \\
+\hline
+     klóz: & 
+     \cd{P:- G$_1$, \dots, G$_n$}, ahol \cd{G$_i$} vagy cél vagy constraint\\
+\hline
+     deklarat{\'\i}v olvasata: &  
+     \cd{P} igaz, ha \cd{G$_1$, \dots, G$_n$} mind igaz\\
+\hline
+     kérdés: & \cd{?- G$_1$ , \dots, G$_n$} \\
+\hline
+     válasz egy kérdésre: &  
+     korlátoknak egy olyan konjunkciója, \\
+     & amelybõl a kérdés következik\\
+\etab
+
+\subsection{CLP procedurális szemantika}
+
+A CLP séma szemantikája leírható, mint egy kezdeti célból történõ levezetés,
+amely felhasználja a program klózait. A levezetés egy állapota egy
+$\tuple{G,s}$ párral jellemezhetõ, ahol:
+
+\bul
+\item $G$ a megoldandó célok és korlátok konjunkciója
+\item $s$ egy \emph{korlát-tár}, amely az eddig felhalmozott korlátokat
+tartalmazza. A korlát-tár tartalma mindig \emph{kielégíthetõ}, kezdetben
+pedig üres.
+\eul
+
+Sok CLP megvalósításban a korlát-tár csak a korlátok egy bizonyos osztályát
+tárolhatja, ezeket a korlátokat \emph{egyszerû korlát}oknak nevezzük,
+a korlát-tárba be nem tehetõ korlátokat pedig \emph{összetett korlát}oknak.
+Például a SICStus \clpfd könyvtárának használatakor az egyszerû korlátok csak az
+$\in$ relációt tartalmazhatják. Az összetett korlátok felfüggesztve,
+\emph{démon}ként várnak arra, hogy a korlát-megoldónak segíthessenek.
+A továbbiakban az egyszerû korlátokat kisbetûkkel (pl. $c$), az általános
+jellegû korlátokat pedig nagybetûkkel (pl. $C$) jelöljük.
+\br
+Procedurális értelmezésben egy \cd{P :- G$_1$, G$_2$, \dots, G$_n$} klóz jelentése
+a következõ: \cd{P} elvégzéséhez el kell végezni \cd{G$_1$}-et, \cd{G$_2$}-t,
+\dots \cd{G$_n$}-et.
+
+\enum{A végrehajtás alaplépése:}{
+\item A végrehajtandó cél egy részcéljának, \cd{P}-nek determinisztikus
+kiválasztása
+\item Egy \cd{P}-re illeszkedõ klóz, \cd{P'} nemdeterminisztikus kiválasztása
+\item \cd{P'} végrehajtása és a korlát-tár konzisztenciájának ellenõrzése
+\item Ha a korlát-tár konzisztens, akkor az eljárás folytatható a következõ
+részcéllal, ha viszont nem konzisztens, akkor a végrehajtás ezen ága
+meghiúsul, visszalépés következik be, melynek során a hagyományos visszalépési
+mechanizmus mellett a korlát-tár tartalmát is vissza kell fejteni a legutóbbi
+választási pontig.
+}
+A végrehajtás minden $\tuple{G,s}$ állapotában teljesül, hogy $s$ konzisztens,
+és $G \land s \Rightarrow Q$, ahol $Q$ a kezdõ kérdés. A végrehajtás akkor áll meg, ha
+egy olyan $\tuple{G_c,s_c}$ állapotba kerültünk, ahol $G_c$-re már egyetlen
+következtetési lépés sem végezhetõ el. Ekkor a végrehajtás eredménye az
+$s_c$ korlát-tár (vagy annak egy adott változóhalmazra való vetítése
+a többi változó egzisztenciális kvantifikálásával), valamint az esetlegesen
+fennmaradó $G_c$ korlátok.
+
+\label{erosit}
+
+\enum{Általános következtetési lépések}{
+\item \emph{rezolúció}:\\
+   \tb\cd{P} \& \cd{G}, $s$\te\ $\Rightarrow$
+    \tb\cd{\cd{G}$_1$} \& \dots\ \& \cd{\cd{G}$_n$} \& \cd{G}, \cd{P = P$'$} $\land$ $s$\te,
+    feltéve, hogy a programban van egy \cd{P$'$ :- G$_1$}, \dots, \cd{G$_n$} klóz.
+
+\item \emph{korlát-megoldás}:\\
+
+    \tb \cd{c} \& \cd{G}, $s$\te\ $\Rightarrow$ \tb \cd{G}, $s$ $\land$ \cd{c}\te,
+    tehát egy egyszerû korlát bekerülhet a korlát-tárba, feltéve, ha
+    a korlát-tár továbbra is konzisztens marad
+        
+\item \emph{korlát-erõsítés}:\\
+
+    \tb \cd{C} \& \cd{G}, $s$\te\ $\Rightarrow$
+    \tb \cd{C}$'$ \& \cd{G}, $s \land$ \cd{c}\te
+    ha $s$-bõl következik, hogy \cd{C} ekvivalens (\cd{C}$'$ $\land$ \cd{c})-vel
+    (\cd{C}$'$ = \cd{C} is lehet) és $s$ $\land$ \cd{c} konzisztens marad.
+    Tehát egy összetett korlát \emph{erõsíti} a korlát-tár tartalmát, ha a
+    korlát ekvivalens egy egyszerû korlát és egy másik összetett korlát
+    konjunkciójával. Ilyenkor az egyszerû korlát bekerül a korlát-tárba,
+    az új összetett korlát pedig visszakerül a célsorozatba.
+}
+
+A korlát-erõsítésnek két speciális esetét érdemes megjegyezni:
+
+\begin{enumerate}
+\item \cd{C}=\cd{C'}. Ilyenkor a \cd{c}-re vonatkozó feltétel az, hogy
+$s\Rightarrow($\cd{C}$\Rightarrow$\cd{c}$)$, azaz a tárból és a \cd{C} korlátból
+megpróbálunk egy egyszerû \cd{c} korlátot kikövetkeztetni.
+\item \cd{C'=true}, azaz az $s$ korlát-tár mellett \cd{C}-nek létezik egy
+vele ekvivalens \cd{c} párja, ahol \cd{c} már egyszerû, így felvehetjük
+a korlát-tárba, \cd{C'}-t pedig eldobhatjuk.
+\end{enumerate}
+
+Egy példa korlát-erõsítésre: a korlát-tár tartalma legyen ${Y>3}$, az
+összetett korlát pedig $X>Y*Y$. Ekkor $X>Y*Y \land Y>3 \Rightarrow X>9$, ami már
+felvehetõ a korlát-tárba. Az $X>Y*Y$ korlátnak továbbra is ,,démonként'' életben
+kell maradnia, hogy amikor a késõbbiekben $Y$ tartományára további szûkítéseket
+teszünk, akkor az egyúttal módosítani tudja $X$ tartományát is.
+
+\enum{A korlátmegoldó algoritmussal szemben támasztott követelmények}{
+\item \emph{teljesség}: egyszerû korlátok konjunkciójáról mindig el tudja
+dönteni, hogy az konzisztens-e
+\item \emph{inkrementalitás}: új korlát felvételekor ne bizonyítsa újra a
+teljes tár konzisztenciáját, csak azokat a korlátokat, amelyeket az új
+korlát felvétele érint
+\item \emph{visszalépés támogatása}: a levezetés során ellentmondás esetén
+vissza tudja csinálni a korlátok felvételét
+\item \emph{hatékonyság}
+}
+
+\subsection{A CLP rendszerek felhasználási lehetõségei}
+
+\begin{itemize}
+\item {\bf Ipari erõforrás optimalizálás}: termék- és gépkonfiguráció,
+gyártásütemezés, emberi erõforrások ütemezése, logisztikai tervezés
+
+\item {\bf Közlekedés, szállítás}: repülõtéri allokációs feladatok
+(beszállókapu, poggyász-szalag stb.), repülõ-személyzet járatokhoz rendelése
+menetrendkészítés, forgalomtervezés
+
+\item {\bf Távközlés, elektronika}: GSM átjátszók frekvencia-kiosztása
+lokális mobiltelefon-hálózat tervezése, áramkörtervezés és verifikálás
+
+\item {\bf Egyéb}: szabászati alkalmazások, grafikus megjelenítés megtervezése,
+multimédia szinkronizáció, légifelvételek elemzése
+\end{itemize}

@@ -1,0 +1,492 @@
+\clearpage
+
+\section{Az \fdbg nyomkövetõ csomag}
+
+\label{fdbg}
+Ebben a fejezetben a \clpfd programok nyomkövetésére szolgáló \fdbg csomagot
+mutatjuk be részletesebben. Az \fdbg könyvtár megalkotásakor a szerzõk
+(\emph{Szeredi Tamás} és \emph{Hanák Dávid}) az alábbi szempontokat tartották
+szem elõtt:
+
+\begin{itemize}
+\item követhetõ legyen a véges tartományú (röviden: FD) korlát változók
+  tartományainak szûkülése;
+\item a programozó értesüljön a korlátok felébredésérõl, kilépésérõl és
+  hatásairól, valamint az egyes címkézési lépésekrõl és hatásukról;
+\item jól olvasható formában lehessen kiírni FD változókat tartalmazó
+  kifejezéseket.
+\end{itemize}
+
+A csomag használatához szükséges megismerkednünk néhány alapvetõ fogalommal:
+\br
+\definicio {\tt \em clpfd} {\em esemény}nek nevezzük egy globális korlát felébredését
+vagy bármely címkézési eseményt (címkézés kezdete, címkézési lépés vagy címkézés
+meghiúsulása).
+\br
+\definicio \emph{Megjelenítõ}nek (\emph{visualizer}) nevezzük a \clpfd eseményekre
+reagáló predikátumot. Általában az a feladata, hogy az eseményt valamilyen formában
+kiírja. A tényleges esemény bekövetkezése és így az esemény hatásainak érvényesülése
+\emph{elõtt} hívódik meg. Mindkét fajta \clpfd eseményhez külön megjelenítõ tartozik,
+így beszélhetünk \emph{korlát-megjelenítõ}rõl és \emph{címkézés-megjelenítõ}rõl.
+\br
+\definicio \emph{Jelmagyarázat}nak (\emph{legend}) nevezzük az éppen megfigyelt korlát
+után kiíródó szövegrészt, amely rendszerint a korlátban részt vevõ változókat, a
+hozzájuk kapcsolódó tartományokat és a vizsgált korlát végrehajtásával kapcsolatos
+következtetéseket tartalmazza.
+\br
+Az \fdbg által csak a globális korlátok követhetõek nyomon, az indexikálisok nem,
+viszont a globális korlátok közül a felhasználói és a beépített korlátok ugyanolyan
+módon kezelhetõek. Az \fdbg nyomkövetés bekapcsolt állapota esetén a formula-korlátokból
+mindenképp globális korlátok képzõdnek, nem pedig indexikálisok.
+\br
+Az \fdbg könyvtár külön segédeljárásokat biztosít a kifejezésekben található FD
+változók megjelöléséhez (\emph{annotálás}), az annotált kifejezések jól olvasható
+megjelenítéséhez, valamint jelmagyarázat elõkészítéséhez és kiírásához.
+\br
+Az \fdbg könyvtár szolgáltatásait az alábbi paranccsal lehet igénybe venni:
+
+\begin{verbatim}
+| ?- use_module(library(fdbg)).
+\end{verbatim}
+
+\subsection{A nyomkövetés be- és kikapcsolása}
+
+\begin{itemize}
+\item \bcd{fdbg\_on}\\ \bcd{fdbg\_on(+{\em Options})}\\
+Engedélyezi a nyomkövetést alapértelmezett vagy megadott beállításokkal. A
+nyomkövetést az \cd{fdbg\_output} álnevû (stream alias) folyamra írja a
+rendszer, alaphelyzetben ez a pillanatnyi kimeneti folyam ({\em current
+output stream}) lesz. Legfontosabb opciók:\\
+\begin{itemize}
+\item \cd{file({\em Filename}, {\em Mode})}\\
+  A megjelenítõk kimenete a \cd{\em Filename} nevû állományba irányítódik
+  át, amely az \cd{fdbg\_on/1} hívásakor nyílik meg \cd{\em Mode} módban.
+  \cd{Mode} lehet \cd{write} vagy \cd{append}.
+\item \cd{stream({\em Stream})}\\
+  A megjelenítõk kimenete a \cd{\em Stream} folyamra irányítódik át.
+\item \cd{constraint\_hook({\em Goal})}\\
+  \cd{\em Goal} két argumentummal kiegészítve meghívódik a korlátok
+  felébredésekor. Alapértelmezésben ez az \cd{fdbg\_show/2} eljárás, ld.~késõbb.
+  Ezzel a paraméterrel lehet felüldefiniálni a korlát-megjelenítõt.
+\item \cd{labeling\_hook({\em Goal})}\\
+  \cd{\em Goal} három argumentummal kiegészítve meghívódik minden címkézési
+  eseménykor. Alapértelmezésben ez az \cd{fdbg\_label\_show/3}, ld.~késõbb.
+  Ezzel a paraméterrel lehet felüldefiniálni a címkézés-megjelenítõt.
+\item \cd{no_constraint_hook}, \cd{no_labeling_hook}\\ 
+  Nem lesz adott fajtájú megjelenítõ.
+\end{itemize}
+
+\item \bcd{fdbg\_off}\\
+  Kikapcsolja a nyomkövetést, lezárja a \cd{file} opció hatására megnyitott
+  állományt (ha volt ilyen).
+\end{itemize}
+
+Kimenet átirányítása, beépített megjelenítõ, nincs címkézési nyomkövetés:
+
+\begin{verbatim}
+| ?- fdbg_on([file('my_log.txt', append), no_labeling_hook]).
+\end{verbatim}
+
+Kimenet átirányítása szabványos folyamra, saját és beépített
+megjelenítõ együttes használata:
+
+\begin{verbatim}
+| ?- fdbg_on([constraint_hook(fdbg_show), constraint_hook(my_show),
+              stream(user_error)]).
+\end{verbatim}
+
+\subsection{Kifejezések elnevezése}
+
+Az \fdbg által produkált kimeneten az FD változók alaphelyzetben \cd{<fdvar_1>},
+\cd{<fdvar_2>}, \ldots formában jelennek meg, ami megnehezíti az olvashatóságot.
+Éppen ezért minden FD változóhoz egy saját nevet rendelhetünk, ami a kimeneten
+az \cd{<fdvar_{\em x}>} forma helyett fog megjelenni. Lehetõség van arra is,
+hogy egy egész kifejezéshez rendeljünk nevet. Egy kifejezés elnevezésekor a
+kifejezésben szereplõ összes változóhoz egy-egy származtatott név
+rendelõdik -- ez a név a megadott névbõl és a változó kiválasztójából
+keletkezik (struktúra argumentum-sorszámok ill.\ lista indexek sorozata). A
+létrehozott nevek egy globális listába kerülnek, amely mindig egyetlen toplevel
+híváshoz tartozik, nem vivõdik át a következõ toplevel hívásra (\emph{illékony}).
+
+\enum{Predikátumok}{
+\item \bcd{fdbg\_assign_name(+{\em Name}, +{\em Term})} \\
+    A \cd{\em Term} kifejezéshez a \cd{\em Name} nevet rendeli az aktuális
+    toplevel hívásban.
+\item \bcd{fdbg\_current\_name(?{\em Name}, -{\em Term})} \\
+    Lekérdez egy kifejezést (változót) a globális listából a neve alapjén.
+    Ha \cd{\em Name} változó, akkor felsorolja az összes tárolt név-kifejezés párt.
+\item \bcd{fdbg\_get\_name(+{\em Term}, -\em{Name})} \\
+    \cd{\em Name} a \cd{\em Term} kifejezéshez rendelt név.  Ha \cd{\em Term}-nek még nincs
+    neve, automatikusan hozzárendelõdik egy.
+}
+
+Pl.~\cd{fdbg\_assign_name(foo, bar(A, [B, C]))} hatására a következõ nevek
+generálódnak:
+
+\begin{center}
+\begin{tabular}{|l|l|l|}
+\hline
+\multicolumn{1}{|c|}{név} &
+\multicolumn{1}{c|}{kifejezés} &
+\multicolumn{1}{c|}{megjegyzés} \\
+\hline
+\tt foo       & \tt bar(A, [B, C]) & a teljes kifejezés \\
+\tt foo\_1    & \tt A & \cd{bar} elsõ argumentuma \\
+\tt foo\_2\_1 & \tt B & \cd{bar} második argumentumának elsõ eleme \\
+\tt foo\_2\_2 & \tt C & \cd{bar} második argumentumának második eleme \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Egyszerûbb \fdbg nyomkövetési példák}
+
+\begin{verbatim}
+| ?- use_module([library(clpfd),library(fdbg)]).
+
+| ?- fdbg_on.
+% The clp(fd) debugger is switched on
+% advice
+| ?- Xs=[X1,X2], fdbg_assign_name(Xs, 'X'),
+     domain(Xs, 1, 6), X1+X2 #= 8, X2 #>= 2*X1+1.
+\end{verbatim}
+\begin{verbatim}
+domain([<X_1>,<X_2>],1,6)           X_1 = inf..sup -> 1..6
+                                    X_2 = inf..sup -> 1..6
+                                    Constraint exited.    
+
+<X_1>+<X_2>#=8                      X_1 = 1..6 -> 2..6
+                                    X_2 = 1..6 -> 2..6  
+
+<X_2>#>=2*<X_1>+1                   X_2 = 2..6 -> 5..6
+                                    X_1 = 2..6 -> {2} 
+                                    Constraint exited.
+
+<X_2>#=6    [2+<X_2>#=8 (*)]        X_2 = 5..6 -> {6} 
+                                    Constraint exited.
+
+X1 = 2, X2 = 6 ?
+% advice
+\end{verbatim}
+
+A \cd{(*)} olvashatóbb alak a \cd{library(fdbg)} négy sorának kikommentezésével
+állitható elõ.
+
+\begin{verbatim}
+| ?- X in 1..4, labeling([bisect], [X]).
+
+<fdvar_1> in 1..4                   fdvar_1 = inf..sup -> 1..4
+                                    Constraint exited.        
+
+Labeling [2, <fdvar_1>]: starting in range 1..4.
+Labeling [2, <fdvar_1>]: bisect: <fdvar_1> =< 2
+        Labeling [4, <fdvar_1>]: starting in range 1..2.
+        Labeling [4, <fdvar_1>]: bisect: <fdvar_1> =< 1     
+X = 1 ? ;
+        Labeling [4, <fdvar_1>]: bisect: <fdvar_1> >= 2
+X = 2 ? ;
+        Labeling [4, <fdvar_1>]: failed.
+Labeling [2, <fdvar_1>]: bisect: <fdvar_1> >= 3
+        Labeling [8, <fdvar_1>]: starting in range 3..4.
+        Labeling [8, <fdvar_1>]: bisect: <fdvar_1> =< 3
+X = 3 ? ;
+        Labeling [8, <fdvar_1>]: bisect: <fdvar_1> >= 4
+X = 4 ? ;
+        Labeling [8, <fdvar_1>]: failed.
+Labeling [2, <fdvar_1>]: failed.
+no
+\end{verbatim}
+
+\subsection{Beépített megjelenítõk}
+
+Az \fdbg könyvtár egy-egy alapértelmezett megjelenítõt bocsájt a felhasználó
+rendelkezésére. A korlát-megjelenítõt az \cd{fdbg_show/2}, a címkézés-megjelenítõt
+az \cd{fdbg_label_show/3} predikátum tartalmazza. Ha az \cd{fdbg_on} predikátumnak
+nem adunk meg külön korlát-, illetve címkézés-megjelenítõt, akkor ezeket a megjelenítõket
+alkalmazza.
+
+\begin{itemize}
+\item \bcd{fdbg\_show(+{\em Constraint}, +{\em Actions})} \\
+Beépített korlát-megjelenítõ. A \cd{dispatch_global}-ból való kilépéskor hívódik
+meg. Megkapja az aktuális korlátot és az általa elõállított akciólistát, majd
+ennek alapján megjeleníti a korlátot és a hozzá tartozó jelmagyarázatot. 
+
+,,Szimulált'' példa-hívás \cd{X1=3} és \cd{X2=3} szûkítésekkel:
+
+\begin{verbatim}
+| ?- Xs=[X1,X2,X3], fdbg_assign_name(Xs, 'X'), 
+     domain(Xs, 1, 3), X3 #\= 3, fdbg_on, 
+     fdbg_show(exactly(3,Xs,2),[exit,X1=3,X2=3]).
+
+exactly(3,[<X_1>,<X_2>,<X_3>],2)
+    X_1 = 1..3 -> {3}
+    X_2 = 1..3 -> {3}
+    X_3 = 1..2
+    Constraint exited.
+\end{verbatim}
+
+\item \bcd{fdbg\_label\_show(+{\em Event}, +\em{ID}, +\em{Variable})}\\
+Beépített címkézés-megjelenítõ. Címkézési eseménykor (kezdet, szûkítés,
+meghiúsulás) hívódik meg. \cd{\em Event}-ben megkapja a hívást kiváltó
+eseményt, \cd{\em ID}-ben a címkézési lépés azonosítóját, \cd{\em Variable}-ben
+pedig magát a címkézendõ változót. \cd{\em Event} megegyezik a
+\cd{start} atommal, ha a kiváltó esemény a címkézés kezdete, megegyezik a \cd{fail}
+atommal, ha a kiváltó esemény a címkézés meghiúsulása. Példa:
+
+\begin{verbatim}
+| ?- fdbg_assign_name(X, 'X'), X in {1,3}, fdbg_on,
+     indomain(X).
+% The clp(fd) debugger is switched on
+Labeling [1, <X>]: starting in range {1}\/{3}.
+Labeling [1, <X>]: indomain_up: <X> = 1
+
+X = 1 ? ;
+Labeling [1, <X>]: indomain_up: <X> = 3
+
+X = 3 ? ;
+Labeling [1, <X>]: failed.
+
+no
+\end{verbatim}
+
+\end{itemize}
+
+A fenti kimenet elkészítése során végrehajtott megjelenítõ-hívások:
+
+\begin{verbatim}
+fdbg_label_show(start,1,X)
+fdbg_label_show(step('$labeling_step'(X,=,1,indomain_up)),1,X)
+fdbg_label_show(step('$labeling_step'(X,=,3,indomain_up)),1,X)
+fdbg_label_show(fail,1,X)
+\end{verbatim}
+
+\subsection{Testreszabás kampó-eljárásokkal}
+
+Az alábbi kampó-eljárások a következõ három argumentummal rendelkeznek:
+
+\begin{itemize}
+\item \emph{Name} --- az FD változó neve
+\item \emph{Variable} --- maga a változó
+\item \emph{FDSetAfter} --- a változó tartománya, \emph{miután} az aktuális
+  korlát elvégezte rajta a szûkítéseket
+\end{itemize}
+
+A kampó-eljárások felülbírálásához azokat \emph{multifile} eljárásként kell definiálni.
+
+\begin{itemize}
+\item \bcd{fdbg:fdvar\_portray(+{\em Name}, +{\em Variable}, +{\em FDSetAfter})}\\
+  A kiírt korlátokban szereplõ változók megjelenésének megváltoztatására
+  szolgál. Az alapértelmezett viselkedés \textsl{Name} kiírása kacsacsõrök
+  között. Az alábbi példa a változó neve mellett a változó régi tartományát is
+  kiírja:
+
+\begin{verbatim}
+:- multifile fdbg:fdvar_portray/3.
+
+fdbg:fdvar_portray(Name, Var, _) :-
+       fd_set(Var, Set), fdset_to_range(Set, Range),
+       format('<~p = ~p>', [Name,Range]).
+\end{verbatim}
+
+\item \bcd{fdbg:legend\_portray(+{\em Name}, +{\em Variable}, +{\em FDSetAfter})}\\
+  A jelmagyarázat minden sorára meghívódik, és így végigfut a jelmagyarázatban
+  szereplõ változókon. A sorokat alapértelmezésben négy szóköz nyitja és egy
+  újsor karakter zárja, ezeket nem kell kiírni, de nem is lehet õket felülbírálni.
+  Az alábbi példa a változó tartományának szûkülését lista formában tünteti fel:
+
+\begin{verbatim}
+:- multifile fdbg:legend_portray/3.
+
+fdbg:legend_portray(Name, Var, Set) :-
+        fd_set(Var, Set0), fdset_to_list(Set0, L0),
+        (   Set0 == Set
+        ->  format("~p = ~p", [Name, L0])
+        ;   fdset_to_list(Set, L),
+            format("~p = ~p -> ~p", [Name,L0,L])
+        ).
+\end{verbatim}
+\end{itemize}
+
+A példák kimenete összevetve az alapértelmezettel:
+
+\begin{center}\tt\begin{tabular}{l|l}
+\multicolumn{1}{c}{\rm \em Eredeti alak} &
+\multicolumn{1}{c}{\rm \em Testreszabott alak} \\
+
+exactly(3,[<X>,2],1)~~~~~~~ & exactly(3,[<X = 1..3>,2],1) \\
+    X = 1..3 -> \{3\}       &     X = [1,2,3] -> [3]      \\
+    Constraint exited.      &     Constraint exited. \\
+\end{tabular}\end{center}
+
+\subsection{Testreszabás saját megjelenítõvel}
+
+\begin{itemize}
+\item \bcd{{\em my\_global\_visualizer}(+{\em Arg1}, +{\em Arg2}, \ldots, {\em Constraint},
+{\em Actions})}\\
+\cd{\em my\_global\_visualizer} helyére tetszõleges predikátumnév kerülhet, \cd{\em Arg1},
+\cd{\em Arg2} \ldots a predikátum által használt saját argumentumok, \cd{\em Constraint}
+és \cd{\em Actions} pedig az a két paraméter, amit az \cd{fdbg\_show/2} rak a paraméterlista
+végére. \cd{\em Constraint} az éppen felébredt korlátot, \cd{\em Actions} pedig a korlát
+által visszaadott akciólistát tartalmazza. A korlát-megjelenítõ nevét és paraméterlistáját
+(az utolsó kettõ kivételével) az \cd{fdbg_on} opciólistájában kell átadni:\\
+\cd{fdbg\_on(constraint\_hook({\em my\_global\_visualizer}({\em Arg1}, {\em Arg2},
+\ldots)))}.
+
+\item \bcd{{\em my\_labeling\_visualizer}(+{\em Arg1}, +{\em Arg2}, \ldots, {\em Event},
+{\em ID}, {\em Var})}\\
+\cd{\em Event} a megjelenítõ meghívását kiváltó címkézési esemény, a következõek szerint:
+\begin{itemize}
+\item \cd{start} --- címkézés kezdete
+\item \cd{fail} --- címkézés meghiúsulása
+\item \cd{step({\em Step})} --- címkézési lépés, amelyet \cd{\em Step} ír le
+\end{itemize}
+\cd{\em ID} a címkézés azonosítója, \cd{\em Var} pedig a címkézett változó. A
+címkézés-megjelenítõ nevét és paraméterlistáját (az utolsó kettõ kivételével) az
+\cd{fdbg_on} opciólistájában kell átadni:\\
+\cd{fdbg\_on(labeling\_hook({\em my\_labeling\_visualizer}({\em Arg1}, {\em Arg2},
+\ldots)))}.
+\end{itemize}
+
+Érdemes egy pillantást vetni az \cd{fdbg\_show/2} beépített megjelenítõ kódjára is,
+mert ez irányelvet adhat saját megjelenítõ írásához:
+
+\begin{verbatim}
+fdbg_show(Constraint, Actions) :-
+        fdbg_annotate(Constraint, Actions, AnnotC, CVars),
+        print(fdbg_output, AnnotC),
+        nl(fdbg_output),
+        fdbg_legend(CVars, Actions),
+        nl(fdbg_output).
+\end{verbatim}
+
+Gyakran szükség lehet arra, hogy csak bizonyos korlátok mûködését vizsgáljuk,
+ilyenkor jön jól egy saját \cd{fdbg\_show/2} eljárás:
+
+\begin{verbatim}
+filtered_show(Constraint, Actions) :-
+        Constraint = scalar_product(_,_,_,_),
+        fdbg_show(Constraint, Actions).
+\end{verbatim}
+
+A fenti predikátum meghiúsulhat, ha \cd{Constraint} nem \cd{scalar\_product/4} korlát,
+de a megjelenítõk esetében a meghiúsulás nem okozza automatikusan az egész Prolog
+végrehajtás meghiúsulását, ezért az ilyen jellegû megoldás megengedett. A
+megjelenítõ használata:
+
+\begin{verbatim}
+:- fdbg_on([constraint_hook(filtered_show), file('fdbg.log', write)]).
+\end{verbatim}
+
+\subsection{Egyéb segéd-predikátumok}
+
+A változók tartományának kiírásához és az úgynevezett ~\emph{annotáláshoz} több
+predikátum adott.  Ezeket használják a beépített nyomkövetõk, de hívhatók
+kívülrõl is. Ebben az alfejezetben ezeket a predikátumokat ismertetjük.
+
+\begin{itemize}
+\item \bcd{fdbg\_annotate(+{\em Term0}, -{\em Term}, -{\em Vars})} \\
+  \bcd{fdbg\_annotate(+{\em Term0}, +{\em Actions}, -{\em Term}, -{\em Vars})} \\
+  A \cd{\em Term0} kifejezésben található összes FD változót megjelöli,
+  azaz lecseréli egy \cd{fdvar/3} struktúrára.  Ennek tartalma:
+  \begin{itemize}
+  \item a változó neve
+  \item a változó maga (tartománya még a szûkítés elõtti állapotokat
+    tükrözi)
+  \item egy FD halmaz, amely a változó tartománya \emph{lesz} az
+    \cd{\em Actions} akciólista szûkítései után.
+  \end{itemize}
+  Az így kapott kifejezés lesz \cd{\em Term}, a beszúrt \cd{fdvar/3}
+  struktúrák listája pedig \cd{\em Vars}.
+
+Példa az \cd{fdbg\_annotate/3} használatára:
+
+\begin{verbatim}
+| ?- length(L, 2), domain(L, 0, 10), fdbg_assign_name(L, x), 
+     L=[X1,X2], fdbg_annotate(lseq(X1,X2), Goal, _), 
+     format('write(Goal) --> ~w~n', [Goal]),
+     format('print(Goal) --> ~p~n', [Goal]).
+
+write(Goal) --> lseq(fdvar(x_1,_2,[[0|10]]),fdvar(x_2,_2,[[0|10]]))
+print(Goal) --> lseq(<x_1>,<x_2>)
+\end{verbatim}
+
+Látható, hogy az \cd{fdvar/3} struktúrákra az \fdbg modul definiál egy saját
+\cd{portray/1} megjelenítõ eljárást, ezért ha a \cd{print/1} használatával
+íratjuk ki az ilyen struktúrákat, akkor azok a fenti tömör módon jelennek meg.
+
+\item \bcd{fdbg\_legend(+{\em Vars})} \\
+   \bcd{fdbg\_legend(+{\em Vars}, +{\em Actions})} \\
+  Az \cd{fdbg\_annotate/3,4} használatával elõálló \cd{\em Vars} változólistát
+  és az \cd{\em Actions} akció-listából levonható következtetéseket jelmagyarázatként
+  kiírja a következõ szabályok szem elõtt tartásával:
+  \begin{itemize}
+  \item egy sorba egy változó leírása kerül
+  \item minden sor elején a változó neve szerepel
+  \item a nevet a változó tartománya követi (régi \cd{->} új)
+  \end{itemize}
+
+\end{itemize}
+
+\subsection{A mágikus sorozatok feladat nyomkövetése}
+
+Ebben az alfejezetben a mágikus sorozatok feladat egy lehetséges megoldásán
+mutatjuk be az \fdbg nyomkövetõ csomag kimenetét. A programkódban csak a 
+nyomkövetés megértéséhez szükséges predikátumokat tüntettük fel:
+
+\begin{verbatim}
+magic(N, L) :-
+        length(L, N),
+        fdbg_assign_name(L, x), % <--- !!!
+        N1 is N-1, domain(L, 0, N1),
+        occurrences(L, 0, L),
+%       sum(L, #=, N),
+%       findall(I, between(0, N1, I), C),
+%       scalar_product(C, L, #=, N),
+        labeling([ff], L).
+
+occurrences([], _, _).
+occurrences([E|Ek], I, List) :-
+        exactly(I, List, E), J is I+1,
+        occurrences(Ek, J, List).
+
+| ?- fdbg_on, magic(4, L).
+\end{verbatim}
+
+A kimenet vége, az utolsó címkézési lépés után:
+
+\begin{verbatim}
+exactly(0,[1,2,<x_3>,<x_4>],1)          x_3 = 0..3
+                                        x_4 = 0..3
+\end{verbatim}
+\begin{verbatim}
+exactly(2,[1,2,<x_3>,<x_4>],<x_3>)      x_3 = 0..3 -> 1..3
+                                        x_4 = 0..3        
+\end{verbatim}
+\begin{verbatim}
+exactly(3,[1,2,<x_3>,<x_4>],<x_4>)      x_3 = 1..3        
+                                        x_4 = 0..3 -> 0..2
+\end{verbatim}
+\begin{verbatim}
+exactly(1,[1,2,<x_3>,<x_4>],2)          x_3 = 1..3
+                                        x_4 = 0..2
+\end{verbatim}
+\begin{verbatim}
+exactly(2,[1,2,<x_3>,<x_4>],<x_3>)      x_3 = 1..3
+                                        x_4 = 0..2
+\end{verbatim}
+\begin{verbatim}
+exactly(0,[1,2,<x_3>,<x_4>],1)          x_3 = 1..3        
+                                        x_4 = 0..2 -> {0} 
+                                        Constraint exited.
+\end{verbatim}
+\begin{verbatim}
+exactly(1,[1,2,<x_3>,0],2)              x_3 = 1..3 -> {1} 
+                                        Constraint exited.
+\end{verbatim}
+\begin{verbatim}
+exactly(2,[1,2,1,0],1)                  Constraint exited.
+\end{verbatim}
+\begin{verbatim}
+exactly(3,[1,2,1,0],0)                  Constraint exited.
+
+L = [1,2,1,0] ? 
+\end{verbatim}

@@ -1,0 +1,518 @@
+\clearpage
+
+\section{CHR---Constraint Handling Rules}
+
+A CHR (\emph{Constraint Handling Rules}) egy deklaratív nyelv-kiterjesztés,
+amely determinisztikus kifejezés-átíráson alapul. Prolog, CLP, Haskell
+vagy Java \emph{gazda}nyelvbe ágyazódva képes mûködni. Általános szimbolikus
+(nem numerikus) felhasználói korlátok írására alkalmas, de nem tartalmaz
+konzisztencia-vizsgálatot, errõl a megfelelõ szabályok megírásával
+nekünk kell gondoskodnunk. Fõ szerzõje Thom Frühwirth (ECRC, LMU München, Ulm Uni.).
+\br
+A nyelv-kiterjesztés honlapja:
+\verb'http://www.pst.informatik.uni-muenchen.de/~fruehwir/chr-intro.html'.
+\br
+SICStus Prologban a CHR kiterjesztést a következõ paranccsal vehetjük használatba:
+\begin{verbatim}
+:- use_module(library(chr)).
+\end{verbatim}
+
+\subsection{CHR szabályok}
+
+A CHR kiterjesztésben a korlát-tár alakulását saját magunk által írt szabályok
+segítségével írhatjuk le. A szabályoknak három fajtája van:
+
+\begin{itemize}
+\item \emph{Egyszerûsítés} (\emph{simplification}):\\
+ $H_1$, \ldots, $H_i$ \cd{<=>} $G_1$, \ldots, $G_j$ \cd{|} $B_1$,
+ \ldots, $B_k$.
+\item \emph{Propagáció} (\emph{propagation}):\\
+ $H_1$, \ldots, $H_i$ \cd{==>} $G_1$, \ldots, $G_j$ \cd{|} $B_1$,
+ \ldots, $B_k$. 
+\item \emph{Egypagáció} (\emph{simpagation}):\\
+ $H_1$, \ldots, $H_l$ \cd{\bs} $H_{l+1}$, \ldots, $H_i$ \cd{==>} $G_1$, \ldots, $G_j$ \cd{|} $B_1$,
+ \ldots, $B_k$. 
+\end{itemize}
+
+Amint látható, egy CHR szabály alapvetõen három részre osztható:
+
+\begin{itemize}
+\item \emph{multi-fej} (\emph{multi-head}): ez alatt a ,,$H_1$, \ldots, $H_i$'' részt
+értjük, ahol a $H_m$-ek CHR-korlátok
+\item \emph{õr} (\emph{guard}): $G_1$, \ldots, $G_j$, ahol a $G_m$-ek a gazda-nyelvben
+értelmezett korlátok
+\item \emph{törzs} (\emph{body}): $B_1$, \ldots, $B_k$, ahol a $B_m$-ek CHR- vagy
+gazda-korlátok
+\item mindvégig $i > 0, j \geq 0, k \geq 0, l > 0$.
+\end{itemize}
+
+A fentiekben mindvégig $i > 0, j \geq 0, k \geq 0, l > 0$.
+\br
+Az \emph{egyszerûsítés} azt fejezi ki, hogy ha az õrben felírt korlátok igazak, akkor
+a fej ekvivalens a törzzsel, ezért a fejet ki lehet törölni a korlát-tárból, és helyette
+a törzset fel lehet venni. A \emph{propagáció} esetében ha az õr igaz, akkor a fejbõl
+következik a törzs, ezért a törzset fel lehet venni a korlát-tárba. Az \emph{egypagáció}
+az egyszerûsítés és a propagáció összegyúrásából keletkezik, és vissza is lehet vezetni
+rájuk, hiszen: \cd{Heads1 \bs ~Heads2 <=> Body} ugyanazt jelenti, mint
+\cd{Heads1, Heads2 <=> Heads1, Body}, csak sokkal hatékonyabb, mert \cd{Heads1}-et
+nem kell újra felvenni a korlát-tárba.
+
+\subsection{A CHR szabályok végrehajtása}
+
+A CHR korlátoknak három állapota lehet: \emph{aktív}, \emph{aktiválható passzív} és
+\emph{alvó passzív}. Aktív korlátból legfeljebb egy van minden pillanatban. Egy
+korlát akkor válik aktiválhatóvá, ha valamelyik változóját \emph{megérintik}, azaz
+egyesítik egy tõle különbözõ kifejezéssel. Minden alkalommal, amikor egy korlát aktívvá
+válik, az összes rá vonatkozó szabályt végigpróbáljuk az alábbiak szerint:
+
+\begin{itemize}
+\item mindegyik fejre \emph{illesztjük} a korlátot (ez egyirányú egyesítés,
+hívásbeli változó nem kaphat értéket)
+\item többfejû szabályok esetén a korlát-tárban keresünk megfelelõ
+(illeszthetõ) \emph{partner}-korlátot,
+\item sikeres illesztés után végrehajtjuk az õr-részt, ha ez is sikeres, a
+szabály \emph{tüzel}, különben folytatjuk a próbálkozást a következõ szabállyal.
+\item A tüzelés abból áll, hogy (egyszerûsítés vagy egypagáció esetén)
+kivesszük a tárból a kijelölt korlátokat, majd minden esetben végrehajtjuk a törzset.
+\item Ha ezzel az aktív korlátot nem hagytuk el a tárból, folytatjuk a rá vonatkozó
+próbálkozást a következõ szabállyal.
+\item Amikor az összes szabályt kipróbáltuk, akkor a korlátot \emph{elaltatjuk}, azaz
+visszatesszük a tárba (az alvó passzív korlátok közé).
+\end{itemize}
+
+A futás akkor fejezõdik be, amikor már nem marad aktiválható korlát. Az õr-részben
+(elvben) nem lehet változót érinteni. Az õr-rész két komponensbõl áll: \cd{Ask \& Tell}
+
+\begin{itemize}
+\item \cd{Ask} --- változó-érintés vagy behelyettesítési hiba meghiúsulást okoz
+\item \cd{Tell} --- nincs ellenõrzés, a rendszer ,,elhiszi'', hogy ilyen dolog nem
+fordul elõ
+\end{itemize}
+
+\subsection{A CHR szabályok szintaxisa}
+
+A SICStus kézikönyv alapján a CHR szabályok szintaxisa az alábbi szabályrendszerrel
+írható le:
+
+\begin{alltt}
+Szabály       --> [Név @] 
+                    (Egyszerûsítés | Propagáció | Egypagáció)
+                       [pragma Pragma].
+
+Egyszerûsítés --> Fejek         <=> [Õr '|'] Törzs
+Propagáció    --> Fejek         ==> [Õr '|'] Törzs
+Egypagáció    --> Fejek \bs Fejek <=> [Õr '|'] Törzs
+
+Fejek         --> Fej | Fej, Fejek
+Fej           --> Korlát | Korlát \# Azonosító
+Korlát        --> {\rm egy korlátként deklarált meghívható kifejezés}
+Azonosító     --> {\rm egy egyedi változó}
+
+Õr            --> Ask | Ask & Tell
+Ask           --> Célsorozat
+Tell          --> Célsorozat
+Célsorozat    --> {\rm egy meghívható kifejezés, konjunkciókkal és diszjunkciókkal}
+
+Törzs         --> Célsorozat
+
+Pragma        --> {\rm kifejezések konjunkciója, amik a \cd{\#/2}-vel azonosított fejekre hivatkoznak}
+\end{alltt}
+
+Két fontosabb pragmát érdemes ismerni:
+
+\begin{itemize}
+\item \cd{already_in_heads(Id)} --- kiküszöböli ugyanazon korlát kivételét és
+                   visszarakását
+\item \cd{passive(Id)} --- a hivatkozott fej-korlát csak passzív szerepû lehet. 
+\end{itemize}
+
+\subsection{CHR példák}
+
+Az alábbi példa az $X \leq Y$ relációt valósítja meg CHR-ben.
+\begin{verbatim}
+:- use_module(library(chr)).
+
+handler leq.
+constraints leq/2.
+
+:- op(500, xfx, leq).
+
+reflexivity  @ X leq Y <=> X = Y | true.
+antisymmetry @ X leq Y , Y leq X <=> X=Y.
+idempotence  @ X leq Y \ X leq Y <=> true.
+transitivity @ X leq Y , Y leq Z ==> X leq Z.
+
+| ?- X leq Y, Y leq Z, Z leq X.
+
+% X leq Y, Y leq Z  ----> (transitivity) X leq Z
+% X leq Z, Z leq X  <---> (antisymmetry) X = Z
+% Z leq Y, Y leq Z  <---> (antisymmetry) Z = Y
+
+Y = X, Z = X ? 
+\end{verbatim}
+
+A $\leq$ reláció leírásához négy szabályt vezetünk be, mindegyik egy-egy elég
+triviális tulajdonságot ír le:
+
+\begin{itemize}
+\item Reflexivitás (\cd{reflexivity}) --- kifejezi, hogy ha a korlát-tárban van
+egy \cd{X leq Y} korlát, és ugyanekkor az \cd{X = Y} reláció teljesül, akkor
+a korlát triviálisan igaz, tehát helyettesíthetjük a \cd{true} korláttal, azaz
+tulajdonképpen eltávolíthatjuk a korlát-tárból.
+
+\item Antiszimmetria (\cd{antisymmetry}) --- kifejezi, hogy ha a korlát-tárban
+egyszerre van jelen az \cd{X leq Y} és az \cd{Y leq X} korlát, akkor az csak úgy
+lehetséges, ha \cd{X=Y}.
+
+\item Idempotencia (\cd{idempotency}) --- kifejezi, hogy ha a korlát-tárban
+kétszer szerepel az \cd{X leq Y} korlát, akkor az egyiket eltávolíthatjuk.
+
+\item Tranzitivitás (\cd{transitivity}) --- az
+$X \leq Y \wedge Y \leq Z \Longrightarrow X \leq Z$ azonosság kifejezése.
+\end{itemize}
+
+Ezen négy szabály segítségével az \cd{X leq Y, Y leq Z, Z leq X} célsorozatból
+a következõképpen jön rá a rendszer, hogy \cd{X = Y} és \cd{X = Z}:
+
+\begin{center} \begin{tabular}{|l|l|l|}
+\hline
+Korlát-tár                 & Célsorozat                     & Tüzelés \\
+\hline
+\hline
+---                        & \cd{X leq Y, Y leq Z, Z leq X} & ---     \\
+\hline
+\cd{X leq Y}               & \cd{Y leq Z, Z leq X}          & ---     \\
+\hline
+\cd{X leq Y, Y leq Z}      & \cd{Z leq X} & \cd{transitivity} $\Longrightarrow$ \cd{X leq Z} \\
+\hline
+\cd{X leq Y, Y leq Z, X leq Z} & \cd{Z leq X}               & ---     \\
+\hline
+\cd{X leq Y, Y leq Z, X leq Z} & & \cd{antisymmetry} $\Longrightarrow$ \cd{Z = X}\\
+\cd{Z leq X} & & \\
+\hline
+\cd{X leq Y, Y leq X, X leq X} & & \cd{reflexivity} kétszer \\
+\cd{X leq X, Z = X}            & & \\
+\hline
+\cd{X leq Y, Y leq X, Z = X}   & & \cd{antisymmetry} $\Longrightarrow$ \cd{Y = X} \\
+\hline
+\cd{Y = X, Z = X} & & \\
+\hline
+\end{tabular} \end{center}
+
+Nézzünk egy bonyolultabb CHR példát végeshalmaz-korlátokra! Az alábbi példa egy egyszerû
+\clpfd keretrendszert valósít meg:
+
+\begin{itemize}
+\item két-argumentumú korlátokat kezel;
+\item a korlátokat  egy (a keretrendszeren kívül megadott) {\tt test/3}
+eljárás írja le:
+\begin{quote}
+{\tt test(C, X, Y)} sikeres, ha a {\tt C} ,,nevû'' korlát fennáll {\tt X}
+és {\tt Y} között;
+\end{quote}
+\item nem csak numerikus tartományokra jó.
+\end{itemize}
+
+\begin{verbatim}
+handler dom_consistency.
+constraints dom/2, con/3.
+% dom(X,D) - az X változó a D listából veheti az értékeit
+%            (D elemei ground-ok)
+% con(C,X,Y) - a C korlát az X és Y változók között fennáll
+
+con(C, X, Y) <=> ground(X), ground(Y) | test(C, X, Y).
+con(C, X, Y), dom(X, XD) \ dom(Y, YD) <=> 
+        reduce(x_y, XD, YD, C, NYD) | new_dom(NYD, Y).
+con(C, X, Y), dom(Y, YD) \ dom(X, XD) <=> 
+        reduce(y_x, YD, XD, C, NXD) | new_dom(NXD, X).
+
+  reduce(CXY, XD, YD, C, NYD):- 
+        select(GY, YD, NYD1), % megpróbálja YD-t csökkenteni GY-nal
+        (   member(GX, XD), test(CXY, C, GX, GY) -> fail
+        ;   reduce(CXY, XD, NYD1, C, NYD) -> true
+        ;   NYD = NYD1
+        ), !.
+
+  test(x_y, C, GX, GY):- test(C, GX, GY).
+  test(y_x, C, GX, GY):- test(C, GY, GX).
+
+  new_dom([], _X) :- !, fail.
+  new_dom(DX, X):- dom(X, DX),
+          (   DX = [E] -> X = E
+          ;   true
+          ).
+
+% labeling:
+constraints labeling/0.
+
+labeling, dom(X, L) #Id <=> member(X, L), labeling
+        pragma passive(Id).
+\end{verbatim}
+
+A \cd{passive(Id)} úgynevezett \cd{pragma} direktíva jelentése: az \cd{\#Id}
+jelöléssel hivatkozott fej csak passzív szerepû lehet. A fenti keretrendszer
+alkalmazásával az N királynõ példa megoldása:
+
+\begin{verbatim}
+
+% Qs az N-királynõ feladat megoldása
+queens(N, Qs) :-
+        length(Qs, N), 
+        make_list(1, N, L1_N), 
+        domains(Qs, L1_N),       % tartományok megadása
+        safe(Qs),                % korlátok felvétele
+        labeling.                % címkézés
+
+% make_list(I, N, L): Az L lista az I, I+1, ..., N elemekbõl áll.
+make_list(I, N, []) :- I > N, !.
+make_list(I, N, [I|L]) :-
+        I1 is I+1,
+        make_list(I1, N, L).
+
+% domains(Vs, Dom): A Vs-beli változók tartománya Dom.
+domains([], _).
+domains([V|Vs], Dom) :- dom(V, Dom), domains(Vs, Dom).
+
+% queens(Qs): Qs egy biztonságos királynõ-elrendezés.
+safe([]).
+safe([Q|Qs]) :- no_attack(Qs, Q, 1), safe(Qs).
+
+% no_attack(Qs, Q, I): A Qs lista által leírt királynõk
+% egyike sem támadja a Q által leírt királynõt, ahol I a Qs
+% lista elsõ elemének távolsága Q-tól.
+no_attack([], _, _).
+no_attack([X|Xs], Y, I) :-
+        con(no_threat(I), X, Y),  % a korlát felvétele
+        I1 is I+1, 
+        no_attack(Xs, Y, I1).
+
+% "Az X és Y oszlopokban  I sortávolságra levõ királynõk nem 
+% támadják egymást" korlát definíciója, a dom_consistency 
+% keretrendszernek megfelelõen
+test(no_threat(I), X, Y) :-
+        Y =\= X, Y =\= X-I, Y =\= X+I.
+
+| ?- queens(4, Qs).
+                                Qs = [3,1,4,2], labeling ? ;
+                                Qs = [2,4,1,3], labeling ? ; no
+\end{verbatim}
+
+Egy nem korlát-jellegû példa: az eratoszthenészi prímszita CHR-ben:
+
+\begin{verbatim}
+handler eratosthenes.
+constraints primes/1,prime/1.
+
+primes(1) <=> true.
+primes(N) <=> N>1 | 
+        M is N-1,prime(N),primes(M). 
+
+absorb(J) @ prime(I) \ prime(J) <=> 
+        J mod I =:= 0 | true.
+\end{verbatim}
+
+Boole-korlátok (ld. még \cd{library('chr/examples/bool.pl')}):
+
+\begin{verbatim}
+handler bool.
+constraints and/3, labeling/0. 
+
+and(0,X,Y) <=> Y=0.                      
+and(X,0,Y) <=> Y=0.                      
+and(1,X,Y) <=> Y=X.                      
+and(X,1,Y) <=> Y=X.                      
+and(X,Y,1) <=> X=1,Y=1.                  
+and(X,X,Z) <=> X=Z.                      
+and(X,Y,A) \ and(X,Y,B) <=> A=B.         
+and(X,Y,A) \ and(Y,X,B) <=> A=B.         
+                                      
+labeling, and(A,B,C)#Pc <=> 
+        label_and(A,B,C), labeling               
+    pragma passive(Pc).        
+                               
+label_and(0,_X,0).      
+label_and(1,X,X).      
+
+| ?- and(X, Y, 0), labeling.   
+  X = 0, labeling ? ;          
+  X = 1, Y = 0, labeling ? ;
+  no
+\end{verbatim}
+
+Számosság-korlát megvalósítása 0-1 értékû változókra:
+
+\begin{verbatim}
+constraints card/4.
+
+% L-ben a 1-ek száma >= A és =< B.
+card(A, B, L):-  
+        length(L,N), A=<B,0=<B,A=<N, card(A,B,L,N).
+
+triv_sat @ card(A,B,L,N) <=> A=<0,N=<B | true.          
+pos_sat @ card(N,B,L,N) <=> set_to_ones(L).             
+neg_sat @ card(A,0,L,N) <=> set_to_zeros(L).            
+pos_red @ card(A,B,L,N) <=> select(X,L,L1),X==1 |       
+                A1 is A-1, B1 is B-1, N1 is N-1, 
+                card(A1,B1,L1,N1).
+neg_red @ card(A,B,L,N) <=> select(X,L,L1),X==0 | 
+                N1 is N-1, card(A,B,L1,N1).
+% speciális esetek két változóra
+card2nand @ card(0,1,[X,Y],2) <=> and(X,Y,0).           
+% ...
+labeling, card(A,B,L,N)#Pc <=> 
+  label_card(A,B,L,N), labeling
+    pragma passive(Pc).
+
+label_card(A,B,[],0):- A=<0,0=<B.
+label_card(A,B,[0|L],N):- N1 is N-1, card(A,B,L,N1).
+label_card(A,B,[1|L],N):- 
+    A1 is A-1, B1 is B-1, N1 is N-1, card(A1,B1,L,N1).
+
+| ?- card(2,3,L), labeling.
+
+L = [1,1], labeling ? ;      
+L = [0,1,1] , labeling ? ; 
+L = [1,0,1] , labeling ? ;   
+L = [1,1,_A] , labeling ? ; 
+L = [0,0,1,1] , labeling ? ; 
+L = [0,1,0,1] , labeling ? ; 
+L = [0,1,1,_A] , labeling ? ;  
+% ...
+\end{verbatim}
+
+\subsection{Egy nagyobb CHR példa kezdeménye}
+
+A feladat: adott egy négyzet, ahol bizonyos mezõkben egész számok vannak.
+A cél: minden mezõbe számot írni, úgy, hogy az azonos számot tartalmazó
+összefüggõ területek mérete megegyezzék a terület mezõibe írt számmal. 
+\br
+A feladványt leíró adatstruktúra: \cd{tf(Meret,Adottak)}, ahol \cd{Meret}
+a négyzet oldalhossza, az \cd{Adottak} egy lista, amelynek elemei 
+\cd{t(O,S,M)} alakú struktúrák. Egy ilyen struktúra azt jelenti, hogy a
+négyzet \cd{S}. sorának \cd{O}. oszlopában az \cd{M} szám áll.
+
+\begin{verbatim}
+handler terulet.
+constraints orszag/3, tabla/1, cimkez/0.
+
+% orszag(Mezok, M, N): A Mezok mezõlista egy összefüggõ, M méretû
+% terület, amelynek kívánt mérete N. Egy mezõ Sor-Oszlop
+% koordinátáival van megadva.
+
+% tabla(Matrix): A teljes téglalap, listák listájaként.
+
+% cimkez: Címkézési segédkorlát (ld. labeling az elõzõ példákban)
+
+foglalas(tf(Meret,Adottak), Mtx) :-
+    bagof(Sor,
+          S^bagof(Mezo, 
+                  O^tabla_mezo(Meret, Adottak, S, O, Mezo), 
+                  Sor),
+          Mtx),
+    append_lists(Mtx, Valtozok),         % listává lapítja Mtx-t
+    MaxTerulet is Meret*Meret,
+    domain(Valtozok, 1, MaxTerulet),
+    tabla(Mtx),                          % tabla/1 korlát felvétele
+    matrix_korlatok(Mtx, 1),             % orszag/3 korlátok
+    cimkez.                              % címkézési segédkorlát
+
+tabla_mezo(Meret, Adottak, S, O, M) :-
+    between(1, Meret, S),               % 1..Meret felsorolása
+    between(1, Meret, O),
+    (   member(t(S,O,M), Adottak) -> true
+    ;   true
+    ).
+
+matrix_korlatok([], _).
+matrix_korlatok([Sor|Mtx], S) :-
+    sor_korlatok(Sor, S, 1),
+    S1 is S+1,
+    matrix_korlatok(Mtx, S1).
+
+sor_korlatok([], _, _).
+sor_korlatok([M|Mk], S, O) :-
+    orszag([S-O], 1, M),
+    O1 is O+1,
+    sor_korlatok(Mk, S, O1).
+
+
+% Az orszag/3 korlátra vonatkozó szabályok
+
+% Ha két ország szomszédos, és azonos számot tartalmaz, akkor
+% össze kell vonni õket
+orszag(Mezok1, H1, M), orszag(Mezok2, H2, M) <=>
+                szomszedos_orszag(Mezok1, Mezok2) |
+                H is H1+H2,
+                M #>= H,
+                append(Mezok1, Mezok2, Mezok),
+                orszag(Mezok, H, M).
+
+% Ha két ország szomszédos, és az egyik már pont annyi mezõbõl áll,
+% ahányas számot tartalmaz, akkor a másik országban már nem szerepelhet
+% ilyen szám
+orszag(Mezok, M, M), orszag(Mezok1, _, M1) ==>
+                szomszedos_orszag(Mezok, Mezok1) |
+                M1 #\= M.
+
+% Ha egy ország pont annyi mezõbõl áll, ahányas számot tartalmaz,
+% akkor nem kell vele tovább foglalkozni (mivel a szabályok sorban
+% tüzelnek, ezért ez mindig késõbb tüzel, mint az elõzõ)
+orszag(Mezok, M, M) <=> 
+                true.
+
+% Ha egy ország már nem terjeszkedhet, de kevesebb mezõbõl áll, mint
+% ahányas szám van benne, akkor meghiúsulunk
+orszag(Mezok, H, M), tabla(Mtx) ==>
+                nonvar(M), H < M, 
+                \+ terjeszkedhet(Mezok, M, Mtx) | fail.
+
+% Címkézési segédszabály
+(orszag(Mezok, H, M) # Id1, tabla(Mtx) # Id2) \ cimkez  <=>
+                fd_max(M, Max), H < Max | 
+                szomszedos_mezo(Mezok, Mtx, M), cimkez
+                        pragma passive(Id1), passive(Id2).
+
+% A Mezok mezõbõl álló, M méretû ország az Mtx táblában terjeszkedhet
+terjeszkedhet(Mezok, M, Mtx) :-
+    szomszedos_mezo(Mezok, Mtx, M0),
+    fd_set(M0, Set), fdset_member(M, Set).
+
+% Az Mk1 és az Mk2 mezõkbõl álló országok szomszédosak
+szomszedos_orszag(Mk1, Mk2) :-
+    member(S1-O1, Mk1), member(S2-O2, Mk2),
+    (   S1 == S2 -> abs(O1-O2) =:= 1
+    ;   O1 == O2, abs(S1-S2) =:= 1
+    ).
+
+% A Mezok országnak az Mtx mátrixban az M mezõ a szomszédja
+szomszedos_mezo(Mezok, Mtx, M) :-
+    member(S-O, Mezok),
+    relativ_szomszed(S1, O1),
+    S2 is S+S1, O2 is O+O1,
+    non_member(S2-O2, Mezok),
+    matrix_elem(S2, O2, Mtx, M).   
+    % A Mtx mátrix S2. sorának O2. eleme M.
+
+relativ_szomszed(1, 0).
+relativ_szomszed(0, -1).
+relativ_szomszed(-1, 0).
+relativ_szomszed(0, 1).
+
+pelda(p1,  tf(5, [t(2,1,2),t(2,2,1),t(2,4,4),t(2,5,3),
+                  t(3,4,2),t(4,2,5),t(4,4,3),t(5,1,3),
+                  t(5,5,2)])).                        
+
+pelda(p9,  tf(6, [t(1,1,1),t(2,3,1),t(2,6,4),t(3,1,3),t(3,6,3),
+                  t(4,1,2),t(4,5,2),t(4,6,4),t(5,3,3),t(6,1,2),
+                  t(6,5,3)])).                                 
+
+| ?- pelda(p1, _Fogl), foglalas(_Fogl, Mtx).
+Mtx = [[2,4,4,3,3],
+       [2,1,4,4,3],
+       [3,5,5,2,2],
+       [3,5,3,3,3],
+      [3,5,5,2,2]],
+cimkez,
+tabla([[2,4,4,3,3],[2,1,4,4,3],[3,5,5,2,2],...]) ? ;
+no
+\end{verbatim}

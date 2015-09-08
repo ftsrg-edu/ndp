@@ -1,0 +1,305 @@
+\message{[Prolog documentation macros for LaTeX $Revision: @(#)prolog.sty	1.3 Date: 3/5/91 10:54:23]%
+}
+% Prolog style file.  Steve Kelem 90/08/09, 90/09/19
+\input{tabverbatim.sty}
+\makeatletter
+ 
+% Give _ a special mathcode that will make it active, but only in math
+% formulas.
+\mathcode`\_="8000
+ 
+% Now define active character _ to do a subscript operation.
+\catcode`\_=\active
+\let _ =\sb
+%\show\sb % Return to continue
+%\show _ % Return to continue
+ 
+%      Now give _ the catcode that we want to be in effect for normal
+%      (non-math) text).  The previous definition will thus remain
+%      inactive until we enter a math formula.
+\catcode`\_=12 % or maybe 11?
+ 
+% The LaTeX code for the following is based on the TeX version written
+% by Peter Reintjes (MCNC and Quintus) and on the tabverbatim mode written by
+% Michael Fine @ Distributed Systems Architecture.
+%
+
+% Load the fonts that aren't pre-loaded in the standard lfonts.tex
+\font\tentti = cmitt10  % italic typewriter
+\font\tenmib = cmmib10  % bold math italic
+\font\tensyb = cmbsy10  % bold symbols
+\font\tentts = cmsltt10 % slanted typewriter
+
+% \font\elvtti = cmitt10  \@halfmag % italic typewriter
+% \font\elvmib = cmmib10  \@halfmag % bold math italic
+% \font\elvsyb = cmbsy10  \@halfmag % bold symbols
+% \font\elvtts = cmsltt10 \@halfmag % slanted typewriter
+% 
+% \font\twltti = cmitt10  \@magscale1 % italic typewriter
+% \font\twlmib = cmmib10  \@magscale1 % bold math italic
+% \font\twlsyb = cmbsy10  \@magscale1 % bold symbols
+% \font\twltts = cmsltt10 \@magscale1 % slanted typewriter
+
+% Define a new typestyle called \tti --- typewriter italic
+\def\tti{\protect\ptti}
+
+% Define a new typestyle called \ttb --- typewriter bold
+\def\ttb{\protect\pttb}
+
+% Define a new typestyle called \tts --- typewriter slanted
+\def\tts{\protect\ptts}
+
+% definition of typewriter italic family \ttifam
+\newfam\ttifam      % \tti is family 11
+
+% definition of typewriter slanted family \ttsfam
+\newfam\ttsfam      % \tts is family 12
+
+% definition of typewriter bold family \ttbfam
+\newfam\ttbfam      % \tts is family 13
+
+% Prolog code contained within \begin{prolog} ... \end{prolog}
+% is typeset in tabverbatim mode.
+% This prolog code can be extracted into a Prolog .pl file by use of the
+% latex2pl program.
+%
+\gdef\prolog{\protect\small\@newverbatim\frenchspacing\@vobeyspaces
+    \@xprolog\noindent\hbox\bgroup\rightskip-5pc \hoffset=2.0in\@gobblecr}
+
+% Prolog code contained within \begin{prologdisplay}...\end{prologdisplay}
+% is typeset in typewriter italic, but not output to the prolog file.
+\gdef\prologdisplay{\protect\small\@ttiverbatim\frenchspacing\@vobeyspaces
+    \@xprologdisplay\noindent\hbox\bgroup\rightskip-5pc
+    \hoffset=2.0in\@gobblecr}
+
+\@namedef{prologdisplay*}{\@verbatimtti\@sxprologdisplay}
+\expandafter\let\csname endprologdisplay*\endcsname =\endtrivlist
+
+\begingroup
+\begingroup \catcode `|=0 \catcode `[= 1
+\catcode`]=2 \catcode `\{=12 \catcode `\}=12
+\catcode`\\=12
+|gdef|@xprolog#1\end{prolog}[#1|end[prolog]]
+|gdef|@sxprolog#1\end{prolog*}[#1|end[prolog*]]
+|gdef|@xprologdisplay#1\end{prologdisplay}[#1|end[prologdisplay]]
+|gdef|@sxprologdisplay#1\end{prologdisplay*}[#1|end[prologdisplay*]]
+|endgroup
+
+\gdef\endprolog{\egroup\setbox\@tempboxa\lastbox
+    \@tempdimb\wd\@tempboxa
+    \ifdim\@tempdimb=0pt\else\box\@tempboxa\fi
+    \let\par\@@par\endtrivlist}
+
+\gdef\endprologdisplay{\egroup\setbox\@tempboxa\lastbox
+    \@tempdimb\wd\@tempboxa
+    \ifdim\@tempdimb=0pt\else\box\@tempboxa\fi
+    \let\par\@@par\endtrivlist}
+
+\gdef\prodisp{\begingroup \catcode``=13 \@noligs 
+\tti \let\do\@makeother \dospecials 
+\@ifstar{\@sverb}{\@verb}}
+
+\catcode`\^^I=\active\def^^L{}
+
+\gdef\@ttiverbatim{\@verbatimtti
+    \def\par{\egroup\@@par\noindent
+    \@tempdima 0pt\hbox\bgroup{}}\obeylines
+    \let\ignorespaces\relax    % for \@gobblecr
+    \catcode`\^^I\active
+    \def^^I{\egroup\setbox\@tempboxa\lastbox\@tempdimb \wd\@tempboxa
+    \box\@tempboxa
+    \advance\@tempdima by \@tempdimb \computeskip\penalty10000
+    \hskip\@tempdimb\advance\@tempdima by \@tempdimb
+    \hbox\bgroup{}}\def^^L{\egroup\setbox\@tempboxa\lastbox
+    \@tempdimb\wd\@tempboxa
+    \ifdim\@tempdimb=0pt\else\box\@tempboxa\fi
+    {\let\par\@@par\newpage}\noindent\hbox\bgroup\@gobblecr}\relax
+    \def\computeskip{\@tempcnta 0\@tempdimb 0pt\loop
+        \ifdim \@tempdimb<\@tempdima
+        \advance\@tempdimb by \tabwidth \advance \@tempcnta1 \repeat
+    \ifdim\@tempdima=\@tempdimb \advance\@tempcnta1\fi
+    \@tempdimb\@tempcnta \tabwidth \advance \@tempdimb
+    by -\@tempdima}}
+
+\endgroup
+
+\def\@verbatimtti{\trivlist \item[]\if@minipage\else\vskip\parskip\fi
+\leftskip\@totalleftmargin\rightskip\z@
+\parindent\z@\parfillskip\@flushglue\parskip\z@
+\@tempswafalse \def\par{\if@tempswa\hbox{}\fi\@tempswatrue\@@par}
+\obeylines \tti \catcode``=13 \@noligs \let\do\@makeother \dospecials}
+
+% Redefine the ten-point family so it knows about the new type styles
+\def\xpt{\textfont\z@\tenrm 
+  \scriptfont\z@\sevrm \scriptscriptfont\z@\fivrm
+\textfont\@ne\tenmi \scriptfont\@ne\sevmi \scriptscriptfont\@ne\fivmi
+\textfont\tw@\tensy \scriptfont\tw@\sevsy \scriptscriptfont\tw@\fivsy
+\textfont\thr@@\tenex \scriptfont\thr@@\tenex \scriptscriptfont\thr@@\tenex
+\def\unboldmath{\everymath{}\everydisplay{}\@nomath\unboldmath
+          \textfont\@ne\tenmi 
+          \textfont\tw@\tensy \textfont\lyfam\tenly
+          \@boldfalse}\@boldfalse
+\def\boldmath{\@ifundefined{tenmib}{\global\font\tenmib\@mbi 
+   \global\font\tensyb\@mbsy 
+   \global\font\tenlyb\@lasyb\relax\@addfontinfo\@xpt
+   {\def\boldmath{\everymath{\mit}\everydisplay{\mit}\@prtct\@nomathbold
+        \textfont\@ne\tenmib \textfont\tw@\tensyb 
+        \textfont\lyfam\tenlyb \@prtct\@boldtrue}}}{}\@xpt\boldmath}%
+\def\prm{\fam\z@\tenrm}%
+\def\pit{\fam\itfam\tenit}\textfont\itfam\tenit \scriptfont\itfam\sevit
+    \scriptscriptfont\itfam\sevit
+\def\psl{\fam\slfam\tensl}\textfont\slfam\tensl 
+     \scriptfont\slfam\tensl \scriptscriptfont\slfam\tensl
+\def\pbf{\fam\bffam\tenbf}\textfont\bffam\tenbf 
+    \scriptfont\bffam\tenbf \scriptscriptfont\bffam\tenbf 
+\def\ptt{\fam\ttfam\tentt}\textfont\ttfam\tentt
+    \scriptfont\ttfam\tentt \scriptscriptfont\ttfam\tentt
+\def\ptti{\fam\ttifam\tentti}\textfont\ttifam\tentti
+    \scriptfont\ttifam\tentti \scriptscriptfont\ttifam\tentti
+%\def\pttb{\fam\ttbfam\tenttb}\textfont\ttbfam\tenttb
+%    \scriptfont\ttbfam\tenttb \scriptscriptfont\ttbfam\tenttb
+\def\ptts{\fam\ttsfam\tentts}\textfont\ttsfam\tentts
+    \scriptfont\ttsfam\tentts \scriptscriptfont\ttsfam\tentts
+\def\psf{\fam\sffam\tensf}\textfont\sffam\tensf
+    \scriptfont\sffam\tensf \scriptscriptfont\sffam\tensf
+\def\psc{\@getfont\psc\scfam\@xpt{\@mcsc}}%
+\def\ly{\fam\lyfam\tenly}\textfont\lyfam\tenly 
+   \scriptfont\lyfam\sevly \scriptscriptfont\lyfam\fivly 
+\@setstrut \rm}
+
+% Redefine the eleven-point family so it knows about the new type styles
+\def\xipt{\textfont\z@\elvrm 
+  \scriptfont\z@\egtrm \scriptscriptfont\z@\sixrm
+\textfont\@ne\elvmi \scriptfont\@ne\egtmi \scriptscriptfont\@ne\sixmi
+\textfont\tw@\elvsy \scriptfont\tw@\egtsy \scriptscriptfont\tw@\sixsy
+\textfont\thr@@\tenex \scriptfont\thr@@\tenex \scriptscriptfont\thr@@\tenex
+\def\unboldmath{\everymath{}\everydisplay{}\@nomath\unboldmath
+          \textfont\@ne\elvmi \textfont\tw@\elvsy 
+          \textfont\lyfam\elvly \@boldfalse}\@boldfalse
+\def\boldmath{\@ifundefined{elvmib}{\global\font\elvmib\@mbi\@halfmag 
+         \global\font\elvsyb\@mbsy\@halfmag
+         \global\font\elvlyb\@lasyb\@halfmag\relax\@addfontinfo\@xipt
+         {\def\boldmath{\everymath{\mit}\everydisplay{\mit}\@prtct\@nomathbold
+                \textfont\@ne\elvmib \textfont\tw@\elvsyb 
+                \textfont\lyfam\elvlyb\@prtct\@boldtrue}}}{}\@xipt\boldmath}%
+\def\prm{\fam\z@\elvrm}%
+\def\pit{\fam\itfam\elvit}\textfont\itfam\elvit 
+   \scriptfont\itfam\egtit \scriptscriptfont\itfam\sevit
+\def\psl{\fam\slfam\elvsl}\textfont\slfam\elvsl 
+    \scriptfont\slfam\tensl \scriptscriptfont\slfam\tensl 
+\def\pbf{\fam\bffam\elvbf}\textfont\bffam\elvbf 
+   \scriptfont\bffam\ninbf \scriptscriptfont\bffam\ninbf 
+\def\ptt{\fam\ttfam\elvtt}\textfont\ttfam\elvtt
+   \scriptfont\ttfam\nintt \scriptscriptfont\ttfam\nintt 
+\def\ptti{\fam\ttifam\elvtti}\textfont\ttifam\elvtti
+    \scriptfont\ttifam\elvtti \scriptscriptfont\ttifam\elvtti
+%\def\pttb{\fam\ttbfam\elvttb}\textfont\ttbfam\elvttb
+%    \scriptfont\ttbfam\elvttb \scriptscriptfont\ttbfam\elvttb
+\def\psf{\fam\sffam\elvsf}\textfont\sffam\elvsf
+    \scriptfont\sffam\tensf \scriptscriptfont\sffam\tensf
+\def\psc{\@getfont\psc\scfam\@xipt{\@mcsc\@halfmag}}%
+\def\ly{\fam\lyfam\elvly}\textfont\lyfam\elvly 
+   \scriptfont\lyfam\egtly \scriptscriptfont\lyfam\sixly 
+\@setstrut \rm}
+
+% Redefine the twelve7z-point family so it knows about the new type styles
+\def\xiipt{\textfont\z@\twlrm 
+  \scriptfont\z@\egtrm \scriptscriptfont\z@\sixrm
+\textfont\@ne\twlmi \scriptfont\@ne\egtmi \scriptscriptfont\@ne\sixmi
+\textfont\tw@\twlsy \scriptfont\tw@\egtsy \scriptscriptfont\tw@\sixsy
+\textfont\thr@@\tenex \scriptfont\thr@@\tenex \scriptscriptfont\thr@@\tenex
+\def\unboldmath{\everymath{}\everydisplay{}\@nomath\unboldmath
+          \textfont\@ne\twlmi 
+          \textfont\tw@\twlsy \textfont\lyfam\twlly
+          \@boldfalse}\@boldfalse
+\def\boldmath{\@ifundefined{twlmib}{\global\font\twlmib\@mbi\@magscale1\global
+        \font\twlsyb\@mbsy \@magscale1\global\font
+         \twllyb\@lasyb\@magscale1\relax\@addfontinfo\@xiipt
+              {\def\boldmath{\everymath
+                {\mit}\everydisplay{\mit}\@prtct\@nomathbold
+                \textfont\@ne\twlmib \textfont\tw@\twlsyb 
+                \textfont\lyfam\twllyb\@prtct\@boldtrue}}}{}\@xiipt\boldmath}%
+\def\prm{\fam\z@\twlrm}%
+\def\pit{\fam\itfam\twlit}\textfont\itfam\twlit \scriptfont\itfam\egtit
+   \scriptscriptfont\itfam\sevit
+\def\psl{\fam\slfam\twlsl}\textfont\slfam\twlsl 
+     \scriptfont\slfam\tensl \scriptscriptfont\slfam\tensl
+\def\pbf{\fam\bffam\twlbf}\textfont\bffam\twlbf 
+   \scriptfont\bffam\ninbf \scriptscriptfont\bffam\ninbf 
+\def\ptt{\fam\ttfam\twltt}\textfont\ttfam\twltt
+   \scriptfont\ttfam\nintt \scriptscriptfont\ttfam\nintt 
+\def\ptti{\fam\ttifam\twltti}\textfont\ttifam\twltti
+    \scriptfont\ttifam\twltti \scriptscriptfont\ttifam\twltti
+%\def\pttb{\fam\ttbfam\twlttb}\textfont\ttbfam\twlttb
+%    \scriptfont\ttbfam\twlttb \scriptscriptfont\ttbfam\twlttb
+\def\psf{\fam\sffam\twlsf}\textfont\sffam\twlsf
+    \scriptfont\sffam\tensf \scriptscriptfont\sffam\tensf
+\def\psc{\@getfont\psc\scfam\@xiipt{\@mcsc\@magscale1}}%
+\def\ly{\fam\lyfam\twlly}\textfont\lyfam\twlly 
+   \scriptfont\lyfam\egtly \scriptscriptfont\lyfam\sixly
+ \@setstrut \rm}
+
+%% pbr magic
+
+\long\def\code#1{}
+\def\endcode{}
+
+%% end pbr magic
+
+% A LaTeX-style wrapper that allows \begin{invisibleprolog} followed by
+% lines of code that don't appear in the documentation, and ended with
+% \end{invisibleprolog}
+%\let\Pbgroup={ \let\Pegroup=}
+%\newenvironment{invisibleprolog}{\code\Pbgroup}{\Pegroup}
+
+% Parse an argument, then pass it to #1.
+% The argument can be delimited with [...] or with "..." or braces
+% or it can be a whole line.
+% #1 should be a macro which expects
+% an ordinary undelimited TeX argument.
+
+\def\parsearg #1{\let\next=#1\begingroup\obeylines\futurelet\temp\parseargx}
+
+\def\parseargx{%
+\ifx \obeyedspace\temp \aftergroup\parseargdiscardspace \else%
+\aftergroup \parseargline %
+\fi \endgroup}
+
+\def\parseargline{\begingroup \obeylines \parsearglinex}
+{\obeylines %
+\gdef\parsearglinex #1^^M{\endgroup \next {#1}}}
+
+% @comment ...line which is ignored...
+% @c is the same as @comment
+% @ignore ... @end ignore  is another way to write a comment
+
+\def\comment{\parsearg \commentxxx}
+
+\def\commentxxx #1{}
+
+\let\c=\comment
+
+\long\def\ignore #1\end ignore{}
+
+\outer\def\ifset{\parsearg\ifsetxxx}
+
+\def\ifsetxxx #1#2\end ifset{%
+\expandafter\ifx\csname IF#1\endcsname\relax \else #2\fi}
+
+\makeatother
+
+% \term prints its argument in typewriter font and places an entry in the index
+\def\term#1{{\tt #1}\index{#1}}
+\def\typewriter#1{{\tt #1}}
+
+% \pl is prolog text
+\def\pl{\ptt}
+
+% \pli is italic prolog text
+\def\pli{\ptti}
+
+% \plb is bold prolog text
+%\def\plb{\pttb}
+
+% \plbi is bold italic prolog text
+%\def\plbi{\pttbi}

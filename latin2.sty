@@ -1,0 +1,420 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%       Definitions of ISO 8859 Latin-2 standard characters with set
+%       8th bit.
+%
+%       Copyright September 1993, Andrej Brodnik (Andy),
+%               ABrodnik@UWaterloo.CA
+%               use or misuse this file as you like...
+%
+%       Adapted from:
+%         o the file for Latin-1 by  Olaf `Olsen' Barthel, 7.April
+%           1991
+%         o ``The TeXbook'' page 356 for letters U and u with a circle
+%           on the top
+%         o typesetting of crossed D and d from Nenad Antoni\'{c}'s
+%           temporary Croatian style 23.05.93
+%         o ogonek typesetting taken from ``plhbm.sty --  93-01-24''
+%           by ``Michal Jaegermann <NTOMCZAK@vm.ucs.UAlberta.CA>''.
+%           Macros really originated with Leszek Holenderski (based on
+%           work of Jerzy Ryll), were later modified by Janusz S.
+%           Bie{\'n} and used by Michal.
+%
+%       NOTE: Most of letters defined here do not work for math.mode.
+%       If one wants to define them for math mode as well, please, go
+%       ahead!
+%       The definition for a currency symbol is only an approximation.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% See the new `lplain.tex' for TeX 3.0 (>= Version 2.09  Feb 8, 1990)
+%
+% if not(TeX >= 3.0) do_nothing else ...
+\ifx\undefined\inputlineno \else
+\ifnum\inputlineno=-1 \else
+
+\message{ISO 8859-2 (Latin-2)}
+
+%%%%
+% typeset `ogonek' box
+%---
+\dimendef\ogonek@left=0 \dimendef\ogonek@down=1
+\dimendef\ogonek@right=2 \dimendef\ogonek@temp=3
+
+\def\@sob#1#2#3#4#5{\leavevmode%
+% parameters: letter and fractions hl,ho,vl,vo
+% `ogonek' boxes (first horizontal then vertical; first letter then `ogonek')
+\setbox0\hbox{#1}\setbox1\hbox{$_\mathchar'454$}\setbox2\hbox{p}%
+\ogonek@right=#2\wd0 \advance\ogonek@right by-#3\wd1
+\ogonek@down=#5\ht1 \advance\ogonek@down by-#4\ht0
+\ogonek@left=\ogonek@right \advance\ogonek@left by\wd1
+\ogonek@temp=-\ogonek@down \advance\ogonek@temp by\dp2 \dp1=\ogonek@temp
+\kern\ogonek@right\lower\ogonek@down\box1\kern-\ogonek@left #1}
+
+\lccode`±=`±
+\uccode`±=`¡
+\catcode`±=\active \def ±{\@sob a{.66}{.20}{0}{.90}}
+\lccode`¡=`±
+\uccode`¡=`¡
+\catcode`¡=\active \def ¡{\@sob A{.80}{.50}{0}{.90}}
+
+\lccode`¢=`¢
+\uccode`¢=`0
+\catcode`¢=\active \def ¢{\u{}}
+
+\lccode`³=`³
+\uccode`³=`£
+\catcode`³=\active \def ³{\l}
+\lccode`£=`³
+\uccode`£=`£
+\catcode`£=\active \def £{\L}
+
+% the following char is only an approximation of what it should be
+\uccode`¤=`¤
+\lccode`¤=`¤
+\catcode`¤=\active\def ¤{\leavevmode
+   \setbox0\hbox{$\times$}\hbox to\wd0{\hss\hbox to 0pt
+   {\hss$\circ$\hss}\hbox to 0pt{\hss$\times$\hss}\hss}}
+
+\lccode`µ=`µ
+\uccode`µ=`¥
+\catcode`µ=\active \def µ{\v{l}}
+\lccode`¥=`µ
+\uccode`¥=`¥
+\catcode`¥=\active \def ¥{\v{L}}
+
+\lccode`¶=`¶
+\uccode`¶=`¦
+\catcode`¶=\active \def ¶{\'{s}}
+\lccode`¦=`¶
+\uccode`¦=`¦
+\catcode`¦=\active \def ¦{\'{S}}
+
+\lccode`§=`§
+\uccode`§=`0
+\catcode`§=\active \def §{\S}
+
+\lccode`¨=`¨
+\uccode`¨=`0
+\catcode`¨=\active \def ¨{\"{}}
+
+\lccode`¹=`¹
+\uccode`¹=`©
+\catcode`¹=\active \def ¹{\v{s}}
+\lccode`©=`¹
+\uccode`©=`©
+\catcode`©=\active \def ©{\v{S}}
+
+\lccode`º=`º
+\uccode`º=`ª
+\catcode`º=\active \def º{\c{s}}
+\lccode`ª=`º
+\uccode`ª=`ª
+\catcode`ª=\active \def ª{\c{S}}
+
+\lccode`»=`»
+\uccode`»=`«
+\catcode`»=\active \def »{\v{t}}
+\lccode`«=`»
+\uccode`«=`«
+\catcode`«=\active \def «{\v{T}}
+
+\lccode`¼=`¼
+\uccode`¼=`¬
+\catcode`¼=\active \def ¼{\'{z}}
+\lccode`¬=`¼
+\uccode`¬=`¬
+\catcode`¬=\active \def ¬{\'{Z}}
+
+\lccode`­=`­
+\uccode`­=`0
+\catcode`­=\active \def ­{\-}
+
+\lccode`¾=`¾
+\uccode`¾=`®
+\catcode`¾=\active \def ¾{\v{z}}
+\lccode`®=`¾
+\uccode`®=`®
+\catcode`®=\active \def ®{\v{Z}}
+
+\lccode`¿=`¿
+\uccode`¿=`¯
+\catcode`¿=\active \def ¿{\.{z}}
+\lccode`¯=`¿
+\uccode`¯=`¯
+\catcode`¯=\active \def ¯{\.{Z}}
+
+\lccode`°=`°
+\uccode`°=`0
+\catcode`°=\active \def °{\ifmmode^\circ\else$^\circ$\fi}
+
+\lccode`²=`²
+\uccode`²=`0
+\catcode`²=\active \def ²{\@sob \ {.50}{.35}{0}{.90}}
+
+\lccode`´=`´
+\uccode`´=`0
+\catcode`´=\active \def ´{\'{}}
+
+\lccode`·=`·
+\uccode`·=`0
+\catcode`·=\active \def ·{\v{}}
+
+\lccode`¸=`¸
+\uccode`¸=`0
+\catcode`¸=\active \def ¸{\c{\ }}
+
+\lccode`½=`½
+\uccode`½=`0
+\catcode`½=\active \def ½{\H{}}
+
+\lccode`à=`à
+\uccode`à=`À
+\catcode`à=\active \def à{\'{r}}
+\lccode`À=`à
+\uccode`À=`À
+\catcode`À=\active \def À{\'{R}}
+
+\lccode`á=`á
+\uccode`á=`Á
+\catcode`á=\active \def á{\'{a}}
+\lccode`Á=`á
+\uccode`Á=`Á
+\catcode`Á=\active \def Á{\'{A}}
+
+\lccode`â=`â
+\uccode`â=`Â
+\catcode`â=\active \def â{\^{a}}
+\lccode`Â=`â
+\uccode`Â=`Â
+\catcode`Â=\active \def Â{\^{A}}
+
+\lccode`ã=`ã
+\uccode`ã=`Ã
+\catcode`ã=\active \def ã{\u{a}}
+\lccode`Ã=`ã
+\uccode`Ã=`Ã
+\catcode`Ã=\active \def Ã{\u{A}}
+
+\lccode`ä=`ä
+\uccode`ä=`Ä
+\catcode`ä=\active \def ä{\"{a}}
+\lccode`Ä=`ä
+\uccode`Ä=`Ä
+\catcode`Ä=\active \def Ä{\"{A}}
+
+\lccode`å=`å
+\uccode`å=`Å
+\catcode`å=\active \def å{\'{l}}
+\lccode`Å=`å
+\uccode`Å=`Å
+\catcode`Å=\active \def Å{\'{L}}
+
+\lccode`æ=`æ
+\uccode`æ=`Æ
+\catcode`æ=\active \def æ{\'{c}}
+\lccode`Æ=`æ
+\uccode`Æ=`Æ
+\catcode`Æ=\active \def Æ{\'{C}}
+
+\lccode`ç=`ç
+\uccode`ç=`Ç
+\catcode`ç=\active \def ç{\c{c}}
+\lccode`Ç=`ç
+\uccode`Ç=`Ç
+\catcode`Ç=\active \def Ç{\c{C}}
+
+\lccode`è=`è
+\uccode`è=`È
+\catcode`è=\active \def è{\v{c}}
+\lccode`È=`è
+\uccode`È=`È
+\catcode`È=\active \def È{\v{C}}
+
+\lccode`é=`é
+\uccode`é=`É
+\catcode`é=\active \def é{\'{e}}
+\lccode`É=`é
+\uccode`É=`É
+\catcode`É=\active \def É{\'{E}}
+
+\lccode`ê=`ê
+\uccode`ê=`Ê
+\catcode`ê=\active \def ê{\@sob e{.50}{.35}{0}{.93}}
+\lccode`Ê=`ê
+\uccode`Ê=`Ê
+\catcode`Ê=\active \def Ê{\@sob E{.60}{.35}{0}{.90}}
+
+\lccode`ë=`ë
+\uccode`ë=`Ë
+\catcode`ë=\active \def ë{\"{e}}
+\lccode`Ë=`ë
+\uccode`Ë=`Ë
+\catcode`Ë=\active \def Ë{\"{E}}
+
+\lccode`ì=`ì
+\uccode`ì=`Ì
+\catcode`ì=\active \def ì{\v{e}}
+\lccode`Ì=`ì
+\uccode`Ì=`Ì
+\catcode`Ì=\active \def Ì{\v{E}}
+
+\lccode`í=`í
+\uccode`í=`Í
+\catcode`í=\active \def í{\'{\i}}
+\lccode`Í=`í
+\uccode`Í=`Í
+\catcode`Í=\active \def Í{\'{I}}
+
+\lccode`î=`î
+\uccode`î=`Î
+\catcode`î=\active \def î{\^{\i}}
+\lccode`Î=`î
+\uccode`Î=`Î
+\catcode`Î=\active \def Î{\^{I}}
+
+\lccode`ï=`ï
+\uccode`ï=`Ï
+\catcode`ï=\active \def ï{\v{d}}
+\lccode`Ï=`ï
+\uccode`Ï=`Ï
+\catcode`Ï=\active \def Ï{\v{D}}
+
+\lccode`ð=`ð
+\uccode`ð=`Ð
+\catcode`ð=\active
+\def ð{\hbox{%
+d\kern-0,347em%
+\vrule width0,3em height1,252ex depth-1,21ex%
+\kern0,051em}}
+\lccode`Ð=`ð
+\uccode`Ð=`Ð
+\catcode`Ð=\active
+\def Ð{\hbox{%
+D\kern-0,735em%
+\vrule width0,3em height0,86ex depth-0,81ex%
+\kern0,40em}}
+
+\lccode`ñ=`ñ
+\uccode`ñ=`Ñ
+\catcode`ñ=\active \def ñ{\'{n}}
+\lccode`Ñ=`ñ
+\uccode`Ñ=`Ñ
+\catcode`Ñ=\active \def Ñ{\'{N}}
+
+\lccode`ò=`ò
+\uccode`ò=`Ò
+\catcode`ò=\active \def ò{\v{n}}
+\lccode`Ò=`ò
+\uccode`Ò=`Ò
+\catcode`Ò=\active \def Ò{\v{N}}
+
+\lccode`ó=`ó
+\uccode`ó=`Ó
+\catcode`ó=\active \def ó{\'{o}}
+\lccode`Ó=`ó
+\uccode`Ó=`Ó
+\catcode`Ó=\active \def Ó{\'{O}}
+
+\lccode`ô=`ô
+\uccode`ô=`Ô
+\catcode`ô=\active \def ô{\^{o}}
+\lccode`Ô=`ô
+\uccode`Ô=`Ô
+\catcode`Ô=\active \def Ô{\^{O}}
+
+\lccode`õ=`õ
+\uccode`õ=`Õ
+\catcode`õ=\active \def õ{\H{o}}
+\lccode`Õ=`õ
+\uccode`Õ=`Õ
+\catcode`Õ=\active \def Õ{\H{O}}
+
+\lccode`ö=`ö
+\uccode`ö=`Ö
+\catcode`ö=\active \def ö{\"{o}}
+\lccode`Ö=`ö
+\uccode`Ö=`Ö
+\catcode`Ö=\active \def Ö{\"{O}}
+
+\lccode`×=`×
+\uccode`×=`0
+\catcode`×=\active \def ×{\ifmmode\times\else$\times$\fi}
+
+\lccode`ø=`ø
+\uccode`ø=`Ø
+\catcode`ø=\active \def ø{\v{r}}
+\lccode`Ø=`ø
+\uccode`Ø=`Ø
+\catcode`Ø=\active \def Ø{\v{R}}
+
+\lccode`ù=`ù
+\uccode`ù=`Ù
+\catcode`ù=\active \def ù{\accent'27u}
+\lccode`Ù=`ù
+\uccode`Ù=`Ù
+\catcode`Ù=\active \def Ù{\leavevmode%
+\setbox0=\hbox{h}\dimen@=\ht0 \advance\dimen@ by-1ex%
+\rlap{\raise.67\dimen@\hbox{\char'27}}U}
+
+\lccode`ú=`ú
+\uccode`ú=`Ú
+\catcode`ú=\active \def ú{\'{u}}
+\lccode`Ú=`ú
+\uccode`Ú=`Ú
+\catcode`Ú=\active \def Ú{\'{U}}
+
+\lccode`û=`û
+\uccode`û=`Û
+\catcode`û=\active \def û{\H{u}}
+\lccode`Û=`û
+\uccode`Û=`Û
+\catcode`Û=\active \def Û{\H{U}}
+
+\lccode`ü=`ü
+\uccode`ü=`Ü
+\catcode`ü=\active \def ü{\"{u}}
+\lccode`Ü=`ü
+\uccode`Ü=`Ü
+\catcode`Ü=\active \def Ü{\"{U}}
+
+\lccode`ý=`ý
+\uccode`ý=`Ý
+\catcode`ý=\active \def ý{\'{y}}
+\lccode`Ý=`ý
+\uccode`Ý=`Ý
+\catcode`Ý=\active \def Ý{\'{Y}}
+
+\lccode`þ=`þ
+\uccode`þ=`Þ
+\catcode`þ=\active \def þ{\c{t}}
+\lccode`Þ=`þ
+\uccode`Þ=`Þ
+\catcode`Þ=\active \def Þ{\c{T}}
+
+\lccode`ß=`ß
+\uccode`ß=`0
+\catcode`ß=\active \def ß{\ss}
+
+\lccode`÷=`÷
+\uccode`÷=`0
+\catcode`÷=\active \def ÷{\ifmmode\div\else$\div$\fi}
+
+\lccode`ÿ=`ÿ
+\uccode`ÿ=`0
+\catcode`ÿ=\active \def ÿ{\.{}}
+
+% After transferring files there's sometimes an Ctrl-Z at the end.
+% (This could also handled in the CodePage with a line ^^Z>^^@)
+%\catcode`^^Z=9                          % ignore it or ...
+%\catcode`^^Z=\active \def^^Z{\endinput}% ... make it active
+
+\fi\fi
+
+
+\endinput
+% Local Variables: 
+% mode: tex
+% TeX-master: t
+% End: 

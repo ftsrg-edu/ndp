@@ -1,0 +1,94 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%    Verbatim With Tabbing and Page Breaks
+%
+%	Written by:
+%		Michael Fine
+%		Distributed Systems Architecture.
+%		September 1987
+%
+%
+% This environment is similar to the LaTeX verbatim environment but it
+% interpretes tab characters as usually expected.  It has the
+% additional feature that a CTL-L in the verbatim environment invokes
+% the LaTeX macro \newpage (thereby giving you some control over page
+% breaks).
+%
+% There is also a command \inputverbatim which can be used to specify
+% a file to be input and typeset in the verbatim environment.
+%
+% This does not and should be made to work correctly for verbatim* as
+% well.  Also, it should probably use a different name.
+%
+% Usage:
+%
+%         \setlength{\tabwidth}            % or
+%	  \settowidth{\tabwidth}{text}
+%	      % default is width of 8 characters of \normalsize\tt
+%
+% Then:
+%         \begin{verbatim}
+%	      Verbatim text set in \tt font with ^L for page ejects
+%	      and ^I for tabs
+%         \end{verbatim}
+%
+%   or:
+%         \inputverbatim{filename}         % input a file of text
+%
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%
+% A version message
+%
+\typeout{Tabbing Verbatim Style <September 29, 1987>}
+\makeatletter
+
+\newlength{\tabwidth}
+% \settowidth{\tabwidth}{\normalsize\tt mmmmmmmm}
+\settowidth{\tabwidth}{2cm}
+	% default is 8 characters of \tt font in \normalsize
+
+\begingroup
+\catcode`\^^I=\active\def^^L{}
+
+\gdef\@newverbatim{\@verbatim
+    \def\par{\egroup\@@par\noindent
+    \@tempdima 0pt\hbox\bgroup{}}\obeylines
+    \let\ignorespaces\relax    % for \@gobblecr
+    \catcode`\^^I\active
+    \def^^I{\egroup\setbox\@tempboxa\lastbox\@tempdimb \wd\@tempboxa
+    \box\@tempboxa
+    \advance\@tempdima by \@tempdimb \computeskip\penalty10000
+    \hskip\@tempdimb\advance\@tempdima by \@tempdimb
+    \hbox\bgroup{}}\def^^L{\egroup\setbox\@tempboxa\lastbox
+    \@tempdimb\wd\@tempboxa
+    \ifdim\@tempdimb=0pt\else\box\@tempboxa\fi
+    {\let\par\@@par\newpage}\noindent\hbox\bgroup\@gobblecr}\relax
+    \def\computeskip{\@tempcnta 0\@tempdimb 0pt\loop
+        \ifdim \@tempdimb<\@tempdima
+        \advance\@tempdimb by \tabwidth \advance \@tempcnta1 \repeat
+    \ifdim\@tempdima=\@tempdimb \advance\@tempcnta1\fi
+    \@tempdimb\@tempcnta \tabwidth \advance \@tempdimb
+    by -\@tempdima}}
+
+\gdef\verbatim{\@newverbatim\frenchspacing\@vobeyspaces
+    \@xverbatim\noindent\hbox\bgroup\@gobblecr}
+
+\gdef\endverbatim{\egroup\setbox\@tempboxa\lastbox
+    \@tempdimb\wd\@tempboxa
+    \ifdim\@tempdimb=0pt\else\box\@tempboxa\fi
+    \let\par\@@par\endtrivlist}
+
+%
+% Now we define \inputverbatim
+%
+% This is similar to \verbatim but does not need \@xverbatim trickery
+% to delimit the begining and end of the verbatim text.
+
+\gdef\inputverbatim#1{{\@newverbatim\frenchspacing\@vobeyspaces
+    \noindent\hbox\bgroup\input{#1}\endverbatim}}
+
+\endgroup
+\makeatother

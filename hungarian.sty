@@ -1,0 +1,137 @@
+%%
+%% This is file `hunart.cls'
+%% This is an article class for Hungarian language
+%% Copyright (C) 1995 Zolt\'an Hidv\'egi
+%% All rights reserved.
+%%
+%% Send bugreports to hzoli@cs.elte.hu
+%%
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{hungarian}
+              [1996/04/28 v0.5
+               Experimental LaTeX package]
+
+% ezt a sort én csináltam
+\chardef\l@magyar2% ez a harmadik (2-es szamu elvalasztasi minta adatbazis)
+
+\usepackage[magyar]{babel}
+\usepackage{theorem}
+\def\th@magyar{\normalfont\slshape
+  \def\@begintheorem##1##2{\item
+       [\hskip\labelsep \theorem@headerfont ##2.\ ##1]}%
+  \def\@opargbegintheorem##1##2##3{\item
+       [\hskip\labelsep \theorem@headerfont ##2.\ ##1\ (##3)]}}
+\addto{\extrasmagyar}{%
+  \babel@save{\theorem@style}%
+  \theorem@style{magyar}%
+  \babel@save{\@partnum}%
+  \def\@partnum{\thepart.~\partname}%
+  \babel@save{\fnum@figure}%
+  \def\fnum@figure{\thefigure.~\figurename}%
+  \babel@save{\fnum@table}%
+  \def\fnum@table{\thetable.~\tablename}%
+  \babel@save{\@seccntformat}%
+  \def\@seccntformat#1{\csname the#1\endcsname.\space}%
+  \babel@save{\numberline}%
+  \renewcommand{\numberline}[1]{\hbox to\@tempdima{#1.\hfil}}}
+\@ifclassloaded{article}
+    {\addto{\extrasmagyar}{%
+       \babel@save{\appendix}%
+       \addto{\appendix}{\def\@seccntformat#1{\csname the#1\endcsname\quad}}}}
+    {}
+\@ifclassloaded{report}
+  {\addto{\extrasmagyar}{%
+     \babel@save{\appendix}%
+     \addto{\appendix}{\def\@chapternum{\thechapter\space\@chapapp}}
+     \babel@save{\@chapternum}%
+     \def\@chapternum{\thechapter.~\@chapapp}}}
+  {}
+\@ifclassloaded{book}
+  {\addto{\extrasmagyar}{%
+%      \babel@save{\@makechapterhead}%
+%      \def\@makechapterhead#1{%
+%        \vspace*{50\p@}%
+%        {\parindent \z@ \raggedright \normalfont%
+%          \ifnum \c@secnumdepth >\m@ne%
+%            \if@mainmatter%
+%              \huge\bfseries \thechapter.~\@chapapp%
+%              \par\nobreak%
+%              \vskip 20\p@%
+%            \fi%
+%          \fi%
+%          \interlinepenalty\@M%
+%          \Huge \bfseries #1\par\nobreak%
+%          \vskip 40\p@%
+%        }}%
+%      \babel@save{\@makeschapterhead}
+%      \def\@makeschapterhead#1{%
+%	\vspace*{50\p@}%
+%	{\parindent \z@ \raggedright
+%	  \normalfont
+%	  \interlinepenalty\@M
+%	  \Huge \bfseries  #1\par\nobreak
+%	  \vskip 40\p@
+%	}}
+     \babel@save{\appendix}%
+     \addto{\appendix}{\def\@chapternum{\thechapter\space\@chapapp}}
+     \babel@save{\@chapternum}%
+     \def\@chapternum{\thechapter.~\@chapapp}}}
+  {}
+\renewcommand{\encodingdefault}{T1}
+\fontencoding\encodingdefault\selectfont
+% Convert Hungarian ISO-8859-2 characters to Cork
+\catcode`\^^f5=\active \let^^f5^^ae % \H o
+\catcode`\^^d5=\active \let^^d5^^8e % \H O
+\catcode`\^^fb=\active \let^^fb^^b6 % \H u
+\catcode`\^^db=\active \let^^db^^96 % \H U
+\newcommand{\eng}{\selectlanguage{english}}
+\newcommand{\hun}{\selectlanguage{magyar}}
+
+% innentol az aljaig en csinaltam
+\def\theorem{\th@magyar\@thm}
+% \uppercase és \lowercase primitívek kedvéért (egyelõre csak a magyarok)
+\uccode`á=`Á
+\uccode`Á=`Á
+\uccode`é=`É
+\uccode`É=`É
+\uccode`í=`Í
+\uccode`Í=`Í
+\uccode`ó=`Ó
+\uccode`Ó=`Ó
+\uccode`ö=`Ö
+\uccode`Ö=`Ö
+\uccode`õ=`Õ
+\uccode`Õ=`Õ
+\uccode`ú=`Ú
+\uccode`Ú=`Ú
+\uccode`ü=`Ü
+\uccode`Ü=`Ü
+\uccode`û=`Û
+\uccode`Û=`Û
+
+\lccode`á=`á
+\lccode`Á=`á
+\lccode`é=`é
+\lccode`É=`é
+\lccode`í=`í
+\lccode`Í=`í
+\lccode`ó=`ó
+\lccode`Ó=`ó
+\lccode`ö=`ö
+\lccode`Ö=`ö
+\lccode`õ=`õ
+\lccode`Õ=`õ
+\lccode`ú=`ú
+\lccode`Ú=`ú
+\lccode`ü=`ü
+\lccode`Ü=`ü
+\lccode`û=`û
+\lccode`Û=`û
+
+%\def\;{\leavevmode {{\setbox0=\hbox{,}\setbox1=\hbox{''}
+%  \dimen1=\ht1 \advance\dimen1-\ht0
+%  \setbox1=\hbox{\lower\dimen1\box1}\ht1=\ht0
+%  \dp1=\dp0 \hglue-0.2em \box1\kern-.03em}}}
+\let\;\quotedblbase
+
+\endinput

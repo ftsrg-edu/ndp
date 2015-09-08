@@ -1,0 +1,1054 @@
+\clearpage
+
+\section{Esettanulmányok \Clpfd -ben}
+
+Ebben a fejezetben néhány nagyobb \clpfd feladat megoldását ismertetjük, közben
+pedig bemutatjuk a \emph{konstruktív diszjunkció}, a \emph{duális címkézés} és a
+\emph{borotválás} módszerét.
+
+\subsection{Négyzetdarabolás}
+
+Adott egy nagy négyzet oldalhosszúsága (pl. \cd{Limit = 10}), valamint adottak
+kis négyzetek oldalhosszúságai (pl. \cd{Sizes = [6,4,4,4,2,2,2,2]}). A kis
+négyzetek területösszege megegyezik a nagy négyzet területével. Meg kell határozni,
+hogy le lehet-e fedni a kis négyzetekkel a nagy négyzetet, és ha igen, meg is
+kell adni azt, hogy a lefedéshez hova kell helyezni a kis négyzeteket (a nagy
+négyzet bal alsó sarka az (1,1) koordinátán van). A példában említett feladat
+megoldása: \cd{Xs = [1,7,7,1,5,5,7,9]}, \cd{Ys = [1,1,5,7,7,9,9,9]}.
+\br
+Források:
+\begin{itemize}
+\item Pascal van Hentenryck et al. tanulmányának 2. szekciója \\
+(\cd{http://www.cs.brown.edu/publications/techreports/reports/CS-93-02.html})
+\item SICStus \clpfd példaprogram: \cd{library('clpfd/examples/squares')}
+\end{itemize}
+Néhány tesztadat:
+{\tt
+\begin{center}
+\begin{tabular}{|r|l|}
+\hline
+Limit & Sizes \\
+\hline
+   10 & [6,4,4,4,2,2,2,2]\\
+   20 & [9,8,8,7,5,4,4,4,4,4,3,3,3,2,2,1,1]\\
+  112 & [50,42,37,35,33,29,27,25,24,19,18,17,16,15,11,9,8,7,6,4,2]\\
+  175 & [81,64,56,55,51,43,39,38,35,33,31,30,29,20,18,16,14,9,8,5,4,3,2,1]\\
+  503 & [211,179,167,157,149,143,135,113,100,93,88,87,67,62,50,34,33,27, \\
+      & 25,23,22,19,16,15,4]\\
+\hline
+\end{tabular}
+\end{center}
+}
+
+Az esettanulmány program-változatai, adatai, tesztkörnyezete
+megtalálható itt: \cd{http://www.inf.bme.hu/}\verb'~'\cd{szeredi/nlp/nlp_progs_sq.tgz}.
+\br
+A megoldás során nem foglalkozunk az azonos oldalhosszak miatt jelentkezõ többszörös
+megoldások kiküszöbölésével, mivel az eredeti feladat különbözõ oldalhosszúságú négyzetekrõl
+szólt, az azonos oldalhosszak csak azért kerültek bele, hogy a programot kisebb
+tesztadatokon is tesztelni tudjuk. A teszteseteket minden alkalommal Linux operációs
+rendszer alatt egy 600 MHz-es Pentium III gépen futtattuk maximum 120 másodpercig. Ahol
+a programvariáns nem adott eredményt 120 másodpercen belül, ott a futási táblázatokban
+a mezõt üresen hagytuk. A táblázatokban a futási idõt és a visszalépések számát
+is feltüntetjük.
+
+\subsubsection{Egyszerû Prolog megoldás}
+
+Az alábbi program Colmerauer \clpr megoldásán alapul, a mûködési elve hasonlít a
+\pageref{teglalap:clpqr}. oldalon található téglalap-lefedõ feladathoz.
+
+\begin{verbatim}
+% A Limit méretû négyzet lefedhetõ diszjunkt, Ss oldalhosszúságú
+% négyzetekkel, amelyek X és Y kooridnátáit az Xs és Ys lista tartalmazza
+squares_prolog(Ss, Limit, Xs, Ys) :-
+        triples(Ss, Xs, Ys, SXYs),
+        Y0 is Limit+1, 
+        XY0 = 1-Y0, 
+        NLimit is -Limit,
+        filled_hole([NLimit,Limit,Limit], _, XY0, SXYs, []).
+
+% triples(Ss, Xs, Ys, SXYs): SXYs is s(S,X,Y) alakú struktúrákból álló lista
+triples([S|Ss], [X|Xs], [Y|Ys], [s(S,X,Y)|SXYs]) :-
+        triples(Ss, Xs, Ys, SXYs).
+triples([], [], [], []).
+
+% filled_hole(L0, L, XY, SXYs0, SXYs): az L0 vonalban lévõ, XY pontban
+% kezdõdõ lyuk az SXYs0 és SXYs listák különbségében lévõ négyzetekkel
+% lefedve az L vonalat adja
+filled_hole(L, L, _, SXYs, SXYs) :-
+        L = [V|_], V >= 0, !.
+filled_hole([V|HL], L, X0-Y0, SXYs00, SXYs) :-
+        V < 0 , Y1 is Y0+V,  
+        select(s(S,X0,Y1), SXYs00, SXYs0),
+        placed_square(S, HL, L1),  
+        Y2 is Y1+S, X2 is X0+S,
+        filled_hole(L1, L2, X2-Y2, SXYs0, SXYs1),  
+        V1 is V+S,
+        filled_hole([V1,S|L2], L, X0-Y0, SXYs1, SXYs).
+
+% placed_square(S, HL, L): a HL vízszintes vonalon az S méretû négyzetet
+% elhelyezve az L függõleges vonalat kapjuk
+placed_square(S, [H,0,H1|L], L1) :- 
+        S > H, !, H2 is H+H1,
+        placed_square(S, [H2|L], L1).
+placed_square(S, [H,V|L], [X|L]) :- 
+        S = H, !, X is V-S.
+placed_square(S, [H|L], [X,Y|L]) :- 
+        S < H, X is -S, Y is H-S.
+\end{verbatim}
+
+\begin{center}
+\begin{tabular}{|l|rr|rr|rr|rr|rr|}
+\hline
+variáns   & 10     &      &  20   &      & 112    &      & 175   &    & 503  &\\
+\hline
+Prolog          &  0.000 &     0&  0.87& 271K &  0.38 &  183K & 5.72 & 2.6M
+&93.58 & 29M \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsubsection{Egyszerû \clpfd megoldás}
+
+Ez a megoldás veszi a kis négyzetek összes koordinátáját, és beállítja
+õket úgy, hogy értéküket a nagy négyzeten belül vegyék fel. Ezután
+minden négyzet-párra felveszi a \cd{no\_overlap/6} constraintet,
+ami azt írja le Prolog választási pontok segítségével, hogy a két
+négyzet nem fedi egymást. Végül címkézéssel megadja az eredményt.
+
+\begin{verbatim}
+% A feladatra adott egyszerû megoldás spekulatív diszjunkció használatával
+squares_spec(Sizes, Limit, Xs, Ys) :-
+        generate_coordinates(Xs, Ys, Sizes, Limit),
+        state_asymmetry(Xs, Ys, Sizes, Limit),
+        state_no_overlap(Xs, Ys, Sizes),
+        labeling([], Xs), labeling([], Ys).
+
+% Legenerálja a koordinátákra vonatkozó határokat
+generate_coordinates([], [], [], _).
+generate_coordinates([X|Xs], [Y|Ys], [S|Ss], Limit) :-
+        Sd is Limit-S+1, domain([X,Y], 1, Sd),
+        generate_coordinates(Xs, Ys, Ss, Limit).
+
+% Az elsõ négyzet középpontja a bal alsó negyedben van,
+% a fõátló alatt
+state_asymmetry([X|_], [Y|_], [D|_], Limit) :-
+        UB is (Limit-D+2)>>1, X in 1..UB, Y #=< X.
+
+% Páronkénti át nem fedést biztosító korlátok felvétele
+state_no_overlap([], [], []).
+state_no_overlap([X|Xs], [Y|Ys], [S|Ss]) :-
+        state_no_overlap(X, Y, S, Xs, Ys, Ss),
+        state_no_overlap(Xs, Ys, Ss).
+
+% Megadja, hogy az (X,Y) középpontú, S méretû négyzet nem fedi át a
+% többit, amiket a listákban adunk át
+state_no_overlap(X, Y, S, [X1|Xs], [Y1|Ys], [S1|Ss]) :-
+        no_overlap_spec(X, Y, S, X1, Y1, S1),
+        state_no_overlap(X, Y, S, Xs, Ys, Ss).
+state_no_overlap(_, _, _, [], [], []).
+
+% no_overlap_spec(X1,Y1,S1, X2,Y2,S2): 
+% Az SQ1 = <X1,Y1,S1> négyzet nem fedi át SQ2 = <X2,Y2,S2> -t
+% Spekulatív megoldás
+no_overlap_spec(X1, _Y1, _S1, X2, _Y2, S2) :-   
+        X2+S2 #=< X1.   % SQ1 is above SQ2
+no_overlap_spec(X1, _Y1, S1, X2, _Y2, _S2) :- 
+        X1+S1 #=< X2.   % SQ1 is below SQ2
+no_overlap_spec(_X1, Y1, _S1, _X2, Y2, S2) :-
+        Y2+S2 #=< Y1.   % SQ1 is to the right of SQ2
+no_overlap_spec(_X1, Y1, S1, _X2, Y2, _S2) :-   
+        Y1+S1 #=< Y2.   % SQ1 is to the left of SQ2
+\end{verbatim}
+
+Ezzel a megoldással sokkal kevésbé hatékony változatot kaptunk:
+
+\begin{center}
+\begin{tabular}{|l|rr|rr|rr|rr|rr|}
+\hline
+variáns   & 10     &      &  20   &      & 112    &      & 175   &    & 503  &\\
+\hline
+Prolog          &  0.000 &     0&  0.87& 271K &  0.38 &  183K & 5.72 & 2.6M & 93.58 & 29M \\
+\cd{spec}       &  1.99  &   34K&       &     &       &     &       &        &       &\\
+\hline
+\end{tabular}
+\end{center}
+
+Érdemes megfigyelni, hogy míg a Prolog megoldás a 10-es feladatot visszalépés nélkül oldotta
+meg, addig ehhez a \cd{spec} változatnak 34 ezer visszalépésre volt szüksége. A problémát
+a \cd{no_overlap/6} korlát spekulatív diszjunkcióval való megvalósítása jelenti, hiszen
+ez a kombinatorikus robbanás miatt nagyon sok visszalépést eredményez.
+
+\subsubsection{A diszjunkció megvalósítási módszerei}
+
+\label{diszjunkcio}
+
+Az elõzõ variánsban gondot okozó spekulatív diszjunkció kiváltására több lehetõségünk is
+van, ezeket egy egyszerûbb példán fogjuk megnézni. Legyen ez az egyszerûbb példa a
+következõ:
+
+\begin{verbatim}
+| ?- domain([X,Y], 0, 6), ( X+5 #=< Y ; Y+5 #=< X).
+X in 0..1, Y in 5..6 ? ;
+X in 5..6, Y in 0..1 ? ;
+no
+\end{verbatim}
+
+A diszjunkció megvalósítására kézenfekvõ megoldás, ha tükrözést használunk:
+
+\begin{verbatim}
+| ?- domain([X,Y], 0, 6), X+5 #=< Y #\/ Y+5 #=< X.
+X in 0..6, Y in 0..6 ? ;
+no
+\end{verbatim}
+
+Amint látjuk, ennek az a hátránya, hogy nem hajt végre maximális szûkítést, nem jön
+rá, hogy \cd{X} és \cd{Y} semmiképpen nem lehet 2, 3 vagy 4. A korlát-megoldó ugyanis
+egy diszjunkció esetén csak akkor tud tenni valamit, ha a diszjunkcióban részt vevõ
+korlátok közül egyet kivéve már az összesrõl eldõlt, hogy nem állhat fenn. Érdemes
+tehát további megoldásokon gondolkoznunk. A jelen esetben például kikerülhetjük a
+diszjunkciót az \cd{abs} korlát használatával:
+
+\begin{verbatim}
+| ?- domain([X,Y], 0, 6), 'x+y=t tsz'(Y, D, X), abs(D) #>= 5.
+X in(0..1)\/(5..6), Y in(0..1)\/(5..6) ? ;
+no
+\end{verbatim}
+
+Ezt azonban nagyon sok esetben nem tehetjük meg. Átírhatjuk viszont a diszjunkciót
+indexikálissá:
+
+\begin{verbatim}
+ix_disj(X, Y) +: 
+        X in \(max(Y)-4..min(Y)+4), Y in \(max(X)-4..min(X)+4).
+
+| ?- ix_disj(X, Y).
+X in(0..1)\/(5..6), Y in(0..1)\/(5..6) ? ;
+no
+\end{verbatim}
+
+Sajnos az indexikálisokra fennálló korlátozások (pl. fix számú változó) miatt ezt
+is csak speciális esetekben tehetjük meg. Most egy általános szûkítési módszert,
+a \emph{konstruktív diszjunkció}t fogjuk ismertetni.
+\br
+A konstruktív diszjunkció alapötlete a következõ: a diszjunkció minden tagja esetén
+vizsgáljuk meg a hatását a tárra, és jelöljük az így kapott ,,vagylagos'' tárakat
+$S_1, \ldots, S_n$-nel. Ekkor minden változó a vagylagos tárakban kapott tartományok
+uniójára szûkíthetõ: \cd{X in_set $\cup D({\tt X}, S_i)$}. A konstruktív diszjunkciót
+általánosan az alábbihoz hasonló módon lehet megvalósítani:
+
+\begin{verbatim}
+cdisj(Cs, Var) :-
+        empty_fdset(S0), cdisj(Cs, Var, S0, S), 
+        Var in_set S.
+
+cdisj([Constraint|Cs], Var, Set0, Set) :-
+        findall(S, (Constraint,fd_set(Var,S)), Sets),
+        fdset_union([Set0|Sets], Set1),
+        cdisj(Cs, Var, Set1, Set).
+cdisj([], _, Set, Set).
+
+| ?- domain([X,Y], 0, 6), cdisj([X+5 #=< Y,Y+5 #=< X], X).
+X in(0..1)\/(5..6), Y in 0..6 ? 
+\end{verbatim}
+
+A konstruktív diszjunkció akár erõsebb is lehet, mint a tartomány-szûkítés, mert más
+korlátok hatását is figyelembe tudja venni, lásd az alábbi példát:
+
+\begin{verbatim}
+| ?- domain([X,Y], 0, 20), X+Y #= 20, cdisj([X#=<5,Y#=<5],X).
+X in(0..5)\/(15..20), Y in(0..5)\/(15..20) ? 
+\end{verbatim}
+
+\subsubsection{\clpfd megvalósítás reifikációval és indexikálissal}
+
+\enumhead{Számosság-alapú \cd{no\_overlap} változatok}
+
+\begin{verbatim}
+no_overlap_card1(X1, Y1, S1, X2, Y2, S2) :-
+        X1+S1 #=< X2 #<=> B1,
+        X2+S2 #=< X1 #<=> B2,
+        Y1+S1 #=< Y2 #<=> B3,
+        Y2+S2 #=< Y1 #<=> B4,
+        B1+B2+B3+B4 #>= 1.
+
+no_overlap_card2(X1, Y1, S1, X2, Y2, S2) :-
+  call( abs(2*(X1-X2)+(S1-S2)) #>= S1+S2 #\/
+        abs(2*(Y1-Y2)+(S1-S2)) #>= S1+S2 ).
+\end{verbatim}
+
+\enumhead{Indexikális \cd{no\_overlap} (,,gyenge'' konstruktív diszjunkció)}
+\br
+Alapgondolat: Ha két négyzet Y irányú vetületei biztosan átfedik egymást,
+akkor X irányú vetületeik diszjunktak kell legyenek, és fordítva. Az Y irányú
+vetületek átfedik egymást, ha mindkét négyzet felsõ széle magasabban van mint
+a másik négyzet alsó széle: \cd{Y1+S1>Y2} és \cd{Y2+S2>Y1}. Indexikálisban ezt
+a következõképpen tudjuk megfogalmazni: ha a \cd{(Y1+S1..Y2) \bs/ (Y2+S2..Y1)} halmaz
+üres, akkor a fenti feltétel fennáll, tehát X irányban szûkíthetünk: \cd{X1 =< X2-S1}
+vagy \cd{X1 >= X2+S2}. Feltételes kifejezéssel:
+\begin{center}
+\cd{X1 in ((Y1+S1..Y2)\bs/(Y2+S2..Y1))?(inf..sup) \bs/ \bs(X2-S1+1..X2+S2-1)}
+\end{center}
+Ezen ötlet felhasználásával az indexikális:
+
+\begin{alltt}
+no_overlap_ix(X1, Y1, S1, X2, Y2, S2) +:
+{\tt\em{}%       ha Y irányú átfedés van, azaz}
+{\tt\em{}%       ha min(Y1)+S1 > max(Y2) és min(Y2)+S2 > max(Y1) ...}
+        X1 in ((min(Y1)+S1..max(Y2)) \bs/ (min(Y2)+S2..max(Y1)))
+{\tt\em{}%                       ... akkor X irányban nincs átfedés: }
+             ? (inf..sup) \bs/ \bs(max(X2)-(S1-1) .. min(X2)+(S2-1)),
+        X2 in ((min(Y1)+S1..max(Y2)) \bs/ (min(Y2)+S2..max(Y1)))
+             ? (inf..sup) \bs/ \bs(max(X1)-(S2-1) .. min(X1)+(S1-1)),
+        Y1 in ((min(X1)+S1..max(X2)) \bs/ (min(X2)+S2..max(X1)))
+             ? (inf..sup) \bs/ \bs(max(Y2)-(S1-1) .. min(Y2)+(S2-1)),
+        Y2 in ((min(X1)+S1..max(X2)) \bs/ (min(X2)+S2..max(X1)))
+             ? (inf..sup)\bs/ \bs(max(Y1)-(S2-1) .. min(Y1)+(S1-1)).
+\end{alltt}
+
+\begin{center}
+\begin{tabular}{|l|rr|rr|rr|rr|rr|}
+\hline
+variáns   & 10     &      &  20   &      & 112    &      & 175   &    & 503  &\\
+\hline
+Prolog     &0.00&    0&  0.87& 271K &  0.38 &  183K & 5.72 & 2.6M & 93.58 & 29M \\
+\cd{spec}  &1.99&  34K&       &     &       &     &       &        &       &\\
+\cd{card1} &0.07&  141&       &     &       &     &       &       &       &     \\
+\cd{card2} &0.07&  141&       &     &       &     &       &       &       &     \\
+\cd{ix}    &0.01&  141&       &     &       &     &       &       &       &     \\
+\hline
+\end{tabular}
+\end{center}
+
+A visszalépések száma lényegesen javult a spekulatív diszjunkcióval kapott változathoz
+képest, azonban a program még így is nyomába sem ér a hagyományos Prolog megvalósításnak.
+
+\subsubsection{Kapacitás-korlátok és paraméterezhetõ címkézés}
+
+Mint azt már említettük, lehetõség van a címkézés menetének befolyásolására a
+\cd{labeling/2} eljárás paraméterlistáján keresztül. Az eredeti Prolog megoldás
+a ,,tetris-elv'' szerint alulról felfelé töltötte fel a nagy négyzetet a
+kis négyzetekkel, ennek egy elég jó megközelítése a \cd{[min,step]} üzemmódú
+címkézés. Próbálgatás céljából esetleg érdemes külön paraméterezhetõvé tenni
+a címkézési módokat, majd összevetni az egyes variánsokat.
+\br
+További gyorsítás érhetõ el redundáns korlátok használatával. A jelenlegi program
+ugyanis még nem elég okos: például amikor a nagy négyzet alja betelt, nem hagyja
+ki az Y változók tartományából az 1 értéket, pedig oda már biztosan nem tudunk
+további négyzeteket rakni. Az ún.\ kapacitás-korlátokkal ez megvalósítható:
+ha összeadjuk azon kis négyzetek oldalhosszát, amelyek elmetszenek egy X=1, X=2,
+\ldots, Y=1, Y=2, \ldots vonalat, akkor a nagy négyzet oldalhosszát kell kapnunk
+(a kis négyzeteket itt alulról és balról zártnak, felülrõl és jobbról nyíltnak
+tekintjük). Például X irányban:
+
+$$\sum  \{ \cd{S}_i | p \in [\cd{X}_i,\cd{X}_i+\cd{S}_i) \} =
+\cd{Limit} \ \ \ ( \forall p \in \cd{1..Limit-1} )$$
+
+A kapacitás-korlátok az alábbi kódrészlettel felvehetõek:
+
+\begin{verbatim}
+% A feladatra adott egyszerû megoldás kapacitás-korlátok használatával
+squares_cap(Lab, Sizes, Limit, Xs, Ys) :-
+        generate_coordinates(Xs, Ys, Sizes, Limit),
+        state_asymmetry(Xs, Ys, Sizes, Limit),
+        state_no_overlap(Xs, Ys, Sizes),
+        state_capacity(1, Xs, Sizes, Limit),
+        state_capacity(1, Ys, Sizes, Limit),
+        labeling(Lab, Xs), labeling(Lab, Ys).
+\end{verbatim}
+\begin{verbatim}
+% Kapacitás-korlát a Cs koordinátákra Sizes oldalhosszúságú
+% kis négyzetek és Limit méretû nagy négyzet esetén a
+% Pos..Limit intervallum összes elemére
+state_capacity(Pos, Limit, Cs, Sizes) :-
+        Pos =< Limit, !, accumulate(Cs, Sizes, Pos, Bs),
+        scalar_product(Sizes, Bs, #=, Limit), 
+        Pos1 is Pos+1, state_capacity(Pos1, Limit, Cs, Sizes).
+state_capacity(_Pos, _Limit, _, _).
+\end{verbatim}
+\begin{alltt}
+% accumulate(C, S, Pos, B): B, C és S ugyanolyan hosszú listák,
+% \cd{B}\(_i\)-k B elemei, \(\cd{B}_i=1 \Leftrightarrow \cd{Pos} \in [\cd{C}_i,\cd{C}_i+\cd{S}_i)\),
+accumulate([], [], _, []).
+accumulate([Ci|Cs], [Si|Ss], Pos, [Bi|Bs]) :-
+        Crutch is Pos-Si+1, Ci in Crutch .. Pos #<=> Bi,
+        accumulate(Cs, Ss, Pos, Bs).
+\end{alltt}
+
+\begin{center}
+\begin{tabular}{|l|rr|rr|rr|rr|rr|}
+\hline
+variáns, címkézés  & 10     &      &  20   &      & 112    &      & 175   &    & 503  &\\
+\hline
+Prolog     &0.00&    0&  0.87& 271K &  0.38 &  183K & 5.72 & 2.6M & 93.58 & 29M \\
+\cd{[]-ix, [min]}     &  0.01&   84&       &     &       &     &       &     &       &     \\
+\cd{cap-ix, []}       &  0.01&    0&  0.07&   18&       &     &       &     &       &     \\
+\cd{cap-ix, [min]}    &  0.01&    0&  0.06&    0&  1.96&  109&  3.74&  105& 20.32&  405\\
+\hline
+\cd{cap-spec, [min]}  &  2.31&34K&       &     &       &     &       &     &       &     \\
+\cd{cap-card1, [min]} &  0.04&    0&  0.24&    0&  3.51&  109&  4.86&  105& 22.63&  405\\
+\cd{cap-card2, [min]} &  0.04&    0&  0.34&    0&  2.41&  109&  4.48&  105& 21.83&  405\\
+\hline
+\end{tabular}
+\end{center}
+
+Amint látható, a kapacitás-korlátokkal a nagyobb méretekre a \clpfd megoldás már
+lekörözi a hagyományos Prolog megoldást.
+
+\subsubsection{Ütemezési és lefedési korlátok használata}
+
+A négyzetdarabolás felfogható ütemezési problémaként, illetve diszjunkt téglalapok
+problémájaként is. Mindkét feladatra van beépített korlát a SICStusban. Ütemezési
+probléma esetén alkalmazhatjuk a \cd{cumulative/5} korlátot mindkét tengely irányában,
+diszjunkt téglalapok problémája esetén pedig a \cd{disjoint2/2} korlátot (ilyenkor a
+\cd{no\_overlap} használatától akár el is tekinthetünk).
+\br
+A két újabb változat:
+
+\begin{verbatim}
+squares_cum(Lab, Opts, Sizes, Limit, Xs, Ys) :-
+        generate_coordinates(Xs, Ys, Sizes, Limit),
+        state_asymmetry(Xs, Ys, Sizes, Limit),
+        state_no_overlap(Xs, Ys, Sizes),   
+        cumulative(Xs, Sizes, Sizes, Limit, Opts),
+        cumulative(Ys, Sizes, Sizes, Limit, Opts),
+        labeling(Lab, Xs), labeling(Lab, Ys).
+
+squares_dis(Lab, Opts, Sizes, Limit, Xs, Ys) :-
+        generate_coordinates(Xs, Ys, Sizes, Limit),
+        state_asymmetry(Xs, Ys, Sizes, Limit),
+        state_no_overlap(Xs, Ys, Sizes),    % ez elmarad a`none' 
+                                            % variáns esetén
+        disjoint2_data(Xs, Ys, Sizes, Rects),
+        disjoint2(Rects, Opts),
+        labeling(Lab, Xs), labeling(Lab, Ys).
+
+disjoint2_data([], [], [], []).
+disjoint2_data([X|Xs], [Y|Ys], [S|Ss], [r(X,S,Y,S)|Rects]) :-
+        disjoint2_data(Xs, Ys, Ss, Rects).
+\end{verbatim}
+
+Az alábbi tesztek során mindig \cd{[min]} címkézést használtunk, és a globális
+korlátok paraméterezésével variáltunk. Rövidítések: \cd{e = edge_finder(true)},
+\cd{g = global(true)}.
+
+\begin{center}
+\begin{tabular}{|l|rr|rr|rr|rr|rr|}
+\hline
+variáns   & 10     &      &  20   &      & 112    &      & 175   &    & 503  &\\
+\hline
+{\tt cum-ix}      &  0.00&    0&  0.02&    0&       &     &       &     &       &     \\
+{\tt cum(e)-ix}   &  0.01&    0&  0.01&    0&  0.18&  139&  0.12&   67&  0.52&  421\\
+\hline
+{\tt dis-none}    &  0.01&   52&       &     &       &     &       &     &       &     \\
+{\tt dis(g)-none} &  0.00&    0&  0.01&    0&  0.73&  282&  0.41&  133&  2.55&  576\\
+{\tt dis(g)-ix}   &  0.00&    0&  0.02&    0&  0.93&  282&  0.53&  133&  2.95&  576\\
+\hline
+\end{tabular}
+\end{center}
+
+\subsubsection{Duális címkézés}
+
+Duális címkézés során nem a változókhoz keresünk megfelelõ értéket, hanem az értékekhez
+megfelelõ változót. Kicsit formálisabban fogalmazva az algoritmus lényege:
+
+\begin{itemize}
+\item vegyük sorra a lehetséges változó-értékeket,
+\item egy adott $e$ értékhez keresünk egy $V$ változót, amely felveheti ezt
+az értéket,
+\item csináljunk egy választási pontot: $V = e$, vagy $V \neq e$, stb.
+\end{itemize}
+
+Növekvõ értéksorrend esetén a keresési tér meg fog egyezni a \cd{[min, step]} beépített
+címkézés keresési terével.
+
+\begin{verbatim}
+% dual_labeling(L, Min, Max): címkézi az L lista elemeit, ahol
+% minden L-beli X változóra X in Min..Max fennáll.
+% A programban használt hívási formátum:
+% dual_labeling(Xs,1,Limit),dual_labeling(Ys,1,Limit).
+dual_labeling([], _, _) :- !.
+dual_labeling(L0, Min0, Limit) :-
+        dual_labeling(L0, L1, Min0, Limit, Min1),
+        dual_labeling(L1, Min1, Limit).
+
+% dual_labeling(L0, L, I, Min0, Min): címkézi az L0 lista változóit
+% az I értékkel, amikor ez lehetséges, a maradék változókat L-ben adja
+% vissza. Ugyanakkor Min0-Min-ben gyûjti az L-beli változók
+% alsó határát
+dual_labeling([], [], _, Min, Min).
+dual_labeling([X|L0], L, I, Min0, Min) :-
+        (   integer(X) -> dual_labeling(L0, L, I, Min0, Min)
+        ;   X = I, 
+            dual_labeling(L0, L, I, Min0, Min)
+        ;   X #> I, 
+            fd_min(X, Min1), Min2 is min(Min0,Min1),
+            L = [X|L1], dual_labeling(L0, L1, I, Min2, Min)
+        ).
+\end{verbatim}
+
+\begin{center}
+\begin{tabular}{|l|rr|rr|rr|rr|rr|}
+\hline
+variáns; címkézés   & 10     &      &  20   &      & 112    &      & 175   &    & 503  &\\
+\hline
+\cd{cum(e)-ix; [min]}    &  0.01&    0&  0.01&    0&  0.18&  139&  0.12&   67&  0.52&  421\\
+\cd{cum(e)-ix; dual}     &  0.01&    0&  0.02&    0&  0.19&  139&  0.13&   67&  0.54&  421\\
+\hline
+\cd{cap-cum(e)-ix;}      &  0.02&    0&  0.07&    0&  1.77&  100&  3.22&   65& 17.26&  395\\
+\cd{cap-dis(g)-none;}    &  0.01&    0&  0.06&    0&  1.71&   97&  3.24&   66& 17.98&  393\\ 
+\cd{cum(e),dis(g)-none;} &  0.00&    0&  0.01&    0&  0.23&  136&  0.16&   67&  0.99&  419\\
+\hline
+\end{tabular}
+\end{center}
+
+
+
+
+\subsection{Torpedó}
+
+Adott egy téglalap alakú táblázat, amelyben $1 \times n$-es hajókat kell elhelyezni
+úgy, hogy még átlósan se érintkezzenek. A hajók különbözõ színûek lehetnek. Minden
+szín esetén adott:
+\begin{itemize}
+\item minden hajóhosszhoz: az adott színû és hosszú hajók száma;
+\item minden sorra és oszlopra: az adott színû hajó-darabok száma;
+\item ismert hajó-darabok a táblázat mezõiben.
+\end{itemize}
+Színfüggetlenül adottak az ismert torpedó-mentes (tenger) mezõk.
+\br
+{\bf Példa:} Két szín, mindkét színbõl 1 darab egyes és 1 darab kettes hajó.
+Ismert mezõk: az 1. sor 1. mezõje tenger, az elsõ sor 3. mezõje egy kettes
+hajó tatja (jobb vége).
+
+\begin{alltt}
+     {\rm \em A feladat:}                                     {\rm \em A megoldás:}
+\end{alltt}
+\begin{alltt}
+      1 2 3 4 5     <-- {\em oszlopszám     }              1 2 3 4 5     
+      0 1 1 1 0     <-- {\em 1. oszlopössz. }              0 1 1 1 0     
+                        {\em                }                            
+1  2  =   r      0      {\em                }        1  2  = * r : :  0
+2  0             1      {\em                }        2  0  : : : : #  1  
+3  0             1      {\em                }        3  0  # : : : :  1  
+4  1             1      {\em                }        4  1  # : : * :  1  
+   ^-------------^------{\em sorösszegek    }          
+      2 0 0 0 1     <-- {\em 2. oszlopössz. }              2 0 0 0 1     
+\end{alltt}
+
+A fenti példában alkalmazott jelölésrendszer: a tábla felett az elsõ számsor az
+oszlopok számozását jelenti, a tábla mellett az elsõ oszlop a sorok számozását.
+Közvetlenül a tábla szélei mellett lévõ számsorok az adott sorban, illetve oszlopban
+lévõ hajódarabkák számát adják meg, a felsõ, illetve a bal oldali az 1. színét,
+az alsó, illetve a jobb oldali pedig a 2. színét. A táblában a tengert \cd{=}
+(egyenlõségjel) karakterrel, a hajódarabkákat pedig betûkkel jelöljük. Az 1. szín
+hajódarabkáit kisbetûkkel, a 2. színét nagybetûkkel ábrázoljuk. Az 1 hosszú hajók
+\cd{o}, illetve \cd{O} betûkkel vannak jelölve, a hosszabb hajók esetén pedig \cd{u}
+(\cd{U}) a hajó felsõ vége, \cd{d} (\cd{D}) az alsó vége, \cd{l} (\cd{L}) a bal széle,
+\cd{r} (\cd{R}) a jobb széle, \cd{m} (\cd{M}) pedig a közepe. A kikövetkeztetett
+hajódarabkákat \cd{*} (csillag) és \cd{\#} (hashmark) karakterek jelölik, a
+kikövetkeztetett tengerdarabkákat pedig \cd{:} (kettõspont).
+\br
+A feladat az 1999. évi NLP kurzus nagyházifeladata volt, a mintamegoldás letölthetõ
+az alábbi címrõl: \verb'http://www.inf.bme.hu/~szeredi/hf_99_torpedo.tgz'.
+
+\subsubsection{A feladat modellezése}
+
+A feladat komplexitásából kifolyólag eleve érdemes azon elgondolkoznunk, hogy hogyan
+feleltessük meg a feladatot a CLP világnak. Például a korlát-változók felvételére
+is eleve két lehetõségünk van:
+
+\begin{itemize}
+\item[a.] Minden hajóhoz hozzárendelünk egy irányváltozót (vízszintes vagy
+függõleges) és a kezdõpont koordinátáit. Így viszonylag kevés változóval
+,,megússzuk'', cserébe viszont szimmetria problémák léphetnek fel
+(azonos méretû hajók sorrendje), a korlátjaink bonyolultabbak lesznek és
+sok diszjunktív korlátot kell alkalmaznunk (pl. egy hajó vízszintes vagy
+függõleges elhelyezés esetén más-más mezõket fed le).
+\item[{\bf b.}] A mezõkhöz rendelünk változókat, és mezõnként tároljuk, hogy mi
+található ott: hajó-darab vagy tenger. Ezzel ugyan több változónk lesz,
+de a korlátok lényegesen leegyszerûsödnek, ezért ezt a megoldást választjuk.
+\end{itemize}
+
+Ezek után el kell gondolkoznunk azon, hogy az egyes mezõkhöz tartozó változóknak
+milyen értékkészletet adunk. Újfent két, lényegében eltérõ megoldás között
+választhatunk:
+
+\begin{itemize}
+\item[a.] egy mezõrõl csak azt tároljuk, hogy hajódarab vagy pedig tenger van ott,
+a hajódarabról pedig a színt is megjegyezzük. Mivel nem rögzítjük, hogy egy hajódarab
+a hajó melyik részét alkotja, ezért az eleve ismert mezõknél információvesztés lép fel.
+\item[{\bf b.}] az egyes hajódarabokat is megkülönböztetjük:
+\begin{itemize}
+\item[b1.] az elõre kitöltött mezõknek megfelelõ darabok \cd{(u,l,m,r,d,o)} --- ilyenkor
+ismét diszjunktív korlátokat kell alkalmazni (pl.\ ugyanaz a betû többféle hajó része
+lehet)
+\item[{\bf b2.}] részletesebb bontás: a mezõket megkülönböztetjük a hajó hossza, iránya, a
+darab hajón belüli pozíciója szerint, pl.: egy 4 hosszú vízszintes hajó balról
+3. darabja. A megoldásban ezt a módszert alkalmazzuk.
+\end{itemize}
+\end{itemize}
+
+Vegyük észre, hogy a választott megoldás jellemzõje az, hogy ha egy mezõhöz tartozó
+változó tengertõl különbözõ értéket kap, akkor ezzel már az egész hajót meghatároztuk.
+\br
+Mivel egy mezõvel kapcsolatban több információt is rögzíteni akarunk, felvetõdik a kérdés,
+hogy külön változókkal adjuk meg az egyes jellemzõket, vagy pedig egyetlen változóban
+jelenítsük meg az összeset. Az elsõ esetben nyilvánvalóan egyszerûbb lesz a kódolás,
+de a korlátok szûkítései gyengébbek lesznek, mivel egy korlátnak nem feltétlenül
+áll rendelkezésére az összes információ. A második esetben ugyan bonyolultabb kódolást
+kell megvalósítani, de cserébe a korlátok erõsebben szûkítenek majd, és mivel a
+megoldásunkban elsõsorban a sebesség a lényeg, ezért ehhez a módszerhez érdemes folyamodni.
+\br
+Összefoglalva a választott irányelveket:
+
+\begin{itemize}
+\item Minden mezõnek egy változó felel meg.
+\item Az értékek kódolási elvei (\cd{max} címkézéshez igazítva)
+\begin{itemize}
+\item az irányított hajók orra (\cd{l} és \cd{u}) kapja a legmagasabb
+kódokat,
+\item ezen belül a hosszabbak kapják a nagyobb kódokat
+\item adott hossz esetén az irány és a szín sorrendje nem fontos
+\item az irányított hajók nem-orr elemeinek kódolása nem lényeges (címkézéskor
+az orr-elemek helyettesítõdnek be)
+\item az egy hosszú hajók (hajódarabok) kódja a legalacsonyabb
+\item a tenger kódja minden hajónál alacsonyabb
+\end{itemize}
+\item Példa-kódolás: 1 szín, max 3 hosszú hajók, \cd{h$ij$} = horizontális (vízszintes),
+$i$ hosszú hajó $j$-edik darabja, \cd{v$ij$} = vertikális (függõleges) hajó megfelelõ
+darabja, stb. A kódkiosztás: 
+
+\begin{verbatim}
+0:       tenger
+1:       h11 = v11      % 1-hosszú hajó
+2..4     v33  h22 h32   % nem-orr-elemek
+5..7     v32 v22  h33   % nem-orr-elemek
+8..9     h21 v21        % orr-elemek
+10..11   h31 v31        % orr-elemek
+\end{verbatim}
+\end{itemize}
+
+\subsubsection{Alapvetõ korlátok}
+
+A feladat megoldásához két alapvetõ korlátra lesz szükségünk:
+
+\begin{itemize}
+\item \cd{coded\_field\_neighbour(Dir, CF0, CF1)}: \cd{CF0} kódolt mezõ
+\cd{Dir} irányú szomszédja \cd{CF1}, ahol \cd{Dir} lehet \cd{horiz,
+vert, diag}. Például:
+
+\begin{verbatim}
+| ?- coded_field_neighbour(horiz, 0, R).
+R in \{3,4,7} ? ;
+no
+\end{verbatim}
+
+\item \cd{group\_count(Group, CFs, Count, Env):} a \cd{Group} csoportba
+tartozó elemek száma a \cd{CFs} listában \cd{Count}, ahol a futási
+környezet \cd{Env}. Itt \cd{Group} például lehet \cd{all(Clr)}: az összes
+\cd{Clr} színû hajódarab. Ez a \cd{count/4} eljárás kiterjesztése: nem
+egyetlen szám, hanem egy számhalmaz elõfordulásait számoljuk meg.
+\end{itemize}
+
+Ezen korlátokat az ismert mezõk megfelelõ csoportokra való megszorítása
+után a következõképpen kell felvenni:
+
+\begin{enumerate}
+\item Színenként az adott sor- és oszlopszámlálók elõírása (erre jó az
+elõzõ részfejezetben felvázolt \cd{group\_count/4} predikátum).
+\item A hajóorr-darabok megszámolásával az adott hajófajta darabszámának
+biztosítása (\cd{group\_count/4}, minden színre és minden hajófajtára).
+\item A vízszintes, függõleges és átlós irányú szomszédos mezõkre vonatkozó
+korlátok biztosítása a \cd{coded\_field\_neighbour/3} korláttal.
+\end{enumerate}
+
+A 2. fajtájú korlátoknál a részösszegekre néhol érdemes segédváltozókat
+bevezetni (pl.\ \cd{A+B+C \#= 2, A+B+D \#= 2} helyett \cd{A+B \#= S, S+C
+\#= 2, S+D \#= 2} jobban tud szûkíteni, mert az \cd{S} változón keresztül a
+két összegkorlát ,,kommunikál'' egymással). Formálisan: jelölje $sor^K_s$
+ill.\ $oszl^L_s$ az $s$ hajódarab elõfordulási számát a $K$-adik sorban,
+ill.\ az $L$-edik oszlopban. A hajók számolásához a $sor^K_{\tt hI1}$ és
+$oszl^L_{\tt vI1}$ mennyiségekre segédváltozókat vezetünk be, ezekkel a 3. korlát:
+
+\begin{center}
+az \cd{I} hosszú hajók száma = 
+$\sum_{K} sor^K_{\tt hI1} + \sum_{L} oszl^L_{\tt vI1} \ \ \ \ ({\tt I} > 1)$
+\end{center}
+
+\begin{center}
+az 1 hosszú hajók száma = $\sum_{K} sor^K_{\tt h11} $
+\end{center}
+
+\subsubsection{Redundáns korlátok, címkézés és borotválás}
+
+A fenti alapvetõ korlátok mellé még az alábbi redundáns korlátokat érdemes
+bevezetni:
+
+\begin{itemize}
+\item \cd{count\_ships\_occs}: sorösszegek alternatív kiszámolása (vö.\ a
+mágikus sorozatok megoldásában a skalárszorzat redundáns korláttal):
+\begin{center}
+a $K$. sorbeli darabok száma = \parbox{19em}{
+{\large \[\sum_{\cd{I}\leq hosszak} \cd{I}*sor^K_\cd{hI1} + \sum_{1<\cd{I}\leq hosszak, \cd{J}\leq \cd{I}} sor^K_\cd{vIJ}\]}
+}\end{center}
+Analóg módon az oszlopösszegekre is.
+
+Ennek a korlátnak a hatására ,,veszi észre'' a program, hogy  ha pl. egy
+sorösszeg 3, akkor nem lehet a sorban 3 elemûnél hosszabb hajó.
+
+\item \cd{count\_ones\_columns}: az egy hosszú darabok számát az
+oszloponkénti elõfordulások összegeként is meghatározzuk.
+\item \cd{count\_empties}: minden sorra és oszlopra a tenger-mezõk
+számát is elõírjuk (a sorhosszból kivonva az összes --- különbözõ színû ---
+hajódarab összegét).
+\end{itemize}
+
+A mintamegoldásban az alábbi címkézési fajták vannak implementálva
+(\cd{label(\emph{Variáns})} opciók):
+
+\begin{itemize}
+\item \cd{plain}: \cd{labeling([max,down], Mezõk)}, ahol \cd{Mezõk} a mezõváltozókat
+        tartalmazó lista.
+\item \cd{max\_dual}: a négyzetkirakáshoz hasonlóan a legmagasabb
+        \emph{értékeket} próbálja a változóknak értékül adni. Ez szûkítõ
+        hatásban (és így a keresési fa szerkezetében) azonos a \cd{plain}
+        variánssal.
+\item \cd{ships}: speciális címkézés, minden hosszra, a legnagyobbtól
+        kezdve, minden színre az adott színû és hosszú hajókat sorra elhelyezi
+        (ez az alapértelmezés).
+\end{itemize}
+
+A megoldás a konstruktív diszjunkció egy egyszerûsített verzióját, a \emph{borotválás}t
+is használja a címkézés során. A borotválás lényege az, hogy minden $n$. címkézési
+lépésben a címkézésbõl hátralévõ változók mindegyikét megpróbáljuk egy adott
+tartományra (jelen esetben ,,tenger''-re) helyettesíteni, és ha ez azonnal meghiúsulást
+okoz, akkor a kipróbált tartományt kizárhatjuk a változó tartományából (jelen esetben
+megállapíthatjuk, hogy azon a mezõn hajódarab van). A módszert $n$ változtatásával
+és a tartomány megválasztásával lehet ,,finomhangolni''. A torpedó feladatban alkalmazott
+borotválást minden szín címkézése elõtt megismételjük. A \cd{filter(\emph{VariánsLista})}
+opción keresztül változtathatjuk a borotválás jellegét: ha a lista eleme \cd{off},
+akkor nincs borotválás, \cd{on} esetén egyszeres borotválás van, \cd{repetitive} esetén
+pedig minden borotválásnál ismételten szûrünk addig, amíg az újabb korlátokat eredményez.
+\br
+A borotválás egy lépését az alábbi programkóddal végezhetjük el:
+\begin{verbatim}
+% filter_count_vars(Vars0, Vars, Cnt0, Cnt): Vars0 megszûrve
+% Vars-t adja. A megszûrt változók száma Cnt-Cnt0.
+filter_count_vars([], [], Cnt, Cnt).
+filter_count_vars([V|Vs], Fs, Cnt0, Cnt) :-
+        integer(V), !, filter_count_vars(Vs, Fs, Cnt0, Cnt).
+filter_count_vars([V|Vs], [V|Fs], Cnt0, Cnt) :-
+        (   fd_min(V, Min), Min > 0 -> Cnt1 = Cnt0
+        ;   \+ (V = 0) -> V #\= 0, Cnt1 is Cnt0+1
+        ;   Cnt1 = Cnt0
+        ), filter_count_vars(Vs, Fs, Cnt1, Cnt).
+\end{verbatim}
+
+\subsubsection{További finomhangolási lehetõségek}
+
+A szomszédsági reláció megvalósítására több lehetõség is kínálkozik:
+
+\begin{itemize}
+\item A vízszintes és függõleges szomszédsági reláció egyaránt megvalósítható
+a \cd{relation/3} meghívásával vagy indexikálisként való fordításával is.
+Ezek között az opciólistában a \cd{relation(R)} elemmel kapcsolgathatunk
+(\cd{R = clause} vagy \cd{R = indexical}). Alapértelmezésként a korlát
+indexikálisként van megvalósítva.
+
+\item Az átlós szomszédsági relációt is többféleképpen megvalósíthatjuk.
+A kívánt variánst a \cd{diag(D)} opcióval választhatjuk ki, ahol \cd{D}
+lehet:
+
+\begin{itemize}
+\item \cd{reif} --- reifikációs alapon: \cd{CF1 \#= 0 \#\bs/ CF2 \#= 0}
+\item \cd{ind\_arith} --- aritmetikát használó indexikálissal:\\
+\cd{\ \ \ diagonal\_neighbour\_arith(CF1, CF2) +:\\
+\ \ \ \ \ \ CF1 in 0 .. (1000-(min(CF2)/>1000)*1000), ...}
+\item \cd{ind\_cond} (alapértelmezés) --- feltételes indexikálissal:
+\cd{\ \ \ diagonal\_neighbour\_cond(CF1, CF2) +:\\
+\ \ \ \ \ \ CF1 in (min(CF2)..0) ? (inf..sup) \bs/ {0}, ...} 
+\end{itemize}
+\end{itemize}
+
+\subsubsection{Futási eredmények}
+
+Az alábbi idõeredmények az összes megoldás megtalálására vonatkoznak, és egy
+DEC Alpha 433 MHz-es gépen születtek. A táblázatokban lévõ adatpárok a futási
+idõt (mp) és a visszalépések számát jelentik.
+
+\begin{center}
+\begin{tabular}{|l|rr|rr|rr|}
+\hline
+Opciók/példa   & \multicolumn{2}{l|}{\cd{fules2a}}      & \multicolumn{2}{l|}{\cd{fules3}}  & \multicolumn{2}{l|}{\cd{fules\_clean}}   \\
+\hline
+1. sima                               &   51.437 &    10178 &  253.1 &    55157 & 1085.7 &     260K\\
+\hline
+\multicolumn{7}{|l|}{Redundáns korlátok}\\
+\hline
+2. = 1 $+$ \cd{count_ships_occs     }  &   16.218 &     1910 &  105.6 &    13209 &  395.2 &    52398\\
+3. = 2 $+$ \cd{count_ones_columns   }  &   16.175 &     1861 &  105.0 &    12797 &  386.4 &    50181\\
+4. = 3 $+$ \cd{count_empties        }  &   17.915 &     1771 &  107.2 &    11273 &  381.7 &    42417\\
+\hline
+\multicolumn{7}{|l|}{Címkézési variánsok}\\
+\hline
+5. = 4 $+$ \cd{label(max_dual)      }  &   18.296 &     1771 &  106.3 &    11273 &  379.8 &    42417\\
+6. = 4 $+$ \cd{label(ships)         }  &   17.153 &     1708 &  105.7 &    11236 &  367.8 &    41891\\
+\hline
+\multicolumn{7}{|l|}{Borotválás}\\
+\hline
+7. = 6 $+$ \cd{filter([repetitive])}   &   10.517 &      313 &   64.3 &     2534 &  206.1 &    10740\\
+8. = 6 $+$ \cd{filter([on])         }  &    9.549 &      332 &   59.0 &     2811 &  199.7 &    12004\\
+\hline
+\multicolumn{7}{|l|}{Megvalósítási variánsok}\\
+\hline
+9. = 8 $+$ \cd{relation(indexical)}    &    8.426 &      332 &   54.0 &     2811 &  180.8 &    12004\\
+10.= 9 $+$ \cd{diag(ind_arith)      }  &    7.855 &      332 &   50.2 &
+2811 &  167.7 &    12004\\
+\em 11.= 9 $+$ \cd{diag(ind_cond)}     &\em 7.819 &\em   332 &\em 50.1&\em  2811 &\em   166.2 &\em 12004\\
+\hline
+12.= 11 $-$ \cd{count_empties       }  &    6.750 &      350 &   47.5 &     3248 &  166.2 &    14233\\
+\hline
+\end{tabular}
+\end{center}
+
+{\bf Jelmagyarázat:}
+
+1. sima = \cd{[-count_ships_occs,-count_ones_columns,-count_empties,\\
+\ \ \ \ \ \ \ \ \ label(plain),filter([off]),relation(clause),diag(reif)]}\\
+11. = alapértelmezés
+
+
+
+\subsection{Dominó}
+
+Adott egy $(n+1)\times(n+2)$-es téglalap, amelyen egy teljes $n$-es dominókészlet
+összes elemét elhelyeztük, majd a határokat eltávolítottuk. A feladat a határok
+helyreállítása a számok alapján. A dominókészlet elemei az
+$\{\tuple{i,j} | 0 \leq i  \leq j \leq n \}$ számpároknak felelnek meg. A kiinduló
+adat tehát egy $0..n$ intervallumbeli számokból álló $(n+1)\times(n+2)$-es mátrix,
+amelynek elemei azt mutatják meg, hogy az adott mezõn hány pöttyöt tartalmazó féldominó
+van.
+
+Az alábbi ábrán látható egy feladat $n=3$-ra, és annak egyetlen megoldása:
+
+\begin{alltt}
+                                  ---------------------
+     1   3   0   1   2            | 1 | 3   0 | 1 | 2 |
+                                  |   |-------|   |   |
+     3   2   0   1   3            | 3 | 2   0 | 1 | 3 |
+                                  |---------------|---|
+     3   3   0   0   1            | 3   3 | 0   0 | 1 |
+                                  |-------|-------|   |
+     2   2   1   2   0            | 2   2 | 1   2 | 0 |
+                                  ---------------------
+
+   % Bemenõ adatformátum:         % A megoldás Prolog alakja:
+
+   [[1,  3,  0,  1,  2],          [[n,  w,  e,  n,  n],
+    [3,  2,  0,  1,  3],           [s,  w,  e,  s,  s],
+    [3,  3,  0,  0,  1],           [w,  e,  w,  e,  n],
+    [2,  2,  1,  2,  0]]           [w,  e,  w,  e,  s]]
+
+\end{alltt}
+
+A megoldásban a téglalap minden mezõjérõl el kell dönteni, hogy azon a mezõn egy dominó
+északi (\cd{n}), déli (\cd{s}), keleti (\cd{e}) vagy nyugati (\cd{w}) fele van. A
+\verb'http://www.inf.bme.hu/~szeredi/hf_00s_domino.tgz' címrõl letölthetõ állomány
+tesztadatai négy csoportba oszthatóak:
+
+\begin{itemize}
+\item \cd{base} --- 16 könnyû alapfeladat $n = $ 1--25 közötti méretben.
+\item \cd{easy} --- 24 középnehéz feladat, többségük $n = $ 15--25 méretben.
+\item \cd{diff} --- 21 nehéz feladat 28-as, és egy 30-as méretben.
+\item \cd{hard} --- egy nagyon nehéz feladat 28-as méretben.
+\end{itemize}
+
+\subsubsection{A feladat modellezése}
+
+A torpedó feladathoz hasonlóan itt is elõször érdemes meggondolnunk, hogy a modellezéshez
+milyen változókat használjunk, és ezeknek milyen értékkészletet válasszunk. A korlátváltozók
+bevezetésére fennálló lehetõségek:
+
+\begin{itemize}
+\item[a.] Minden mezõhöz egy ún.\ \emph{irányváltozó}t rendelünk, amely a
+    lefedõ féldominó irányát jelzi (ez az, ami a megoldásban is szerepel).
+    Ezzel a megoldással az a baj, hogy körülményes a dominók egyszeri
+    felhasználását biztosítani.
+\item[b.] Minden dominóhoz egy ún. \emph{dominóváltozó}t rendelünk,
+    amelynek értéke megmondja, hová kerül az adott dominó. Ezzel a megoldással
+    viszont az a probléma, hogy körülményes a dominók át nem fedését biztosítani. 
+\item[{\bf c.}] Mezõkhöz és dominókhoz is rendelünk változókat (a.+b.). Ez az
+    \emph{egyik} választott megoldás.
+\item[{\bf d.}] A mezõk közötti választóvonalakhoz rendelünk egy 0-1 értékû ún.\
+\emph{határváltozó}t, amely azt mutatja meg, hogy az adott választóvonalon egy
+dominó közepe van-e, vagy pedig két dominó érintkezik rajta. Ez a \emph{másik}
+    választott megoldás.
+\end{itemize}
+
+Az irányváltozók értékkészletét legegyszerûbb az \cd{n}, \cd{s}, \cd{e}, \cd{w}
+konstansok valamilyen numerikus kódolása szerint megválasztani. A dominóváltozók
+értékkészletét lehetne egy $\langle${\em sor,oszlop,lehelyezési\_irány}$\rangle$
+hármassal modellezni, de egyszerûbb megszámozni egy adott dominó $l$ lehetséges
+lehelyezési módját, és az $1..l$ számozást használni. Például a fenti elrendezésben
+a 0/2-es dominó csak három különbözõ módon rakható le: $\langle$2, 2, vízsz$\rangle$,
+$\langle$3, 4, függ$\rangle$ és $\langle$4, 4, vízsz$\rangle$. Így a dominónak
+megfeleltetett változót az 1..3 értéktartományra szoríthatjuk be. A határváltozók
+1 értékének ,,természetes'' jelentése lehetne, hogy az adott határvonalat az ábrán
+be kell húzni. Érdemes azonban ennek negáltjával dolgozni: legyen 1 az érték akkor,
+ha az adott vonal egy dominó középvonala. Ez azért jó, mert ettõl az összes korlát
+\cd{A+B+... \#= 1} alakú lesz.
+
+\subsubsection{Egy lehetséges megoldás}
+
+\enumhead{Változók, korlátok}
+\begin{itemize}
+\item Minden mezõhöz egy irányváltozó (\cd{I$yx$ in 1..4 $\equiv$ \{{\em n,w,s,e}\}}),
+minden dominóhoz egy dominóváltozó (\cd{D$ij, 0 \leq i \leq j \leq n$}) tartozik.
+\item Szomszédsági korlát: két szomszédos irányváltozó kapcsolatát adja meg, pl.\
+\cd{I14\#={\em n} \#<=> I24\#={\em s}, I14\#={\em w} \#<=> I15\#={\em e}}, stb.
+Egyszerûen az olyan jellegû feltételeket adja meg, mint pl. ,,ha egy irányváltozó értékét
+mondjuk \cd{n}-nek (dominó északi fele) választjuk, akkor az alatta lévõ mezõ csak
+\cd{s} (dominó déli fele) lehet''.
+\item Dominó-korlát: egy dominó-elhelyezésben a dominóváltozó és a lerakás
+bal vagy felsõ mezõjének irányváltozója közötti kapcsolat. A korábbi példában pl.\  
+\cd{D02\#=1 \#<=> I22\#={\em w}, D02\#=2 \#<=> I34\#={\em n}, D02\#=3 \#<=> I44\#={\em w}}.
+\end{itemize}
+
+Mivel mindegyik megvalósítandó korlát az ,,akkor és csak akkor'' logikai kapcsolatra
+épül, ezért az egyetlen fontos feladatunk, hogy ezt a logikai kapcsolatot hogyan lehet
+a legoptimálisabban megvalósítani. A mintamegoldás három verziót valósít meg a
+\cd{csakkor_egyenlo(X,C,Y,D)} $\equiv$ \cd{X \#= C \#<=> Y \#= D} korlátra:
+
+\begin{itemize}
+        \item \cd{reif}: reifikációval (\cd{X\#=C\#<=>Y\#=D}) 
+        \item \cd{ind1}: az \cd{'x=c=>y=d'} FD predikátum kétszeri hívásával,
+        \item \cd{ind2}: az \cd{'x=c<=>y=d'} FD predikátum hívásával.
+\end{itemize}
+
+Ezek közül az opciólista \cd{csakkor=Cs} paraméterével választhatunk, ahol \cd{Cs} helyére
+kell írni a megfelelõ variáns nevét. Az \cd{ind1}, illetve \cd{ind2} variánshoz használt
+FD predikátumok:
+
+\begin{verbatim}
+'x=c=>y=d'(X, C, Y, D) +:
+        X in (dom(Y) /\ {D}) ? (inf..sup) \/ \({C}),
+        Y in ({X} /\  \({C})) ? (inf..sup) \/ {D}.
+
+'x=c<=>y=d'(X, C, Y, D) +:
+        X in ((dom(Y) /\ {D}) ? (inf..sup) \/ \({C})) /\
+             ((dom(Y) /\ \({D})) ? (inf..sup) \/ {C}),
+        Y in ((dom(X) /\ {C}) ? (inf..sup) \/ \({D})) /\
+             ((dom(X) /\ \({C})) ? (inf..sup) \/ {D}).
+\end{verbatim}
+
+A címkézésnél két, lényegében különbözõ lehetõségünk van: címkézhetünk az irányváltozók és
+a dominóváltozók szerint. Ezeken belül még variálhatunk a \cd{labeling/2} paraméterezésével
+is. Az opciólistában a \cd{valt=V} opció szolgál az irányváltozók és a dominóváltozók
+közti váltásra (\cd{V=irany} az irányváltozók címkézése, \cd{V=domino} a dominóváltozók
+címkézése), a \cd{labeling/2} járulékos paramétereit a \cd{label=LOpciok} segítségével
+adhatjuk át. A borotválás finomhangolása a \cd{szur=Sz} és \cd{szurtek=L} opciók
+alkalmazásával végezhetõ el. Ha \cd{szur $\neq$ ki}, akkor az irány-változókat borotváljuk,
+sorra megpróbáljuk az \cd{L} elemeire behelyettesíteni, és ha ez meghiúsulást okoz, akkor
+az adott elemet kivesszük a változó tartományából. \cd{szur} lehet: \cd{elott} (csak a
+címkézés elõtt szûrünk) vagy \cd{N} (minden \cd{N}. változó címkézése után szûrünk).
+\cd{L} alapértelmezése \cd{[{\em w},{\em n}]}.
+
+\subsubsection{Egy másik lehetséges megoldás}
+
+\enumhead{Változók, korlátok}
+\begin{itemize}
+\item Minden mezõ keleti ill.\ déli határvonalához egy-egy határváltozó
+        tartozik (\cd{E$yx$} ill.\ , \cd{S$yx$}). A határváltozó akkor
+        és csak akkor 1, ha az adott vonal egy dominó középvonala. A
+        táblázat külsõ határai 0 értékûek (behúzott vonalak).
+\item Szomszédsági korlát: minden mezõ négy oldala közül pontosan egy lesz
+egy dominó középvonala, tehát pl.\ a $(2,4)$ koordinátájú dominó-mezõ esetén
+\cd{sum([S14,E23,S24,E24]), \#=, 1)}.
+\item Lerakási korlát: egy dominó összes lerakási lehetõségeit tekintjük,
+ezek középvonalai közül pontosan egy lesz 1, így a példabeli
+$\langle0,2\rangle$ dominóra: \cd{sum([E22,S34,E44], \#=, 1)}.
+\end{itemize}
+
+Az elõzõ változathoz hasonlóan itt is lényegében egyetlen korlát minél optimálisabb
+megvalósításával kell foglalkozni. Ez a korlát egy változólistát kap paraméterül,
+és azt a feltételt fejezi ki, hogy a lista összegének 1-nek kell lennie
+(\cd{lista_osszege_1}). A lehetséges megvalósítások (az \cd{osszeg=Ossz} opción
+keresztül választhatunk közöttük):
+
+\begin{itemize}
+        \item \cd{Ossz=ari(N)}: \cd{N}-nél nem hosszabb listákra aritmetikai korláttal,
+	egyébként (\cd{N}-nél hosszabb listákra) a \cd{sum/3} korláttal
+        \item \cd{Ossz=ind(N)}: \cd{N}-nél nem hosszabb listákra FD predikátummal,
+	egyébként (\cd{N}-nél hosszabb listákra) a \cd{sum/3} korláttal
+        \item \cd{Ossz=sum}: mindig a \cd{sum/3} korláttal
+\end{itemize}
+
+Mivel az FD predikátumok kötött számú változóval dolgoznak, ezért az \cd{Ossz=ind(N)}
+esetben szét kell választanunk az egyes eseteket, valahogy így:
+
+\begin{verbatim}
+osszege1(A, B) +:              A+B #= 1.
+osszege1(A, B, C) +:           A+B+C #= 1.
+osszege1(A, B, C, D) +:        A+B+C+D #= 1.
+(...)
+\end{verbatim}
+
+\subsubsection{Futási eredmények}
+
+Az alábbi idõeredmények az összes megoldás megtalálására vonatkoznak, és egy
+DEC Alpha 433 MHz-es gépen születtek. A táblázatokban lévõ adatpárok a futási
+idõt (mp) és a visszalépések számát jelentik. A dõlt betûs sorok a viszonyítási
+alapot jelzik, a felkiáltójel azt mutatja, hogy idõtúllépés is volt a tesztadatok
+között. A keretezés a legjobb idõt, illetve visszalépés-számot jelenti.
+
+\begin{center}
+\begin{tabular}{|l|rr|rr|rr|rr|}
+\hline
+Opciók/példa   & \multicolumn{2}{l|}{\cd{base}}      & \multicolumn{2}{l|}{\cd{easy}}  & \multicolumn{2}{l|}{\cd{diff}}   & \multicolumn{2}{l|}{\cd{hard}}   \\
+%%%%%%%%%%%%%%%%%%%
+\hline
+\multicolumn{9}{|l|}{\cd{{\rm 1.\ változat},csakkor=ind1,valt=domino,label=[],szur=2,szurtek=[1,2]}}\\
+\hline
+{\tt\em szur=2}            &\em  5.44&\em   1&\em  26.6&\em  28&\em4001.7&\em4950&\em1162.9&\em1448\\
+\cd{szur=1,label=[ff]}    &     5.87&      1&     27.6&      5&   3900.6&   1168&    554.4&    \fbox{159}\\
+\cd{szur=2,label=[ff]}    &     5.48&      1&     25.8&     13&   3222.9&   2074&    446.9&    288\\
+\cd{szur=3,label=[ff]}    &     5.36&      1&     25.7&     19&   3232.6&   3597&    \fbox{429.3}&    477\\
+\cd{label=[ffc]}          &     5.49&      1&     23.7&      7&  !9885.8&   6403&   3902.0&   2795\\
+\cd{csakkor=ind2}         &     5.14&      1&     26.4&     28&   4250.9&   4950&   1233.0&   1448\\
+\cd{csakkor=reif}         &     6.87&      1&     33.5&     28&   4573.2&   4950&   1320.2&   1448\\
+\cd{szurtek=[1]}          &     4.98&      9&     34.1&     92&   6375.0&  13824&   1976.5&   3566\\
+\cd{szur=elott}           &     5.09&      1&     25.1&   1722&         &       &         &       \\
+\cd{szur=ki}              &     38.6&   9K  &    590  &   157K&         &       &         &       \\
+\hline
+\multicolumn{9}{|l|}{\cd{{\rm 1.\ változat},csakkor=ind1,valt=irany,label=[],szur=2,szurtek=[1,2]}}\\
+\hline
+{\tt\em label=[]}          &\em  5.39&\em   1&\em  23.4&\em  10&\em2138.1&\em1377&\em3362.9&\em2326\\
+\cd{label=[ff]}           &     5.40&      1&     23.4&     10&   2137.9&   1377&   3376.5&   2326\\
+\cd{label=[ffc]}          &     5.42&      1&     24.1&     10& !15036.1&  10155&  !7199.7&   4380\\
+\cd{szurtek=[1]}          &     4.94&      3&     29.4&     45&   3240.2&   4000&   6077.2&   7782\\
+\hline
+\multicolumn{9}{|l|}{\cd{{\rm 2.\ változat},osszeg=ind(5),label=[],szur=2,szurtek=[1]}}\\
+\hline
+{\tt\em szur=2}            &\em  2.10&\em   1&\em  \fbox{11.5}&\em   8&\em\fbox{1045.9}&\em1399&\em1607.0&\em2254\\
+\cd{szur=1}               &     2.28&      1&     11.9&      \fbox{3}&   1294.7&    \fbox{787}&   1977.9&   1277\\
+\cd{szur=3}               &     2.04&      1&     11.5&     20&   1051.2&   2436&   1583.1&   3851\\
+\cd{osszeg=ind(4)}        &     2.18&      1&     11.9&      8&   1152.7&   1399&   1768.0&   2254\\
+\cd{osszeg=ind(6)}        &     2.13&      1&     11.9&      8&   1149.2&   1399&   1765.5&   2254\\
+\cd{osszeg=sum}           &     2.96&      1&     15.8&      8&   1409.3&   1399&   2263.1&   2254\\
+\cd{osszeg=ari(5)}        &     2.97&      1&     15.9&      8&   1462.7&   1399&   2257.8&   2254\\
+\cd{szurtek=[0]}          &     \fbox{1.86}&      2&     15.1&    103&   2104.6&  10719&   3211.3&  17300\\
+\cd{szurtek=[0,1]}        &     2.00&      1&     12.3&      7&   1182.2&   1324&   1823.7&   2150\\
+\cd{label=[ff]}           &     2.12&      1&     11.7&      8&   1132.3&   1399&   1735.2&   2254\\
+\cd{label=[ffc]}          &     2.14&      1&     12.4&      8&   2189.5&   2841&   2672.1&   3732\\
+\hline
+\multicolumn{9}{|l|}{\cd{{\rm 2.\ változat},szur=ki,label=[],  \ \ \ \ {\rm rövidítések:} l => lerak  sz => szomsz}}\\
+\hline
+\cd{osszeg=ind(5)}        &     3.31&    818&     57.0&  21181&         &       &         &       \\
+\cd{l=ind(5),sz=sum}      &     4.61&    818&     78.6&  21181&         &       &         &       \\
+\cd{l=sum,sz=ind(5)}      &     3.97&    818&     62.8&  21181&         &       &         &       \\
+\cd{osszeg=sum}           &     4.57&    818&     74.8&  21181&         &       &         &       \\
+%%%%%%%%%%%%%%%%%%
+\hline
+\end{tabular}
+\end{center}
