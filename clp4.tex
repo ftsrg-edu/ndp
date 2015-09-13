@@ -2,7 +2,7 @@
 
 \section{A SICStus \clpb könyvtára}
 
-A következõ fejezetben a SICStus \clpb könyvtárával fogunk foglalkozni.
+A következő fejezetben a SICStus \clpb könyvtárával fogunk foglalkozni.
 A \clpb könyvtárat az alábbi módon lehet használatba venni:
 \begin{verbatim}
 :- use_module(library(clpb)).
@@ -10,8 +10,8 @@ A \clpb könyvtárat az alábbi módon lehet használatba venni:
 
 \subsection{A \clpb könyvtár általános jellemzése}
 
-A \clpb könyvtár a kétértékû Boole-logikán alapuló CLP rendszert valósít meg,
-ennek megfelelõen a \clpb változók értékkészlete a ${0,1}$ halmaz.
+A \clpb könyvtár a kétértékű Boole-logikán alapuló CLP rendszert valósít meg,
+ennek megfelelően a \clpb változók értékkészlete a ${0,1}$ halmaz.
 
 \enumhead{Felhasználható függvények (egyben korlát-relációk)}
 \btab{lp{30em}}
@@ -28,27 +28,27 @@ vagy}).\\
 \verb'P >= Q'   &  Ugyanaz, mint \verb'P + ~Q'.\\
 \verb'P < Q'    &  Ugyanaz, mint \verb'~P * Q'.\\
 \verb'P > Q'    &  Ugyanaz, mint \verb'P * ~Q'.\\
-\cd{card(Is, Es)} &  Az \cd{Es} listában szereplõ igaz értékû
+\cd{card(Is, Es)} &  Az \cd{Es} listában szereplő igaz értékű
 kifejezések száma eleme az \cd{Is} által jelölt halmaznak (\cd{Is}
 egészek és \cd{Tol-Ig} szakaszok listája).\\
 \etab
 
-A \Clpb -ben az összes korlát egyszerû korlát, nincsenek összetett korlátok.
+A \Clpb -ben az összes korlát egyszerű korlát, nincsenek összetett korlátok.
 Pont ez a tény az, ami a \Clpb -t nagy feladatok megoldására alkalmatlanná
-teszi, hiszen minden korlát azonnal bekerül a korlát-tárba, és egy idõ után
-a megoldó algoritmus (a Boole-egyesítés) mûködése a korlát-tár nagy mérete
+teszi, hiszen minden korlát azonnal bekerül a korlát-tárba, és egy idő után
+a megoldó algoritmus (a Boole-egyesítés) működése a korlát-tár nagy mérete
 miatt lelassul.
 
-\enum{Alapvetõ könyvtári eljárások}{
+\enum{Alapvető könyvtári eljárások}{
 \item \cd{sat(Kifejezés)} -- hozzáveszi \cd{Kifejezés}t a korlát-tárhoz.
 \cd{Kifejezés} a \cd{0} és \cd{1} konstansokból, atomokból, valamint
-változókból a fenti mûveletekkel felépített logikai kifejezés. A kifejezésben
-elõforduló atomok a kifejezés legkülsõ szintjén univerzálisan kvantifikált
+változókból a fenti műveletekkel felépített logikai kifejezés. A kifejezésben
+előforduló atomok a kifejezés legkülső szintjén univerzálisan kvantifikált
 változókat jelentenek.
 
 \item \cd{taut(Kifejezés,Érték)} -- megvizsgálja, hogy \cd{Kifejezés}
-levezethetõ-e a korlát-tárból. Ha levezethetõ, akkor \cd{Érték}et \cd{1}-gyel
-egyesíti. Ha \cd{Kifejezés} tagadása levezethetõ, akkor \cd{Érték}et \cd{0}-val
+levezethető-e a korlát-tárból. Ha levezethető, akkor \cd{Érték}et \cd{1}-gyel
+egyesíti. Ha \cd{Kifejezés} tagadása levezethető, akkor \cd{Érték}et \cd{0}-val
 egyesíti. Minden más esetben meghiúsul.
 
 \item \cd{labeling(Változók)} -- beállítja a \cd{Változók} lista összes
@@ -83,7 +83,7 @@ T = 1, sat(A=:=_A*_B*C), sat(B=:=_B*C) ?
 
 Látható, hogy a \clpb a korlát-tár tartalmát \cd{sat(Kifejezés)} alakú
 struktúrák konjunkciójaként jeleníti meg, ahol \cd{Kifejezés} mindig egy
-,,polinom'', azaz konjunkciók kizáró vagy (\cd{\#}) mûveletekkel képzett
+,,polinom'', azaz konjunkciók kizáró vagy (\cd{\#}) műveletekkel képzett
 sorozata. Az atomok a fent elmondottak szerint univerzálisan kvantifikált
 változókat jelentenek. Az univerzális és az egzisztenciális kvantifikáció
 különbségének kiemelésére nézzük meg az alábbi példákat is:
@@ -100,7 +100,7 @@ sat(X=:=_A*y) ? ; no
 \end{alltt}
 
 Nézzünk most egy picit komplikáltabb \clpb példát, amely egy egy bites
-összeadó áramkör mûködését próbálja modellezni \clpb korlátok segítségével:
+összeadó áramkör működését próbálja modellezni \clpb korlátok segítségével:
 
 \begin{verbatim}
 | ?- [user].
@@ -111,10 +111,10 @@ Nézzünk most egy picit komplikáltabb \clpb példát, amely egy egy bites
 yes
 \end{verbatim}
 
-Az összeadó mûködése a \cd{card/2} segítségével nagyon egyszerûen leírható:
+Az összeadó működése a \cd{card/2} segítségével nagyon egyszerűen leírható:
 az összeg értéke akkor 1, ha az \cd{[X,Y,Cin]} listában (\cd{Cin} a carry in,
-tehát a bemenõ átvitel rövidítése) 1 vagy 3 db egyes van, \cd{Cout}
-(a kimenõ átvitel) értéke pedig akkor 1, ha az \cd{[X,Y,Cin]} listában legalább
+tehát a bemenő átvitel rövidítése) 1 vagy 3 db egyes van, \cd{Cout}
+(a kimenő átvitel) értéke pedig akkor 1, ha az \cd{[X,Y,Cin]} listában legalább
 két db egyes van. Nézzük meg, hogy ezeket a korlátokat milyen formában tárolja
 a \clpb rendszer!
 
@@ -125,10 +125,10 @@ sat(Cout=:=x*cin#x*y#y*cin) ?
 \end{verbatim}
 
 Látható, hogy a \cd{card/2} itt is konjunkciók kizáró vagy kapcsolatára
-vezetõdött vissza. Mivel csak a \cd{Sum} és \cd{Cout} változók viselkedésére
+vezetődött vissza. Mivel csak a \cd{Sum} és \cd{Cout} változók viselkedésére
 voltunk kíváncsiak, ezért a másik három változót egzisztenciálisan
-kvantifikáltuk. Nézzük meg azt az egyszerûsített esetet is, amikor \cd{Cin}-t
-0-ra kötjük, tehát nincs bemenõ átvitel:
+kvantifikáltuk. Nézzük meg azt az egyszerűsített esetet is, amikor \cd{Cin}-t
+0-ra kötjük, tehát nincs bemenő átvitel:
 
 \begin{verbatim}
 | ?- adder(x, y, Sum, 0, Cout).
@@ -136,7 +136,7 @@ sat(Sum=:=x#y),
 sat(Cout=:=x*y) ?
 \end{verbatim}
 
-Ha a megoldás nem egyértelmû, akkor a \cd{labeling} eljárással tudjuk
+Ha a megoldás nem egyértelmű, akkor a \cd{labeling} eljárással tudjuk
 felsoroltatni az összes lehetséges megoldást:
 
 \begin{verbatim}
@@ -149,20 +149,20 @@ no
 
 \subsection{A Boole-egyesítés}
 
-A \clpb könyvtár két Boole-kifejezés egyesítésére ,,meglepõ módon'' a
-Boole-egyesítés nevû algoritmust használja. A feladat pontos megfogalmazása:
+A \clpb könyvtár két Boole-kifejezés egyesítésére ,,meglepő módon'' a
+Boole-egyesítés nevű algoritmust használja. A feladat pontos megfogalmazása:
 legyen adott a $g$ és $h$ Boole-kifejezés, és keressük a $g = h$
-egyenletet megoldó legáltalánosabb egyesítõt (a továbbiakban ezt $mgu(g,h)$-val
-jelöljük). Mivel a $g = h$ egyenlet helyettesíthetõ a $g \oplus h = 0$ egyenlettel
-(ahol $\oplus$ a kizáró vagy mûveletet jelenti, amit \Clpb -ben a \cd{\#}
+egyenletet megoldó legáltalánosabb egyesítőt (a továbbiakban ezt $mgu(g,h)$-val
+jelöljük). Mivel a $g = h$ egyenlet helyettesíthető a $g \oplus h = 0$ egyenlettel
+(ahol $\oplus$ a kizáró vagy műveletet jelenti, amit \Clpb -ben a \cd{\#}
 operátor jelöl), ezért a továbbiakban a Boole-egyesítés vizsgálatához
-elegendõ az $f=0$ alakú egyenletek megoldását vizsgálnunk. Az egyesítés
+elegendő az $f=0$ alakú egyenletek megoldását vizsgálnunk. Az egyesítés
 minden lépése során egy $f=0$-beli $x$ formulaváltozót szeretnénk kifejezni a
 többi segítségével.
 \br
-Legyen $f_x(1)$ az $f$-bõl az $x=1$ helyettesítéssel, az $f_x(0)$ pedig az
-$f$-bõl az $x=0$ helyettesítéssel kapott formula. $f=0$ kielégíthetõségének
-szükséges feltétele $f_x(1) \land f_x(0) = 0$ kielégíthetõsége. Fejezzük ki
+Legyen $f_x(1)$ az $f$-ből az $x=1$ helyettesítéssel, az $f_x(0)$ pedig az
+$f$-ből az $x=0$ helyettesítéssel kapott formula. $f=0$ kielégíthetőségének
+szükséges feltétele $f_x(1) \land f_x(0) = 0$ kielégíthetősége. Fejezzük ki
 $x$-et $f_x(1)$ és $f_x(0)$ segítségével úgy, hogy $f=0$ legyen!
 
 \btab{|l|l|l|}
@@ -188,17 +188,17 @@ szerint adódik:
 \end{tabular}
 \end{center}
 
-A táblázat alapján az $a=f_x(0)$ és $b=\overline{f_x(1)}$ megfeleltetés tûnik
-a legegyszerûbbnek. Így alapján az egyesítési algoritmus mûködése az $f=0$
-alakú egyenlõségekre:
+A táblázat alapján az $a=f_x(0)$ és $b=\overline{f_x(1)}$ megfeleltetés tűnik
+a legegyszerűbbnek. Így alapján az egyesítési algoritmus működése az $f=0$
+alakú egyenlőségekre:
 
 \begin{enumerate}
 \item Ha $f$-ben nincs változó, akkor $f$-nek azonosan 0-nak kell lennie,
-      egyébként ugrás a következõ pontra.
-\item Helyettesítsünk $f$-ben egy tetszõleges $x$ változót az
+      egyébként ugrás a következő pontra.
+\item Helyettesítsünk $f$-ben egy tetszőleges $x$ változót az
       $x=(f_x(0) \land \overline{w}) \oplus (\overline{f_x(1)} \land w)$ kifejezéssel
       (Prolog: \cd{X=}$f_x(0)$\cd{*{\~{}}W \# {\~{}}}$f_x(1)$\cd{*W}).
-\item Folytassuk az egyesítést az $f_x(1) \land f_x(0) = 0$ egyenlõségre
+\item Folytassuk az egyesítést az $f_x(1) \land f_x(0) = 0$ egyenlőségre
 \end{enumerate}
 
 Példák a Boole-egyesítésre:
@@ -211,7 +211,7 @@ $\longrightarrow$ \cd{X = W * Y \# Y \# 1};
 $\longrightarrow$ \cd{X = 1}, \cd{Y = {\~{}}Z}.
 \end{itemize}
 
-\subsection{A \clpb belsõ ábrázolási formája}
+\subsection{A \clpb belső ábrázolási formája}
 
 A \clpb könyvtár a Boole-kifejezéseket az úgynevezett \emph{Boole/bináris
 döntési diagram}ok (\emph{Boole/Binary Decision Diagram}s, \emph{BDD})
@@ -219,26 +219,26 @@ segítségével ábrázolja. Ezek irányított körmentes gráfok (\emph{directe
 acyclic graph}, \emph{DAG}), amelyekben kétféle csomópont és kétféle él
 szerepel. A csomópontok tartozhatnak változóhoz vagy a 0 és 1 konstansokhoz.
 Csak a változókat tartalmazó csomópontokból indulhat ki él, mégpedig
-mindkettõbõl kétfajta, az egyik a hamis értéknek (az ábrákon szaggatott vonal),
+mindkettőből kétfajta, az egyik a hamis értéknek (az ábrákon szaggatott vonal),
 a másik az igaz értéknek (az ábrákon folytonos vonal) felel meg. Az egyik
 csomópont kitüntetett abból a szempontból, hogy ebbe a csomópontba egy
-végpont nélküli él is befut (ezt a csomópontot hívjuk \emph{kezdõ csomópont}nak).
+végpont nélküli él is befut (ezt a csomópontot hívjuk \emph{kezdő csomópont}nak).
 A BDD-k segítségével meghatározható az általuk reprezentált Boole-kifejezés
-értéke. Ehhez a gráfot a kezdõ csomópontból kezdve kell bejárni a
-következõ szabályok szerint:
+értéke. Ehhez a gráfot a kezdő csomópontból kezdve kell bejárni a
+következő szabályok szerint:
 
 \begin{enumerate}
 \item Ha az aktuális csomópont a 0 vagy az 1 konstansot tartalmazza, akkor
 megállhatunk a bejárással, és a kifejezés értéke 0 vagy 1, a csomópont
-tartalmától függõen.
+tartalmától függően.
 \item Ha az aktuális csomópont változót tartalmaz, akkor a változó aktuális
-értékétõl függõen vagy a szaggatott (0-nak megfelelõ), vagy a folytonos
-(1-nek megfelelõ) él mentén kell folytatni a bejárást.
+értékétől függően vagy a szaggatott (0-nak megfelelő), vagy a folytonos
+(1-nek megfelelő) él mentén kell folytatni a bejárást.
 \end{enumerate}
 
 Mivel a gráf irányított, körmentes, és csak a 0-t vagy 1-et tartalmazó
-csomópontok nyelõk, ezért az algoritmus véges idõn belül le fog futni.
-A könnyebb érthetõség kedvéért álljon itt két Boole-kifejezés bináris döntési
+csomópontok nyelők, ezért az algoritmus véges időn belül le fog futni.
+A könnyebb érthetőség kedvéért álljon itt két Boole-kifejezés bináris döntési
 diagramja:
 
 \btab{cp{1.5cm}c}
@@ -250,7 +250,7 @@ diagramja:
 
 Legyen adott egy egybites összeadó áramköri modellje (funkcionális elemekkel
 és összeköttetésekkel). Írjunk egy olyan \clpb programot, amely adott
-bemenet-kimenet párra megmondja, hogy melyik funkcionális elem mûködik
+bemenet-kimenet párra megmondja, hogy melyik funkcionális elem működik
 hibásan, ha feltételezzük, hogy egyszerre csak egy hibásodik meg!
 
 \begin{center}\insertfig{adder1}{10cm}\end{center}
@@ -268,9 +268,9 @@ fault([F1,F2,F3,F4,F5], [X,Y,Cin], [Sum,Cout]) :-
 \end{verbatim}
 
 Amint látható, a \cd{fault/3} predikátumban semmi mást nem tettünk, mint
-specifikáltuk az egyes áramköri elemek mûködését, valamint a \cd{card}
+specifikáltuk az egyes áramköri elemek működését, valamint a \cd{card}
 segítségével megadtuk azt a tényt is, hogy egyszerre legfeljebb egy
-áramköri elem hibás. Lássunk néhány példát a \cd{fault} mûködésére!
+áramköri elem hibás. Lássunk néhány példát a \cd{fault} működésére!
 
 \begin{verbatim}
 | ?- fault(L, [1,1,0], [1,0]).
@@ -287,9 +287,9 @@ az \cd{X}-re és \cd{Cin}-re kapcsolódó XOR kapu lehet hibás.
                             sat(_A=\=_B) ? ; no
 \end{verbatim}
 
-Itt a \cd{fault} úgy gondolja, hogy vagy az elsõ, vagy a harmadik funkcionális
-elem a hibás, ezt a korlát-tárban lévõ \cd{sat(_A=\bs=_B)} fejezi ki. Ha
-ehelyett látni szeretnénk a két lehetõséget teljesen behelyettesített
+Itt a \cd{fault} úgy gondolja, hogy vagy az első, vagy a harmadik funkcionális
+elem a hibás, ezt a korlát-tárban lévő \cd{sat(_A=\bs=_B)} fejezi ki. Ha
+ehelyett látni szeretnénk a két lehetőséget teljesen behelyettesített
 változókkal, akkor szükséges a \cd{labeling} használata is:
 
 \begin{verbatim}
@@ -298,8 +298,8 @@ változókkal, akkor szükséges a \cd{labeling} használata is:
                             L = [0,0,1,0,0] ? ; no
 \end{verbatim}
 
-Végül megkérdezhetjük a \cd{fault}-tól, hogy helyes áramköri mûködést
-feltételezve mik az egyes kimenetekhez rendelhetõ logikai egyenletek:
+Végül megkérdezhetjük a \cd{fault}-tól, hogy helyes áramköri működést
+feltételezve mik az egyes kimenetekhez rendelhető logikai egyenletek:
 
 \begin{verbatim}
 | ?- fault([0,0,0,0,0], [x,y,cin], [Sum,Cout]).
@@ -312,7 +312,7 @@ valósítsuk meg ennek a verifikációját \clpb programmal!
 
 \begin{center}\insertfig{xor}{8cm}\end{center}
 
-Elõször leírjuk az npn és pnp tranzisztorok mûködését \clpb kifejezésekkel:
+Először leírjuk az npn és pnp tranzisztorok működését \clpb kifejezésekkel:
 \begin{verbatim}
 n(D, G, S) :-    % Gate => Drain = Source
         sat( G*D =:= G*S).
@@ -321,7 +321,7 @@ p(D, G, S) :-    % ~ Gate => Drain = Source
         sat( ~G*D =:= ~G*S).
 \end{verbatim}
 
-Ezek segítségével megfogalmazhatjuk az XOR kapu mûködését, ha a földelést
+Ezek segítségével megfogalmazhatjuk az XOR kapu működését, ha a földelést
 0-val, a tápfeszültséget 1-gyel jelöljük:
 
 \begin{verbatim}
@@ -334,8 +334,8 @@ xor(A, B, Out) :-
         n(X, B, Out).
 \end{verbatim}
 
-Ellenõrizzük, hogy az npn és pnp tranzisztorokra felírt egyenleteink
-helyesen mûködnek-e a gate feszültség ki- és bekapcsolására:
+Ellenőrizzük, hogy az npn és pnp tranzisztorokra felírt egyenleteink
+helyesen működnek-e a gate feszültség ki- és bekapcsolására:
 
 \begin{verbatim}
 | ?- n(D, 1, S).                 S = D ?
@@ -345,16 +345,16 @@ helyesen mûködnek-e a gate feszültség ki- és bekapcsolására:
 \end{verbatim}
 
 A fentiek szerint a tranzisztorok logikai felírása helyes, így nem
-maradt más hátra, mint hogy ellenõrizzük, hogy az XOR kapu ténylegesen
+maradt más hátra, mint hogy ellenőrizzük, hogy az XOR kapu ténylegesen
 az XOR függvényt valósítja-e meg:
 
 \begin{verbatim}
 | ?- xor(a, b, X).               sat(X=:=a#b) ?
 \end{verbatim}
 
-\subsection{Aknakeresõ játék \Clpb -ben}
+\subsection{Aknakereső játék \Clpb -ben}
 
-Az alábbi programkód egy aknakeresõ játékot valósít meg \clpb programkód
+Az alábbi programkód egy aknakereső játékot valósít meg \clpb programkód
 formájában.
 
 \begin{verbatim}
@@ -418,40 +418,40 @@ neighbour(_, _, _, Nbs, Nbs).
 \end{verbatim}
 
 A játék belépési pontja a \cd{mine(Rows,Cols,Mines,Bd)} eljárás, amely
-egy \cd{Rows} $\times$ \cd{Cols} méretû táblát készít el a \cd{Bd}
+egy \cd{Rows} $\times$ \cd{Cols} méretű táblát készít el a \cd{Bd}
 listában, és felteszi róla, hogy \cd{Mines} db 1-es van benne.
 Ezek után a \cd{play_mine/2} eljáráson keresztül kijelzi, hogy melyik
-mezõ tartalmára kíváncsi, erre a felhasználónak az \cd{m.} karaktersorozattal
-kell válaszolnia, ha akna van ott, üres mezõ esetén pedig meg kell adni, hogy
-hány akna található a mezõ körül. Ha a felhasználó válasza \cd{m.}, akkor a
+mező tartalmára kíváncsi, erre a felhasználónak az \cd{m.} karaktersorozattal
+kell válaszolnia, ha akna van ott, üres mező esetén pedig meg kell adni, hogy
+hány akna található a mező körül. Ha a felhasználó válasza \cd{m.}, akkor a
 program szomorúan konstatálja, hogy veszített (\cd{Mine!}), ha viszont egy
-szám, akkor a tippelt mezõ körül lévõ mezõkre a \cd{process_ans/5} eljárás
-második klózával felveszi a megfelelõ számossági korlátot. A következõ tipp
-kiválasztását a \cd{select_field/5} eljárás végzi, ez mindig egy olyan mezõt
-választ ki, amelyrõl a program egyértelmûen tudja, hogy üres (1. klóz), ha ilyet
-nem talál, akkor pedig egy olyat, amelyrõl nem tudja biztosan, hogy aknát tartalmaz
-(2. klóz). Egy egyszerû példajáték ($3 \times 3$-as tábla, akna a 2. sor 1. mezõjén
-és a 3. sor 3. mezõjén van):
+szám, akkor a tippelt mező körül lévő mezőkre a \cd{process_ans/5} eljárás
+második klózával felveszi a megfelelő számossági korlátot. A következő tipp
+kiválasztását a \cd{select_field/5} eljárás végzi, ez mindig egy olyan mezőt
+választ ki, amelyről a program egyértelműen tudja, hogy üres (1. klóz), ha ilyet
+nem talál, akkor pedig egy olyat, amelyről nem tudja biztosan, hogy aknát tartalmaz
+(2. klóz). Egy egyszerű példajáték ($3 \times 3$-as tábla, akna a 2. sor 1. mezőjén
+és a 3. sor 3. mezőjén van):
 
 \begin{verbatim}
 | ?- mine(3,3,2,Bd).
-% az elsõ két lépésben a program csak reménykedik abban, hogy
+% az első két lépésben a program csak reménykedik abban, hogy
 % nem lép aknára
 Row 1, col 1 (m for mine)? 1.
 Row 1, col 2 (m for mine)? 1.
-% itt a program már rájön, hogy az (1,3) és a (2,3) mezõ üres
+% itt a program már rájön, hogy az (1,3) és a (2,3) mező üres
 Row 1, col 3 (m for mine)? 0.
-% ebbõl már azt is tudja, hogy a (2,2) mezõ üres, így viszont
-% a (2,1) mezõn akna van
+% ebből már azt is tudja, hogy a (2,2) mező üres, így viszont
+% a (2,1) mezőn akna van
 Row 2, col 2 (m for mine)? 2.
-% mivel a (2,3) mezõrõl már elõzõleg kikövetkeztette, hogy üres,
+% mivel a (2,3) mezőről már előzőleg kikövetkeztette, hogy üres,
 % ezért azt is meg meri kérdezni
 Row 2, col 3 (m for mine)? 1.
-% mivel a (2,2) mezõ körül már csak 1 akna helyét nem tudjuk,
-% de azt is tudjuk, hogy a (2,3) mezõ körül is 1 akna van, ezért
-% a (3,1) mezõn nem lehet akna
+% mivel a (2,2) mező körül már csak 1 akna helyét nem tudjuk,
+% de azt is tudjuk, hogy a (2,3) mező körül is 1 akna van, ezért
+% a (3,1) mezőn nem lehet akna
 Row 3, col 1 (m for mine)? 1.
-% így viszont a (3,2) mezõ is üres
+% így viszont a (3,2) mező is üres
 Row 3, col 2 (m for mine)? 2.
 Bd = [[0,0,0],[1,0,0],[0,0,1]] ? ;
 no
@@ -468,7 +468,7 @@ Row 2, col 2 (m for mine)? 1.
 no
 \end{verbatim}
 
-A \clpb mohósága miatt azonban a program egy $20 \times 20$-as aknamezõre már
-nagyon hosszú ideig veszi fel a \cd{mine/4}-ben szereplõ \cd{sat(card...)}
+A \clpb mohósága miatt azonban a program egy $20 \times 20$-as aknamezőre már
+nagyon hosszú ideig veszi fel a \cd{mine/4}-ben szereplő \cd{sat(card...)}
 korlátot (mivel a \cd{card}-ot is ,,polinom'' formára vezeti vissza a listában
-szereplõ összes változó esetén), ilyenkor a program szinte játszhatatlanul lassú lesz.
+szereplő összes változó esetén), ilyenkor a program szinte játszhatatlanul lassú lesz.

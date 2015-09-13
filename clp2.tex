@@ -3,14 +3,14 @@
 \section{CLP segédeszközök SICStusban}
 
 Ez a fejezet bemutatja azokat az eszközöket, amelyeket a SICStus Prolog
-kínál egy rá épülõ CLP nyelv megvalósításához. Az eszközök megismerése után
-egy, a természetes számok tartományára épülõ CLP nyelvet (CLP(MiniNat))
+kínál egy rá épülő CLP nyelv megvalósításához. Az eszközök megismerése után
+egy, a természetes számok tartományára épülő CLP nyelvet (CLP(MiniNat))
 fogunk megvalósítani.
 
 \subsection{Korutinszervezés}
 
 A korutin egy olyan Prolog rutin, amely végrehajtása egy adott feltétel
-teljesüléséig felfüggeszthetõ. Amint a feltétel igazzá válik, a korutin
+teljesüléséig felfüggeszthető. Amint a feltétel igazzá válik, a korutin
 újraaktiválódik és lefut. A feltétel legtöbbször bizonyos változók
 behelyettesítettségére vonatkozik, de a SICStus támogat más feltételtípusokat
 is. A korutinszervezés hatékonyabbá és átláthatóbbá teszi a programkódot,
@@ -18,31 +18,31 @@ ezért érdemes használni.
 
 \subsubsection{Blokk-deklarációk}
 
-Lehetõség van arra, hogy elõírjuk, hogy egy adott eljárás addig ne fusson
-le, amíg bizonyos paraméterváltozói be nem helyettesítõdnek. Például:
+Lehetőség van arra, hogy előírjuk, hogy egy adott eljárás addig ne fusson
+le, amíg bizonyos paraméterváltozói be nem helyettesítődnek. Például:
 
 \begin{verbatim}
 :- block p(-, ?, -, ?, ?).
 \end{verbatim}
 
-Jelentése: ha a \cd{p} hívás elsõ és harmadik argumentuma is
-behelyettesítetlen, akkor a hívás függesztõdjön fel. A hívás csak akkor
-folytatódik, ha az elsõ vagy a harmadik argumentum nem-változó értéket
+Jelentése: ha a \cd{p} hívás első és harmadik argumentuma is
+behelyettesítetlen, akkor a hívás függesztődjön fel. A hívás csak akkor
+folytatódik, ha az első vagy a harmadik argumentum nem-változó értéket
 kap. Ha a futás végén maradtak felfüggesztett hívások, akkor azokat a Prolog
-rendszer kiírja. Lehetõség van vagylagos blokkolási feltétel megadására is:
+rendszer kiírja. Lehetőség van vagylagos blokkolási feltétel megadására is:
 
 \begin{verbatim}
 :- block p(-, ?), p(?, -).
 \end{verbatim}
 
-Jelentése: a \cd{p} hívás csak akkor futhat le, ha az elsõ \emph{és} a
-második argumentum is behelyettesítõdik, tehát ha az elsõ \emph{vagy} a
-második argumentum behelyettesítetlen, akkor a hívás felfüggesztõdik.
+Jelentése: a \cd{p} hívás csak akkor futhat le, ha az első \emph{és} a
+második argumentum is behelyettesítődik, tehát ha az első \emph{vagy} a
+második argumentum behelyettesítetlen, akkor a hívás felfüggesztődik.
 
 \pelda{biztonságos \cd{append/3} hívás megvalósítása}
 \begin{verbatim}
 :- block append(-, ?, -).
-% blokkol, ha az elsõ és a harmadik argumentum 
+% blokkol, ha az első és a harmadik argumentum 
 % egyaránt behelyettesítetlen
 append([], L, L).
 append([X|L1], L2, [X|L3]) :-
@@ -106,11 +106,11 @@ perm(L, [X|P]):-\\
 \br
 
 A {\tt perm} eljárás a egy adott lista permutációját állítja
-elõ. Normál esetben (blokkolás nélkül) az elsõ paramétere a
-bemenõ, a második a kimenõ. A matematikai érzék azt sugallja,
-hogy logikus lenne, ha bármelyik argumentum lehetne a bemenõ (a
+elő. Normál esetben (blokkolás nélkül) az első paramétere a
+bemenő, a második a kimenő. A matematikai érzék azt sugallja,
+hogy logikus lenne, ha bármelyik argumentum lehetne a bemenő (a
 permutáció kölcsönös). A {\tt perm} eljárás
-blokk-deklarációval kiegészítve visszafelé is mûködik:
+blokk-deklarációval kiegészítve visszafelé is működik:
 
 \begin{verbatim}
 | ?- perm(L, [1,2]).
@@ -131,25 +131,25 @@ blokk-deklarációval kiegészítve visszafelé is mûködik:
 L = [1,2] ? 
 \end{verbatim}
 
-\subsubsection{Blokkolás alkalmazása: generál-és-ellenõriz típusú
+\subsubsection{Blokkolás alkalmazása: generál-és-ellenőriz típusú
 programok gyorsítása
 }
 
-A generál-és-ellenõriz típusú programok valamilyen módszerrel
-generálják a lehetséges megoldásokat, és ezután ellenõrzik,
-hogy az aktuálisan vizsgált lehetõség jó-e. Ezek a programok
+A generál-és-ellenőriz típusú programok valamilyen módszerrel
+generálják a lehetséges megoldásokat, és ezután ellenőrzik,
+hogy az aktuálisan vizsgált lehetőség jó-e. Ezek a programok
 általában nem hatékonyak, mert túl sok visszalépést használnak.
-Korutinszervezéssel a generáló és ellenõrzõ rész
-``automatikusan'' összefésülhetõ, így a végrehajtás sokkal
-hatékonyabbá tehetõ. Ehhez az ellenõrzõ részt elõre kell tenni
-és megfelelõen blokkolni. Az alábbi példa egy buta rendezõ
-algoritmust javít fel viszonylag elfogadható sebességûre. A
-rendezés alapja: generáljuk a rendezendõ lista összes
-permutációját, majd ellenõrizzük, hogy rendezett-e.
+Korutinszervezéssel a generáló és ellenőrző rész
+``automatikusan'' összefésülhető, így a végrehajtás sokkal
+hatékonyabbá tehető. Ehhez az ellenőrző részt előre kell tenni
+és megfelelően blokkolni. Az alábbi példa egy buta rendező
+algoritmust javít fel viszonylag elfogadható sebességűre. A
+rendezés alapja: generáljuk a rendezendő lista összes
+permutációját, majd ellenőrizzük, hogy rendezett-e.
 
 \disprol{
-\ttacvi{\% az egyszerû generál-és-ellenõriz típusú programhoz\\
-\% a sorted és a perm felcserélendõ\\
+\ttacvi{\% az egyszerű generál-és-ellenőriz típusú programhoz\\
+\% a sorted és a perm felcserélendő\\
 sort(L, S) :- sorted(S), perm(L, S).\\[1ex]
 
 sorted([]).\\
@@ -161,7 +161,7 @@ sorted([], X, Y) :- X =< Y.\\
 sorted([Z|L], X, Y) :- X =< Y, sorted(L, Y, Z).
 }}
 
-{\bf Futási idõk}
+{\bf Futási idők}
 
 \btab{|l|rrr|}
 \hline
@@ -177,13 +177,13 @@ gen-test+korutin&   0.55s & 4.37s & 40.71s \\
 blokkolásért árat kell fizetni: ha feleslegesen alkalmazzuk,
 lelassíthatja a programot.
 
-\subsubsection{További korutinszervezõ eljárások}
+\subsubsection{További korutinszervező eljárások}
 
 Hívások késleltetésére a \cd{freeze/2}, \cd{dif/2} és \cd{when/2} eljárások
 is felhasználhatóak. A \cd{freeze(X,Hívás)} mindaddig felfüggeszti a
 megadott hívást, amíg \cd{X} behelyettesítetlen változó. Mivel a hívás a
 Prolog \cd{call/1} eljárásával hajtódik végre, és ez elég nagy overhead-del
-rendelkezik, célszerû a \cd{freeze} \cd{block}-kal való helyettesítése, ahol
+rendelkezik, célszerű a \cd{freeze} \cd{block}-kal való helyettesítése, ahol
 csak lehet. A \cd{freeze(X,Hívás)} egy lehetséges megvalósítása:
 
 \disprol{\ttacvi{
@@ -192,11 +192,11 @@ freeze(_,Hivas) :- call(Hivas).
 }}
 
 A \cd{dif(X,Y)}
-egy olyan cél, amely akkor sikerül, ha \cd{X} és \cd{Y} nem egyesíthetõ, de
-mindaddig felfüggeszti a végrehajtását, amíg ez el nem dönthetõ. Az általános
+egy olyan cél, amely akkor sikerül, ha \cd{X} és \cd{Y} nem egyesíthető, de
+mindaddig felfüggeszti a végrehajtását, amíg ez el nem dönthető. Az általános
 felfüggesztés megvalósítására a \cd{when(Feltétel, Hívás)} eljárás használható.
 Ez mindaddig felfüggeszti \cd{Hívás}t, amíg \cd{Feltétel} nem teljesül. A
-\cd{Feltétel} egy nagyon leegyszerûsített Prolog cél lehet, amely szintaxisa:
+\cd{Feltétel} egy nagyon leegyszerűsített Prolog cél lehet, amely szintaxisa:
 
 \begin{verbatim}
     CONDITION ::=  nonvar(X) | ground(X) | ?=(X,Y) |
@@ -207,9 +207,9 @@ Ez mindaddig felfüggeszti \cd{Hívás}t, amíg \cd{Feltétel} nem teljesül. A
 Ebben a fenti szintaxisban a \cd{nonvar(X)} jelentése: X nem változó. A
 \cd{ground(X)} feltétel azt várja el, hogy \cd{X} tömör legyen, azaz ne
 tartalmazzon behelyettesítetlen változót. \cd{?=(X,Y)} jelentése:
-\cd{X} és \cd{Y} egyesíthetõsége eldönthetõ. A vesszõvel elválasztott
-feltételek konjunkcióba, a pontosvesszõvel elválasztottak diszjunkcióba
-kerülnek egymással. Egy egyszerû példa a \cd{when/2} használatára:
+\cd{X} és \cd{Y} egyesíthetősége eldönthető. A vesszővel elválasztott
+feltételek konjunkcióba, a pontosvesszővel elválasztottak diszjunkcióba
+kerülnek egymással. Egy egyszerű példa a \cd{when/2} használatára:
 
 \begin{verbatim}
 | ?- when( ((nonvar(X); ?=(X,Y)), ground(T)), process(X,Y,T)).
@@ -217,7 +217,7 @@ kerülnek egymással. Egy egyszerû példa a \cd{when/2} használatára:
 
 A fenti példában a \cd{process(X,Y,T)} cél akkor fut le, ha \cd{T} nem
 tartalmaz behelyettesítetlen változót, és vagy \cd{X} nem változó, vagy
-pedig \cd{X} és \cd{Y} egyesíthetõsége eldönthetõ.
+pedig \cd{X} és \cd{Y} egyesíthetősége eldönthető.
 
 A késleltetett hívások lekérdezésére a \cd{frozen/2} és a \cd{call_residue/2}
 eljárások használhatóak. A \cd{frozen(X,Hívás)} meghatározza az \cd{X}
@@ -236,9 +236,9 @@ Látható, hogy a \cd{Maradek} változó egyúttal feltünteti azt is, hogy mely
 hívás melyik változók miatt maradt felfüggesztve.
 
 \subsection{További Prolog eszközök a CLP nyelvek megvalósítására}
-\enumhead{Tetszõleges nagyságú egész számok}
+\enumhead{Tetszőleges nagyságú egész számok}
 
-A Prologban tetszõleges nagyságú egész számokat tárolhatunk, nincs rájuk
+A Prologban tetszőleges nagyságú egész számokat tárolhatunk, nincs rájuk
 korlát, mint a legtöbb programozási nyelvben. Például ha írtunk egy
 \cd{fakt/2} eljárást, amely minden $n$ egész számra kiszámítja $n!$-t, akkor
 semmi akadálya annak, hogy nagy $n$-ekre is lefuttassuk az eljárást:
@@ -250,7 +250,7 @@ F = 93326215443944152681699238856266700490715968264381
 697920827223758251185210916864000000000000000000000000 ? 
 \end{verbatim}
 
-\enumhead{Visszaléptethetõ módon változtatható kifejezések (mutábilisek)}
+\enumhead{Visszaléptethető módon változtatható kifejezések (mutábilisek)}
 
 Ezek tulajdonképpen a gépközelibb programozási nyelvek pointer
 fogalmát hozzák be a Prolog világba. Ha például építünk egy
@@ -258,16 +258,16 @@ Prolog fastruktúrát, aminek két (vagy több) részfájában
 ugyanarra a változtatható kifejezésre van szükségünk, akkor a
 mutábilisek használatával ha az egyik helyen megváltoztatjuk a
 kifejezést, akkor a másik helyen is megváltozik. Mutábilisek
-használata nélkül ezt nehéz és nem is hatékony megírni, fõleg
+használata nélkül ezt nehéz és nem is hatékony megírni, főleg
 ha a visszalépést is figyelembe kell venni.
 
 \begin{itemize}
 \item \cd{create_mutable(Adat, Kif)} \\
-\cd{Adat} kezdõértékkel létrehoz egy új változtatható kifejezést,
+\cd{Adat} kezdőértékkel létrehoz egy új változtatható kifejezést,
 ez lesz \cd{Kif}. \cd{Adat} nem lehet üres változó.
 
 \item \cd{get_mutable(Adat, Kif)} \\
-\cd{Adat}-ba elõveszi \cd{Kif} pillanatnyi értékét.
+\cd{Adat}-ba előveszi \cd{Kif} pillanatnyi értékét.
 
 \item \cd{update_mutable(Adat, Kif)} \\
 \cd{Adat}-ra változtatja \cd{Kif} értékét. A változtatás visszalépéskor
@@ -276,7 +276,7 @@ visszacsinálódik. \cd{Adat} nem lehet üres változó.
 
 \enumhead{Mellékhatás visszavonása visszalépéskor}
 
-Mellékhatásos eljárások esetén lehetõség van a mellékhatások visszavonására,
+Mellékhatásos eljárások esetén lehetőség van a mellékhatások visszavonására,
 ha visszalépés történik. A mellékhatásokat visszavonó eljárást egy \cd{undo/1}
 hívásba kell ágyazni, és beleírni a Prolog kódba. Az \cd{undo(Kif)} feltétel
 és mellékhatás nélkül mindig sikerül, de ha visszalépés történik, akkor
@@ -294,7 +294,7 @@ végrehajtja \cd{Kif}-et. Például:
       korutin-kiterjesztésén alapul
 \item A Prolog-ba ágyazás szintaxisa: \\
       \cd{\{}\var{Korlát}\cd{\}} jelenti egy adott korlát felvételét. A
-      \cd{\{\ldots\}} konstrukció csak szintaktikai édesítõszer, valójában a
+      \cd{\{\ldots\}} konstrukció csak szintaktikai édesítőszer, valójában a
       \cd{'\{\}'/1} struktúrát takarja
 }
 \enumhead{Példafutás}
@@ -314,22 +314,22 @@ no
 \subsubsection{Számábrázolás}
 
 A korábban látott \cd{plusz/3} eljárásban (ld. \ref{plusz3} fejezet) az
-N szám ábrázolására egy N elemû listát használtunk. A lista elemei érdektelenek
-voltak, ezért behelyettesítetlen változóval ábrázoltuk õket. Például a 
+N szám ábrázolására egy N elemű listát használtunk. A lista elemei érdektelenek
+voltak, ezért behelyettesítetlen változóval ábrázoltuk őket. Például a 
 3-as szám ábrázolása így nézett ki: \cd{[_,_,_] $\equiv$ .(_,.(_,.(_,[])))}.
 Ha elhagyjuk a behelyettesítetlen változókat, és a \cd{./2} helyett az
 \cd{s/1} struktúrát, valamint a \cd{[]} konstans helyett a \cd{0} számot
 használjuk, akkor a fenti példában az alábbi alakhoz jutunk: \cd{s(s(s(0)))}.
-Itt az \cd{s} az angol \emph{successor} (\emph{követõ}) szó rövidítése,
+Itt az \cd{s} az angol \emph{successor} (\emph{követő}) szó rövidítése,
 és ez jól kifejezi a lényeget: ebben az úgynevezett Peano-féle számábrázolási
 módban mindent a 0 konstanssal és az \cd{s} operátorral fejezünk ki, ahol
-\cd{s(X)} az X szám követõjét jelenti. Ezt a számábrázolást fogjuk felhasználni
+\cd{s(X)} az X szám követőjét jelenti. Ezt a számábrázolást fogjuk felhasználni
 az általunk megvalósítandó CLP(MiniNat)-ban, tehát \cd{0=0}, \cd{1=s(0)},
 \cd{2=s(s(0))} stb.
 
 \subsubsection{Összeadás és kivonás megvalósítása}
 
-Az elõzõ fejezetben vázolt számábrázolási mód segítségével az összeadás
+Az előző fejezetben vázolt számábrázolási mód segítségével az összeadás
 és a kivonás megvalósítása:
 
 \begin{verbatim}
@@ -352,27 +352,27 @@ plusz(s(X), Y, s(Z)) :-
       +(Y, Z, X).
 \end{verbatim}
 
-A \cd{plusz/3} predikátum itt elvárja, hogy a két bemenõ és egy kimenõ
-paraméter közül vagy az elsõ bemenõ, vagy a kimenõ behelyettesített legyen.
+A \cd{plusz/3} predikátum itt elvárja, hogy a két bemenő és egy kimenő
+paraméter közül vagy az első bemenő, vagy a kimenő behelyettesített legyen.
 Mivel az összeadásnál a tagok sorrendje indifferens, ezért ezt a
-megkülönböztetést (az elsõ és a második bemenõ paraméter megkülönböztetését)
+megkülönböztetést (az első és a második bemenő paraméter megkülönböztetését)
 valahogy el kell fednünk. Erre szolgál a \cd{+/3} predikátum, amelyik
 már akkor lefut, ha a három argumentuma közül bármelyik behelyettesített,
-és ha történetesen az elsõ argumentum pont behelyettesítetlen lenne, akkor
-megcseréli az elsõ kettõt és úgy hívja meg a \cd{plusz/3} predikátumot.
+és ha történetesen az első argumentum pont behelyettesítetlen lenne, akkor
+megcseréli az első kettőt és úgy hívja meg a \cd{plusz/3} predikátumot.
 
 \subsubsection{A szorzás megvalósítása}
 
 A szorzás megvalósítása során az alábbi alapelvekhez tartjuk magunkat:
 
 \begin{itemize}
-\item Mindaddig felfüggesztve tartjuk a célt, amíg legalább az egyik tényezõ
-vagy a szorzat be nem helyettesítõdik.
-\item Ha az egyik tényezõ behelyettesített, akkor a célt ismételt összeadásra
+\item Mindaddig felfüggesztve tartjuk a célt, amíg legalább az egyik tényező
+vagy a szorzat be nem helyettesítődik.
+\item Ha az egyik tényező behelyettesített, akkor a célt ismételt összeadásra
 vezetjük vissza.
 \item Ha a szorzat behelyettesített, akkor az egyik tag helyére rendre
 behelyettesítjük 1-et, 2-t, \ldots, $N$-et (ahol $N$ a szorzat), majd mindegyik
-lehetõséget ismételt összeadásra vezetjük vissza.
+lehetőséget ismételt összeadásra vezetjük vissza.
 \end{itemize}
 
 \begin{verbatim}
@@ -405,8 +405,8 @@ szor(s(X), Y, Z) :-
 
 \subsubsection{Korlátok lefordítása célsorozatokra}
 
-Az elõzõ két fejezetben megvalósítottuk az összeadás, kivonás, szorzás
-mûveleteket Prolog eljárások formájában. Szükségünk lesz azonban egy
+Az előző két fejezetben megvalósítottuk az összeadás, kivonás, szorzás
+műveleteket Prolog eljárások formájában. Szükségünk lesz azonban egy
 olyan eljárásra is, amely a ,,hagyományos'' matematikai kifejezések
 formájában leírt korlátokat lefordítja ezekre az eljárásokra, majd az ily
 módon összeállított célsorozatot meghívja. Például az \cd{X*Y+2=Z} korlát
@@ -415,7 +415,7 @@ vissza is fogja vezetni a \cd{=<, <, >=, >} korlátokat a már megvalósított
 korlátokra: az \cd{X =< Y}-t az \cd{X+_=Y}, az \cd{X < Y}-t pedig az
 \cd{X+s(_)=Y} hívás fogja helyettesíteni.
 
-Elõször felveszünk egy eljárást, amely lehetõvé teszi, hogy a korlátokat
+Először felveszünk egy eljárást, amely lehetővé teszi, hogy a korlátokat
 \cd{\{Korlát\}} alakú kifejezésekkel vehessük fel:
 
 \begin{verbatim}
@@ -444,8 +444,8 @@ korlat_cel((K1,K2), (C1,C2)) :-
         korlat_cel(K2, C2). 
 
 % kiertekel(Kif, E, Cel): A Kif aritmetikai kifejezés 
-% értékét E-ben elõállító cél Cel. 
-% Kif egészekbõl a +, -, és * operátorokkal épül fel. 
+% értékét E-ben előállító cél Cel. 
+% Kif egészekből a +, -, és * operátorokkal épül fel. 
 kiertekel(Kif, E, (C1,C2,Rel)) :- 
         nonvar(Kif), 
         Kif =.. [Op,Kif1,Kif2], !, 
@@ -465,30 +465,30 @@ int_to_peano(N, s(P)) :-
 \end{verbatim}
 
 Amint látható, egy \cd{Kif1} $Op$ \cd{Kif2} kifejezés lefordított alakja
-egy három részbõl álló célsorozat, amely egy \var{E} változóban állítja
-elõ a kimenetét. A célsorozat elsõ eleme meghatározza a \cd{Kif1} értékét
-\var{E$_1$}-ben elõállító célsorozatot, a második eleme meghatározza a
-\cd{Kif2} értékét \var{E$_2$}-ben elõállító célsorozatot, végül a harmadik
+egy három részből álló célsorozat, amely egy \var{E} változóban állítja
+elő a kimenetét. A célsorozat első eleme meghatározza a \cd{Kif1} értékét
+\var{E$_1$}-ben előállító célsorozatot, a második eleme meghatározza a
+\cd{Kif2} értékét \var{E$_2$}-ben előállító célsorozatot, végül a harmadik
 eleme az \cd{Op(E$_1$,E$_2$,E)} hívás, ahol \cd{Op} a \cd{+}, \cd{-}, \cd{*}
-jelek egyike. Ha egy kifejezés helyén csak egy szám áll önmagában, akkor az õ
-lefordított formája az õ Peano-alakja. Minden egyéb (változó, vagy Peano-alakú
+jelek egyike. Ha egy kifejezés helyén csak egy szám áll önmagában, akkor az ő
+lefordított formája az ő Peano-alakja. Minden egyéb (változó, vagy Peano-alakú
 szám) változatlan formában marad a fordításkor.
 
 \subsubsection{Formázott kiírás}
 
 Természetes elvárás a rendszerrel szemben, hogy az esetlegesen (pl. nyomkövetés
-esetén) kiírásra kerülõ Peano-számokat ne a CLP(MiniNat) belsõ ábrázolási
-formájában, hanem a hagyományos formátumban írja ki a képernyõre. Ennek
+esetén) kiírásra kerülő Peano-számokat ne a CLP(MiniNat) belső ábrázolási
+formájában, hanem a hagyományos formátumban írja ki a képernyőre. Ennek
 megvalósításában segít a \cd{print/1} és a \cd{portray/1} eljárás.
 \br
 A \cd{print/1} alapértelmezésben megegyezik a \cd{write/1} Prolog kiíró
 eljárással. Ha azonban definiálva van a \cd{portray/1} ,,kampó'' eljárás
-(\emph{hook predicate}), akkor elõször minden kiírandóra meghívja
+(\emph{hook predicate}), akkor először minden kiírandóra meghívja
 \cd{portray}-t, és ha ez a hívás meghiúsul, akkor maga írja ki a
 paraméterként átadott struktúrát. A \cd{print/1} eljárást használja a
 Prolog rendszer többek között a változó-behelyettesítések és a nyomkövetési
-kimenet kiírására is, így ha definiálunk egy megfelelõ \cd{portray/1}
-eljárást a Peano-számok formázására, akkor ezzel el is értük az elsõ
+kimenet kiírására is, így ha definiálunk egy megfelelő \cd{portray/1}
+eljárást a Peano-számok formázására, akkor ezzel el is értük az első
 bekezdésben felvázolt célt. Hasonló módon felvehetünk még egy \cd{portray}
 predikátumot a felfüggesztett célok kiírásának formázására is.
 
@@ -514,39 +514,39 @@ user:portray(user:Rel) :-
         print({Fun=C}).
 \end{verbatim}
 
-\subsubsection{Klózok fordítási idõben történõ átalakítása}
+\subsubsection{Klózok fordítási időben történő átalakítása}
 
 Az eddig összeállított CLP(MiniNat) rendszerünk már használható, azonban
-teljesítményét jelentõsen rontja, hogy a \cd{'\{\}'/1} struktúrával felvett
-korlátokat csak futási idõben alakítja át célsorozatokra. Lehetõség van
-arra is, hogy a betöltött programon még a futtatás elõtt, fordítási idõben
+teljesítményét jelentősen rontja, hogy a \cd{'\{\}'/1} struktúrával felvett
+korlátokat csak futási időben alakítja át célsorozatokra. Lehetőség van
+arra is, hogy a betöltött programon még a futtatás előtt, fordítási időben
 hajtsunk végre bizonyos változtatásokat, transzformációkat, például egy
-ilyen jellegû átalakítást. Ezeket a mûveleteket a \cd{term_expansion/2} és
+ilyen jellegű átalakítást. Ezeket a műveleteket a \cd{term_expansion/2} és
 \cd{goal_expansion/3} eljárásokkal valósíthatjuk meg.
 
 \begin{itemize}
 \item \cd{term_expansion(+Kif, -Klózok)} \\
-      Minden betöltõ eljárás (\cd{consult}, \cd{compile} stb.) által
+      Minden betöltő eljárás (\cd{consult}, \cd{compile} stb.) által
       betöltött kifejezésre a rendszer meghívja. A kifejezést a \cd{Kif}
       paraméterben adja át, a transzformált alakot a \cd{Klózok} paraméterben
       várja (ez akár lista is lehet). Ha az eljárás meghiúsul, akkor a rendszer
       a kifejezést változatlan alakban veszi fel.
 
 \item \cd{goal_expansion(+Cél, +Modul, -ÚjCél)} \\
-      Minden, a programból vagy a szabványos bemenetrõl beolvasott részcélra
+      Minden, a programból vagy a szabványos bemenetről beolvasott részcélra
       meghívja a rendszer. A transzformált célt az \cd{ÚjCél} paraméterben
       várja. Ha az eljárás meghiúsul, akkor a rendszer a célt változatlan
       alakban használja fel.
 \end{itemize}
 
-A \cd{goal_expansion/2} használatával a korlátok fordítási idejû átalakítása
-a következõképpen írható le:
+A \cd{goal_expansion/2} használatával a korlátok fordítási idejű átalakítása
+a következőképpen írható le:
 
 \begin{verbatim}
 goal_expansion({Korlat}, _, Cel) :- korlat_cel(Korlat, Cel).
 \end{verbatim}
 
-Érdemes összehasonlítani egy egyszerû faktoriálisszámító CLP(MiniNat)
+Érdemes összehasonlítani egy egyszerű faktoriálisszámító CLP(MiniNat)
 program korlátokkal leírt és lefordított változatát:
 
 \begin{verbatim}
@@ -592,8 +592,8 @@ szorzatuk_nulla(X, Y) :-
 \end{verbatim}
 
 Amint az alábbi példák mutatják, ez a kezdeti problémánkat megoldja, de
-még mindig nem tökéletes, ugyanis ha X és Y egyesíthetõsége a korlát hívása
-után dönthetõ csak el, akkor a kettõzött megoldás ugyanúgy elõadódik:
+még mindig nem tökéletes, ugyanis ha X és Y egyesíthetősége a korlát hívása
+után dönthető csak el, akkor a kettőzött megoldás ugyanúgy előadódik:
 
 \begin{verbatim}
 | ?- {X*X=0}.
@@ -606,7 +606,7 @@ X = 0, Y = 0 ? ; no
 
 A végleges javításhoz fel kell használnunk a \cd{dif/2} eljárást, amely
 felfüggeszti a \cd{szorzatuk_nulla/2} eljárás második ágát addig, amíg
-az egyesíthetõség el nem dönthetõ:
+az egyesíthetőség el nem dönthető:
 
 \begin{verbatim}
 % X*Y=0, ahol X és Y Peano számok.
@@ -619,13 +619,13 @@ szorzatuk_nulla(X, Y) :-
 X = 0, Y = 0 ? ; no
 \end{verbatim}
 
-A másik problémát erõforrás problémának hívjuk. Ez a rekurzív \cd{fact/2}
+A másik problémát erőforrás problémának hívjuk. Ez a rekurzív \cd{fact/2}
 eljárás használata esetén adódik. Tekintsük például a \cd{fact(X,11)} hívást,
 amely megkeresné azt az \cd{X} számot, melyre \cd{X!=11}. A hívást a második
 \cd{fact} klózzal illesztve a \cd{\{11=X*F1\}} hívásra tudjuk visszavezetni, ez
 pedig két megoldást generál (\cd{X=1, F1=11} és \cd{X=11, F1=1}). Ezekre
 a behelyettesítésekre feléled a rekurzív \cd{fact} hívás \cd{fact(0,11)} és
-\cd{fact(10,1)} paraméterekkel. Az elsõ hívás azonnal meghiúsul, a másodikhoz
+\cd{fact(10,1)} paraméterekkel. Az első hívás azonnal meghiúsul, a másodikhoz
 viszont a Prolog ,,mohó'' módon megpróbálja kiszámolni 10!-t, és csak utána
 egyesítené az eredményt 1-gyel, 10! azonban Peano-szám formában nem
 ábrázolható, mert nincs hozzá elég memória. A probléma úgy javítható, hogy
@@ -642,12 +642,12 @@ fact(N, F) :-
 | ?- fact(N, 24).    -------->   N = 4 ? ; no
 \end{verbatim}
 
-Általános szabályként megállapíthatjuk, hogy egy korlát-programban célszerû
+Általános szabályként megállapíthatjuk, hogy egy korlát-programban célszerű
 minél kevesebb választási pontot csinálni, és éppen ezért az összes korlátot
-érdemes a tényleges keresés \emph{elõtt} felvenni. A legtöbbször a keresésre
-egy úgynevezett \emph{címkézõ} (\emph{labeling}) eljárást használunk, amely
+érdemes a tényleges keresés \emph{előtt} felvenni. A legtöbbször a keresésre
+egy úgynevezett \emph{címkéző} (\emph{labeling}) eljárást használunk, amely
 szisztematikusan, valamilyen módszer szerint végigpróbálgatja a nem lekötött
 változók lehetséges értékeit. CLP(MiniNat)-ban egy ilyen eljárás megvalósítása
 nehézkes, ezért itt nem foglalkozunk vele. CLP(MiniB)-ben (a Boole értékek
-halmazán dolgozó CLP megvalósításban) viszont könnyû: minden változóra a
+halmazán dolgozó CLP megvalósításban) viszont könnyű: minden változóra a
 0 és az 1 értéket kell kipróbálnunk.

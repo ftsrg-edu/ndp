@@ -1,47 +1,47 @@
 \clearpage
 
-\section{Az \fdbg nyomkövetõ csomag}
+\section{Az \fdbg nyomkövető csomag}
 
 \label{fdbg}
 Ebben a fejezetben a \clpfd programok nyomkövetésére szolgáló \fdbg csomagot
-mutatjuk be részletesebben. Az \fdbg könyvtár megalkotásakor a szerzõk
+mutatjuk be részletesebben. Az \fdbg könyvtár megalkotásakor a szerzők
 (\emph{Szeredi Tamás} és \emph{Hanák Dávid}) az alábbi szempontokat tartották
-szem elõtt:
+szem előtt:
 
 \begin{itemize}
-\item követhetõ legyen a véges tartományú (röviden: FD) korlát változók
-  tartományainak szûkülése;
-\item a programozó értesüljön a korlátok felébredésérõl, kilépésérõl és
-  hatásairól, valamint az egyes címkézési lépésekrõl és hatásukról;
+\item követhető legyen a véges tartományú (röviden: FD) korlát változók
+  tartományainak szűkülése;
+\item a programozó értesüljön a korlátok felébredéséről, kilépéséről és
+  hatásairól, valamint az egyes címkézési lépésekről és hatásukról;
 \item jól olvasható formában lehessen kiírni FD változókat tartalmazó
   kifejezéseket.
 \end{itemize}
 
-A csomag használatához szükséges megismerkednünk néhány alapvetõ fogalommal:
+A csomag használatához szükséges megismerkednünk néhány alapvető fogalommal:
 \br
 \definicio {\tt \em clpfd} {\em esemény}nek nevezzük egy globális korlát felébredését
 vagy bármely címkézési eseményt (címkézés kezdete, címkézési lépés vagy címkézés
 meghiúsulása).
 \br
-\definicio \emph{Megjelenítõ}nek (\emph{visualizer}) nevezzük a \clpfd eseményekre
+\definicio \emph{Megjelenítő}nek (\emph{visualizer}) nevezzük a \clpfd eseményekre
 reagáló predikátumot. Általában az a feladata, hogy az eseményt valamilyen formában
 kiírja. A tényleges esemény bekövetkezése és így az esemény hatásainak érvényesülése
-\emph{elõtt} hívódik meg. Mindkét fajta \clpfd eseményhez külön megjelenítõ tartozik,
-így beszélhetünk \emph{korlát-megjelenítõ}rõl és \emph{címkézés-megjelenítõ}rõl.
+\emph{előtt} hívódik meg. Mindkét fajta \clpfd eseményhez külön megjelenítő tartozik,
+így beszélhetünk \emph{korlát-megjelenítő}ről és \emph{címkézés-megjelenítő}ről.
 \br
 \definicio \emph{Jelmagyarázat}nak (\emph{legend}) nevezzük az éppen megfigyelt korlát
-után kiíródó szövegrészt, amely rendszerint a korlátban részt vevõ változókat, a
+után kiíródó szövegrészt, amely rendszerint a korlátban részt vevő változókat, a
 hozzájuk kapcsolódó tartományokat és a vizsgált korlát végrehajtásával kapcsolatos
 következtetéseket tartalmazza.
 \br
-Az \fdbg által csak a globális korlátok követhetõek nyomon, az indexikálisok nem,
+Az \fdbg által csak a globális korlátok követhetőek nyomon, az indexikálisok nem,
 viszont a globális korlátok közül a felhasználói és a beépített korlátok ugyanolyan
-módon kezelhetõek. Az \fdbg nyomkövetés bekapcsolt állapota esetén a formula-korlátokból
-mindenképp globális korlátok képzõdnek, nem pedig indexikálisok.
+módon kezelhetőek. Az \fdbg nyomkövetés bekapcsolt állapota esetén a formula-korlátokból
+mindenképp globális korlátok képződnek, nem pedig indexikálisok.
 \br
 Az \fdbg könyvtár külön segédeljárásokat biztosít a kifejezésekben található FD
 változók megjelöléséhez (\emph{annotálás}), az annotált kifejezések jól olvasható
-megjelenítéséhez, valamint jelmagyarázat elõkészítéséhez és kiírásához.
+megjelenítéséhez, valamint jelmagyarázat előkészítéséhez és kiírásához.
 \br
 Az \fdbg könyvtár szolgáltatásait az alábbi paranccsal lehet igénybe venni:
 
@@ -54,26 +54,26 @@ Az \fdbg könyvtár szolgáltatásait az alábbi paranccsal lehet igénybe venni
 \begin{itemize}
 \item \bcd{fdbg\_on}\\ \bcd{fdbg\_on(+{\em Options})}\\
 Engedélyezi a nyomkövetést alapértelmezett vagy megadott beállításokkal. A
-nyomkövetést az \cd{fdbg\_output} álnevû (stream alias) folyamra írja a
+nyomkövetést az \cd{fdbg\_output} álnevű (stream alias) folyamra írja a
 rendszer, alaphelyzetben ez a pillanatnyi kimeneti folyam ({\em current
 output stream}) lesz. Legfontosabb opciók:\\
 \begin{itemize}
 \item \cd{file({\em Filename}, {\em Mode})}\\
-  A megjelenítõk kimenete a \cd{\em Filename} nevû állományba irányítódik
+  A megjelenítők kimenete a \cd{\em Filename} nevű állományba irányítódik
   át, amely az \cd{fdbg\_on/1} hívásakor nyílik meg \cd{\em Mode} módban.
   \cd{Mode} lehet \cd{write} vagy \cd{append}.
 \item \cd{stream({\em Stream})}\\
-  A megjelenítõk kimenete a \cd{\em Stream} folyamra irányítódik át.
+  A megjelenítők kimenete a \cd{\em Stream} folyamra irányítódik át.
 \item \cd{constraint\_hook({\em Goal})}\\
   \cd{\em Goal} két argumentummal kiegészítve meghívódik a korlátok
-  felébredésekor. Alapértelmezésben ez az \cd{fdbg\_show/2} eljárás, ld.~késõbb.
-  Ezzel a paraméterrel lehet felüldefiniálni a korlát-megjelenítõt.
+  felébredésekor. Alapértelmezésben ez az \cd{fdbg\_show/2} eljárás, ld.~később.
+  Ezzel a paraméterrel lehet felüldefiniálni a korlát-megjelenítőt.
 \item \cd{labeling\_hook({\em Goal})}\\
   \cd{\em Goal} három argumentummal kiegészítve meghívódik minden címkézési
-  eseménykor. Alapértelmezésben ez az \cd{fdbg\_label\_show/3}, ld.~késõbb.
-  Ezzel a paraméterrel lehet felüldefiniálni a címkézés-megjelenítõt.
+  eseménykor. Alapértelmezésben ez az \cd{fdbg\_label\_show/3}, ld.~később.
+  Ezzel a paraméterrel lehet felüldefiniálni a címkézés-megjelenítőt.
 \item \cd{no_constraint_hook}, \cd{no_labeling_hook}\\ 
-  Nem lesz adott fajtájú megjelenítõ.
+  Nem lesz adott fajtájú megjelenítő.
 \end{itemize}
 
 \item \bcd{fdbg\_off}\\
@@ -81,14 +81,14 @@ output stream}) lesz. Legfontosabb opciók:\\
   állományt (ha volt ilyen).
 \end{itemize}
 
-Kimenet átirányítása, beépített megjelenítõ, nincs címkézési nyomkövetés:
+Kimenet átirányítása, beépített megjelenítő, nincs címkézési nyomkövetés:
 
 \begin{verbatim}
 | ?- fdbg_on([file('my_log.txt', append), no_labeling_hook]).
 \end{verbatim}
 
 Kimenet átirányítása szabványos folyamra, saját és beépített
-megjelenítõ együttes használata:
+megjelenítő együttes használata:
 
 \begin{verbatim}
 | ?- fdbg_on([constraint_hook(fdbg_show), constraint_hook(my_show),
@@ -100,13 +100,13 @@ megjelenítõ együttes használata:
 Az \fdbg által produkált kimeneten az FD változók alaphelyzetben \cd{<fdvar_1>},
 \cd{<fdvar_2>}, \ldots formában jelennek meg, ami megnehezíti az olvashatóságot.
 Éppen ezért minden FD változóhoz egy saját nevet rendelhetünk, ami a kimeneten
-az \cd{<fdvar_{\em x}>} forma helyett fog megjelenni. Lehetõség van arra is,
+az \cd{<fdvar_{\em x}>} forma helyett fog megjelenni. Lehetőség van arra is,
 hogy egy egész kifejezéshez rendeljünk nevet. Egy kifejezés elnevezésekor a
-kifejezésben szereplõ összes változóhoz egy-egy származtatott név
-rendelõdik -- ez a név a megadott névbõl és a változó kiválasztójából
+kifejezésben szereplő összes változóhoz egy-egy származtatott név
+rendelődik -- ez a név a megadott névből és a változó kiválasztójából
 keletkezik (struktúra argumentum-sorszámok ill.\ lista indexek sorozata). A
 létrehozott nevek egy globális listába kerülnek, amely mindig egyetlen toplevel
-híváshoz tartozik, nem vivõdik át a következõ toplevel hívásra (\emph{illékony}).
+híváshoz tartozik, nem vivődik át a következő toplevel hívásra (\emph{illékony}).
 
 \enum{Predikátumok}{
 \item \bcd{fdbg\_assign_name(+{\em Name}, +{\em Term})} \\
@@ -117,10 +117,10 @@ híváshoz tartozik, nem vivõdik át a következõ toplevel hívásra (\emph{il
     Ha \cd{\em Name} változó, akkor felsorolja az összes tárolt név-kifejezés párt.
 \item \bcd{fdbg\_get\_name(+{\em Term}, -\em{Name})} \\
     \cd{\em Name} a \cd{\em Term} kifejezéshez rendelt név.  Ha \cd{\em Term}-nek még nincs
-    neve, automatikusan hozzárendelõdik egy.
+    neve, automatikusan hozzárendelődik egy.
 }
 
-Pl.~\cd{fdbg\_assign_name(foo, bar(A, [B, C]))} hatására a következõ nevek
+Pl.~\cd{fdbg\_assign_name(foo, bar(A, [B, C]))} hatására a következő nevek
 generálódnak:
 
 \begin{center}
@@ -131,14 +131,14 @@ generálódnak:
 \multicolumn{1}{c|}{megjegyzés} \\
 \hline
 \tt foo       & \tt bar(A, [B, C]) & a teljes kifejezés \\
-\tt foo\_1    & \tt A & \cd{bar} elsõ argumentuma \\
-\tt foo\_2\_1 & \tt B & \cd{bar} második argumentumának elsõ eleme \\
+\tt foo\_1    & \tt A & \cd{bar} első argumentuma \\
+\tt foo\_2\_1 & \tt B & \cd{bar} második argumentumának első eleme \\
 \tt foo\_2\_2 & \tt C & \cd{bar} második argumentumának második eleme \\
 \hline
 \end{tabular}
 \end{center}
 
-\subsection{Egyszerûbb \fdbg nyomkövetési példák}
+\subsection{Egyszerűbb \fdbg nyomkövetési példák}
 
 \begin{verbatim}
 | ?- use_module([library(clpfd),library(fdbg)]).
@@ -169,7 +169,7 @@ X1 = 2, X2 = 6 ?
 \end{verbatim}
 
 A \cd{(*)} olvashatóbb alak a \cd{library(fdbg)} négy sorának kikommentezésével
-állitható elõ.
+állitható elő.
 
 \begin{verbatim}
 | ?- X in 1..4, labeling([bisect], [X]).
@@ -196,21 +196,21 @@ Labeling [2, <fdvar_1>]: failed.
 no
 \end{verbatim}
 
-\subsection{Beépített megjelenítõk}
+\subsection{Beépített megjelenítők}
 
-Az \fdbg könyvtár egy-egy alapértelmezett megjelenítõt bocsájt a felhasználó
-rendelkezésére. A korlát-megjelenítõt az \cd{fdbg_show/2}, a címkézés-megjelenítõt
+Az \fdbg könyvtár egy-egy alapértelmezett megjelenítőt bocsájt a felhasználó
+rendelkezésére. A korlát-megjelenítőt az \cd{fdbg_show/2}, a címkézés-megjelenítőt
 az \cd{fdbg_label_show/3} predikátum tartalmazza. Ha az \cd{fdbg_on} predikátumnak
-nem adunk meg külön korlát-, illetve címkézés-megjelenítõt, akkor ezeket a megjelenítõket
+nem adunk meg külön korlát-, illetve címkézés-megjelenítőt, akkor ezeket a megjelenítőket
 alkalmazza.
 
 \begin{itemize}
 \item \bcd{fdbg\_show(+{\em Constraint}, +{\em Actions})} \\
-Beépített korlát-megjelenítõ. A \cd{dispatch_global}-ból való kilépéskor hívódik
-meg. Megkapja az aktuális korlátot és az általa elõállított akciólistát, majd
+Beépített korlát-megjelenítő. A \cd{dispatch_global}-ból való kilépéskor hívódik
+meg. Megkapja az aktuális korlátot és az általa előállított akciólistát, majd
 ennek alapján megjeleníti a korlátot és a hozzá tartozó jelmagyarázatot. 
 
-,,Szimulált'' példa-hívás \cd{X1=3} és \cd{X2=3} szûkítésekkel:
+,,Szimulált'' példa-hívás \cd{X1=3} és \cd{X2=3} szűkítésekkel:
 
 \begin{verbatim}
 | ?- Xs=[X1,X2,X3], fdbg_assign_name(Xs, 'X'), 
@@ -225,10 +225,10 @@ exactly(3,[<X_1>,<X_2>,<X_3>],2)
 \end{verbatim}
 
 \item \bcd{fdbg\_label\_show(+{\em Event}, +\em{ID}, +\em{Variable})}\\
-Beépített címkézés-megjelenítõ. Címkézési eseménykor (kezdet, szûkítés,
+Beépített címkézés-megjelenítő. Címkézési eseménykor (kezdet, szűkítés,
 meghiúsulás) hívódik meg. \cd{\em Event}-ben megkapja a hívást kiváltó
 eseményt, \cd{\em ID}-ben a címkézési lépés azonosítóját, \cd{\em Variable}-ben
-pedig magát a címkézendõ változót. \cd{\em Event} megegyezik a
+pedig magát a címkézendő változót. \cd{\em Event} megegyezik a
 \cd{start} atommal, ha a kiváltó esemény a címkézés kezdete, megegyezik a \cd{fail}
 atommal, ha a kiváltó esemény a címkézés meghiúsulása. Példa:
 
@@ -250,7 +250,7 @@ no
 
 \end{itemize}
 
-A fenti kimenet elkészítése során végrehajtott megjelenítõ-hívások:
+A fenti kimenet elkészítése során végrehajtott megjelenítő-hívások:
 
 \begin{verbatim}
 fdbg_label_show(start,1,X)
@@ -261,21 +261,21 @@ fdbg_label_show(fail,1,X)
 
 \subsection{Testreszabás kampó-eljárásokkal}
 
-Az alábbi kampó-eljárások a következõ három argumentummal rendelkeznek:
+Az alábbi kampó-eljárások a következő három argumentummal rendelkeznek:
 
 \begin{itemize}
 \item \emph{Name} --- az FD változó neve
 \item \emph{Variable} --- maga a változó
 \item \emph{FDSetAfter} --- a változó tartománya, \emph{miután} az aktuális
-  korlát elvégezte rajta a szûkítéseket
+  korlát elvégezte rajta a szűkítéseket
 \end{itemize}
 
 A kampó-eljárások felülbírálásához azokat \emph{multifile} eljárásként kell definiálni.
 
 \begin{itemize}
 \item \bcd{fdbg:fdvar\_portray(+{\em Name}, +{\em Variable}, +{\em FDSetAfter})}\\
-  A kiírt korlátokban szereplõ változók megjelenésének megváltoztatására
-  szolgál. Az alapértelmezett viselkedés \textsl{Name} kiírása kacsacsõrök
+  A kiírt korlátokban szereplő változók megjelenésének megváltoztatására
+  szolgál. Az alapértelmezett viselkedés \textsl{Name} kiírása kacsacsőrök
   között. Az alábbi példa a változó neve mellett a változó régi tartományát is
   kiírja:
 
@@ -289,9 +289,9 @@ fdbg:fdvar_portray(Name, Var, _) :-
 
 \item \bcd{fdbg:legend\_portray(+{\em Name}, +{\em Variable}, +{\em FDSetAfter})}\\
   A jelmagyarázat minden sorára meghívódik, és így végigfut a jelmagyarázatban
-  szereplõ változókon. A sorokat alapértelmezésben négy szóköz nyitja és egy
-  újsor karakter zárja, ezeket nem kell kiírni, de nem is lehet õket felülbírálni.
-  Az alábbi példa a változó tartományának szûkülését lista formában tünteti fel:
+  szereplő változókon. A sorokat alapértelmezésben négy szóköz nyitja és egy
+  újsor karakter zárja, ezeket nem kell kiírni, de nem is lehet őket felülbírálni.
+  Az alábbi példa a változó tartományának szűkülését lista formában tünteti fel:
 
 \begin{verbatim}
 :- multifile fdbg:legend_portray/3.
@@ -317,37 +317,37 @@ exactly(3,[<X>,2],1)~~~~~~~ & exactly(3,[<X = 1..3>,2],1) \\
     Constraint exited.      &     Constraint exited. \\
 \end{tabular}\end{center}
 
-\subsection{Testreszabás saját megjelenítõvel}
+\subsection{Testreszabás saját megjelenítővel}
 
 \begin{itemize}
 \item \bcd{{\em my\_global\_visualizer}(+{\em Arg1}, +{\em Arg2}, \ldots, {\em Constraint},
 {\em Actions})}\\
-\cd{\em my\_global\_visualizer} helyére tetszõleges predikátumnév kerülhet, \cd{\em Arg1},
+\cd{\em my\_global\_visualizer} helyére tetszőleges predikátumnév kerülhet, \cd{\em Arg1},
 \cd{\em Arg2} \ldots a predikátum által használt saját argumentumok, \cd{\em Constraint}
 és \cd{\em Actions} pedig az a két paraméter, amit az \cd{fdbg\_show/2} rak a paraméterlista
 végére. \cd{\em Constraint} az éppen felébredt korlátot, \cd{\em Actions} pedig a korlát
-által visszaadott akciólistát tartalmazza. A korlát-megjelenítõ nevét és paraméterlistáját
-(az utolsó kettõ kivételével) az \cd{fdbg_on} opciólistájában kell átadni:\\
+által visszaadott akciólistát tartalmazza. A korlát-megjelenítő nevét és paraméterlistáját
+(az utolsó kettő kivételével) az \cd{fdbg_on} opciólistájában kell átadni:\\
 \cd{fdbg\_on(constraint\_hook({\em my\_global\_visualizer}({\em Arg1}, {\em Arg2},
 \ldots)))}.
 
 \item \bcd{{\em my\_labeling\_visualizer}(+{\em Arg1}, +{\em Arg2}, \ldots, {\em Event},
 {\em ID}, {\em Var})}\\
-\cd{\em Event} a megjelenítõ meghívását kiváltó címkézési esemény, a következõek szerint:
+\cd{\em Event} a megjelenítő meghívását kiváltó címkézési esemény, a következőek szerint:
 \begin{itemize}
 \item \cd{start} --- címkézés kezdete
 \item \cd{fail} --- címkézés meghiúsulása
 \item \cd{step({\em Step})} --- címkézési lépés, amelyet \cd{\em Step} ír le
 \end{itemize}
 \cd{\em ID} a címkézés azonosítója, \cd{\em Var} pedig a címkézett változó. A
-címkézés-megjelenítõ nevét és paraméterlistáját (az utolsó kettõ kivételével) az
+címkézés-megjelenítő nevét és paraméterlistáját (az utolsó kettő kivételével) az
 \cd{fdbg_on} opciólistájában kell átadni:\\
 \cd{fdbg\_on(labeling\_hook({\em my\_labeling\_visualizer}({\em Arg1}, {\em Arg2},
 \ldots)))}.
 \end{itemize}
 
-Érdemes egy pillantást vetni az \cd{fdbg\_show/2} beépített megjelenítõ kódjára is,
-mert ez irányelvet adhat saját megjelenítõ írásához:
+Érdemes egy pillantást vetni az \cd{fdbg\_show/2} beépített megjelenítő kódjára is,
+mert ez irányelvet adhat saját megjelenítő írásához:
 
 \begin{verbatim}
 fdbg_show(Constraint, Actions) :-
@@ -358,7 +358,7 @@ fdbg_show(Constraint, Actions) :-
         nl(fdbg_output).
 \end{verbatim}
 
-Gyakran szükség lehet arra, hogy csak bizonyos korlátok mûködését vizsgáljuk,
+Gyakran szükség lehet arra, hogy csak bizonyos korlátok működését vizsgáljuk,
 ilyenkor jön jól egy saját \cd{fdbg\_show/2} eljárás:
 
 \begin{verbatim}
@@ -368,9 +368,9 @@ filtered_show(Constraint, Actions) :-
 \end{verbatim}
 
 A fenti predikátum meghiúsulhat, ha \cd{Constraint} nem \cd{scalar\_product/4} korlát,
-de a megjelenítõk esetében a meghiúsulás nem okozza automatikusan az egész Prolog
-végrehajtás meghiúsulását, ezért az ilyen jellegû megoldás megengedett. A
-megjelenítõ használata:
+de a megjelenítők esetében a meghiúsulás nem okozza automatikusan az egész Prolog
+végrehajtás meghiúsulását, ezért az ilyen jellegű megoldás megengedett. A
+megjelenítő használata:
 
 \begin{verbatim}
 :- fdbg_on([constraint_hook(filtered_show), file('fdbg.log', write)]).
@@ -379,8 +379,8 @@ megjelenítõ használata:
 \subsection{Egyéb segéd-predikátumok}
 
 A változók tartományának kiírásához és az úgynevezett ~\emph{annotáláshoz} több
-predikátum adott.  Ezeket használják a beépített nyomkövetõk, de hívhatók
-kívülrõl is. Ebben az alfejezetben ezeket a predikátumokat ismertetjük.
+predikátum adott.  Ezeket használják a beépített nyomkövetők, de hívhatók
+kívülről is. Ebben az alfejezetben ezeket a predikátumokat ismertetjük.
 
 \begin{itemize}
 \item \bcd{fdbg\_annotate(+{\em Term0}, -{\em Term}, -{\em Vars})} \\
@@ -389,10 +389,10 @@ kívülrõl is. Ebben az alfejezetben ezeket a predikátumokat ismertetjük.
   azaz lecseréli egy \cd{fdvar/3} struktúrára.  Ennek tartalma:
   \begin{itemize}
   \item a változó neve
-  \item a változó maga (tartománya még a szûkítés elõtti állapotokat
+  \item a változó maga (tartománya még a szűkítés előtti állapotokat
     tükrözi)
   \item egy FD halmaz, amely a változó tartománya \emph{lesz} az
-    \cd{\em Actions} akciólista szûkítései után.
+    \cd{\em Actions} akciólista szűkítései után.
   \end{itemize}
   Az így kapott kifejezés lesz \cd{\em Term}, a beszúrt \cd{fdvar/3}
   struktúrák listája pedig \cd{\em Vars}.
@@ -410,14 +410,14 @@ print(Goal) --> lseq(<x_1>,<x_2>)
 \end{verbatim}
 
 Látható, hogy az \cd{fdvar/3} struktúrákra az \fdbg modul definiál egy saját
-\cd{portray/1} megjelenítõ eljárást, ezért ha a \cd{print/1} használatával
+\cd{portray/1} megjelenítő eljárást, ezért ha a \cd{print/1} használatával
 íratjuk ki az ilyen struktúrákat, akkor azok a fenti tömör módon jelennek meg.
 
 \item \bcd{fdbg\_legend(+{\em Vars})} \\
    \bcd{fdbg\_legend(+{\em Vars}, +{\em Actions})} \\
-  Az \cd{fdbg\_annotate/3,4} használatával elõálló \cd{\em Vars} változólistát
+  Az \cd{fdbg\_annotate/3,4} használatával előálló \cd{\em Vars} változólistát
   és az \cd{\em Actions} akció-listából levonható következtetéseket jelmagyarázatként
-  kiírja a következõ szabályok szem elõtt tartásával:
+  kiírja a következő szabályok szem előtt tartásával:
   \begin{itemize}
   \item egy sorba egy változó leírása kerül
   \item minden sor elején a változó neve szerepel
@@ -429,7 +429,7 @@ Látható, hogy az \cd{fdvar/3} struktúrákra az \fdbg modul definiál egy saj�
 \subsection{A mágikus sorozatok feladat nyomkövetése}
 
 Ebben az alfejezetben a mágikus sorozatok feladat egy lehetséges megoldásán
-mutatjuk be az \fdbg nyomkövetõ csomag kimenetét. A programkódban csak a 
+mutatjuk be az \fdbg nyomkövető csomag kimenetét. A programkódban csak a 
 nyomkövetés megértéséhez szükséges predikátumokat tüntettük fel:
 
 \begin{verbatim}

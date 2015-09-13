@@ -2,18 +2,18 @@
 
 \section{A SICStus \clpq és \clpr könyvtárai}
 
-A következõ fejezetben a SICStus \clpq, illetve \clpr könyvtáraival
+A következő fejezetben a SICStus \clpq, illetve \clpr könyvtáraival
 fogunk foglalkozni.
 
 \subsection{A \clpq és \clpr könyvtár általános jellemzése}
 
 A \clpq könyvtár egy, a racionális számok tartományára
 alapuló CLP rendszert valósít meg, a \clpr könyvtár pedig ugyanezt, csak
-lebegõpontos formában ábrázolt valós számokkal. A felhasználható függvények
-tartalmazzák az alapmûveleteket (\cd{+ - * /}), valamint több magasabb rendû
-mûveletet is (\cd{min}, \cd{max}, \cd{exp}, \cd{abs}, \cd{sin}, \cd{tan}\ldots).
-Korlát-relációnak a valós számok között fennálló alapvetõ relációkat
-használhatjuk (\cd{= =:= < > =< >= =\bs=}). Egyszerû korlátoknak a lineáris
+lebegőpontos formában ábrázolt valós számokkal. A felhasználható függvények
+tartalmazzák az alapműveleteket (\cd{+ - * /}), valamint több magasabb rendű
+műveletet is (\cd{min}, \cd{max}, \cd{exp}, \cd{abs}, \cd{sin}, \cd{tan}\ldots).
+Korlát-relációnak a valós számok között fennálló alapvető relációkat
+használhatjuk (\cd{= =:= < > =< >= =\bs=}). Egyszerű korlátoknak a lineáris
 összefüggéseket tartalmazó korlátokat tekintjük, a korlátmegoldó algoritmus
 a Gauss-elimináción és a szimplex módszeren alapul. A könyvtárakat az alábbi
 parancsokkal vehetjük használatba:
@@ -24,9 +24,9 @@ parancsokkal vehetjük használatba:
 \end{verbatim}
 
 A korlát-tárat a CLP(MiniNat)-hoz hasonlóan a \cd{\{Korlát\}} alakú
-kifejezésekkel bõvíthetjük, ahol \cd{Korlát} egy változókból és egész vagy
-lebegõpontos számokból a fenti mûveletekkel felépített reláció, vagy
-ilyen relációk vesszõvel elválasztott konjunkciója.
+kifejezésekkel bővíthetjük, ahol \cd{Korlát} egy változókból és egész vagy
+lebegőpontos számokból a fenti műveletekkel felépített reláció, vagy
+ilyen relációk vesszővel elválasztott konjunkciója.
 \br
 Mivel a \clpq és a \clpr könyvtárak nagy mértékben hasonlítanak
 egymásra, ezért a továbbiakban csak a \Clpq-val foglalkozunk, de az
@@ -37,7 +37,7 @@ elmondottak ugyanúgy érvényesek a \Clpr-re is.
 Az alábbiakban egy rövid példán keresztül fogjuk bemutatni a \clpq
 könyvtár használatát.
 \br
-Elõször be kell töltenünk a \clpq könyvtárat, hogy használatba vehessük:
+Először be kell töltenünk a \clpq könyvtárat, hogy használatba vehessük:
 
 \begin{verbatim}
 | ?- use_module(library(clpq)).
@@ -45,16 +45,16 @@ Elõször be kell töltenünk a \clpq könyvtárat, hogy használatba vehessük:
 .. .. ..
 \end{verbatim}
 
-Egyszerû korlátok felvétele (lineáris egyenletrendszer megoldása):
+Egyszerű korlátok felvétele (lineáris egyenletrendszer megoldása):
 
 \begin{verbatim}
 | ?- {X=Y+4, Y=Z-1, Z=2*X-9}.   
 X = 6, Y = 2, Z = 3 ?
 \end{verbatim}
 
-Ha a beadott korlátoknak még nincs egyértelmû megoldása, akkor a
+Ha a beadott korlátoknak még nincs egyértelmű megoldása, akkor a
 \clpq rendszer a fennálló relációkat (a korlát-tár állapotát)
-írja ki, mint például az alábbi lineáris egyenlõtlenségnél:
+írja ki, mint például az alábbi lineáris egyenlőtlenségnél:
 
 \begin{verbatim}
 | ?- {X+Y+9<4*Z, 2*X=Y+2, 2*X+4*Z=36}.  
@@ -62,10 +62,10 @@ Ha a beadott korlátoknak még nincs egyértelmû megoldása, akkor a
 \end{verbatim}
 
 Mint már említettük, a \clpq rendszer csak lineáris korlátokat
-tud felvenni a korlát-tárba, elõfordulhat azonban, hogy egy nemlineáris
+tud felvenni a korlát-tárba, előfordulhat azonban, hogy egy nemlineáris
 korlátot linearizálni tud. Ilyen esetben a nemlineáris korlát lineáris
-megfelelõje be tud kerülni a korlát-tárba. Az alábbi példa egy olyan esetet
-mutat, amikor egy kifejezés két különbözõ, de ekvivalens alakját beadva az
+megfelelője be tud kerülni a korlát-tárba. Az alábbi példa egy olyan esetet
+mutat, amikor egy kifejezés két különböző, de ekvivalens alakját beadva az
 egyik a linearizálás miatt be tud kerülni a korlát-tárba, míg a másik nem:
 
 \begin{verbatim}
@@ -81,7 +81,7 @@ clpq:{2*(X*Y)-100*X+X^2=0} ?
 \end{verbatim}
 
 Tisztán nemlineáris korlátok minden esetben a táron kívül maradnak, persze
-elõfordulhat, hogy a nemlineáris korlát egy késõbbi egyesítés vagy
+előfordulhat, hogy a nemlineáris korlát egy későbbi egyesítés vagy
 változóbehelyettesítés miatt lineárissá válik, mint ahogy az alábbi
 példa is mutatja:
 
@@ -108,10 +108,10 @@ számítanak a nemlineáris (vagy a rendszer által nem linearizálható, de
 egyébként lineáris) kifejezések, ezek nem kerülnek be a korlát-tárba, hanem
 démonként várakoznak arra, hogy lineárissá válva bekerülhessenek oda.
 Fontos megjegyezni, hogy a \Clpq-ban és a \Clpr-ben a démonok
-\emph{semmiféle} erõsítõ tevékenységet nem végeznek, kizárólag akkor
+\emph{semmiféle} erősítő tevékenységet nem végeznek, kizárólag akkor
 módosíthatják a tárat, ha valamilyen behelyettesítés folyamán lineárissá
-válnak. Ez gyengébb az általános korláterõsítõ mechanizmusnál. Ennek
-bizonyítására képzeljük el a következõ példát: a korlát-tár tartalma legyen
+válnak. Ez gyengébb az általános korláterősítő mechanizmusnál. Ennek
+bizonyítására képzeljük el a következő példát: a korlát-tár tartalma legyen
 az \cd{X > 3} korlát, a nemlineáris korlát pedig az \cd{Y > X*X}. A
 korlátmegoldó ennek alapján kikövetkeztethetné, hogy \cd{Y > 9}, és ezt
 fel is vehetné a korlát-tárba, hiszen ez már lineáris korlát (persze emellett
@@ -130,8 +130,8 @@ Lássunk egy további példát az összetett korlátokra vonatkozóan!
 \end{verbatim}
 
 Nézzük meg, hogyan jött ki a fenti eredmény! A rendszer a fenti célsorozat
-futtatásakor választási pont létrehozása nélkül felveszi az elsõ két korlátot
-a korlát-tárba, ezt az alábbi célsorozat futtatásával ellenõrizhetjük:
+futtatásakor választási pont létrehozása nélkül felveszi az első két korlátot
+a korlát-tárba, ezt az alábbi célsorozat futtatásával ellenőrizhetjük:
 
 \begin{verbatim}
 | ?- {X =< Y}, {X*(Y+1) > X*X+Z}.
@@ -139,7 +139,7 @@ a korlát-tárba, ezt az alábbi célsorozat futtatásával ellenõrizhetjük:
 \end{verbatim}
 
 A sor végén jól látható a várakozó démon is. Ezek után egy választási pont
-következik, és az elsõ ágon továbbhaladva felvesszük a \cd{Z}-re vonatkozó
+következik, és az első ágon továbbhaladva felvesszük a \cd{Z}-re vonatkozó
 korlátot:
 
 \begin{verbatim}
@@ -147,10 +147,10 @@ korlátot:
                         Z = X*(Y-X), {X-Y=<0}, {X>0} ? 
 \end{verbatim}
 
-Látható, hogy a démonunk felébredt, és egyszerû korláttá válva bekerült a
+Látható, hogy a démonunk felébredt, és egyszerű korláttá válva bekerült a
 korlát-tárba. Ha ezek után megérkezik az \cd{Y}-ra vonatkozó korlát, akkor
 ez ellentmondásban lesz a korlát-tár eddigi tartalmával, hiszen ha \cd{X}
-pozitív (lásd az elõzõ futás eredményében az utolsó korlátot), és \cd{Y}
+pozitív (lásd az előző futás eredményében az utolsó korlátot), és \cd{Y}
 negatív, akkor \cd{X-Y} mindenképp pozitív, ami ellentmondásban van azzal
 a korláttal, hogy \cd{X-Y=<0}. Ezt a rendszer egy meghiúsulás formájában
 ,,éli át'':
@@ -160,7 +160,7 @@ a korláttal, hogy \cd{X-Y=<0}. Ezt a rendszer egy meghiúsulás formájában
                         no
 \end{verbatim}
 
-A meghiúsulás miatt a korlát-tár tartalma visszafejtõdik egészen a választási
+A meghiúsulás miatt a korlát-tár tartalma visszafejtődik egészen a választási
 pontnál fennálló helyzetig, ahonnan a másik ágon fut tovább, és ott meg is
 találjuk az egyetlen megoldást:
 
@@ -172,7 +172,7 @@ találjuk az egyetlen megoldást:
 \subsection{Bonyolultabb \clpq példa: hiteltörlesztés}
 
 \begin{verbatim}
-% Hiteltörlesztés számítása: P összegû hitelt
+% Hiteltörlesztés számítása: P összegű hitelt
 % Time hónapon át évi IntRate kamat mellett havi MP
 % részletekben törlesztve Bal a maradványösszeg.
 mortgage(P, Time, IntRate, Bal, MP):-
@@ -185,8 +185,8 @@ mortgage(P, Time, IntRate, Bal, MP):-
 \end{verbatim}
 
 A fenti \clpq példa további magyarázatot nem igényel, érdemes azonban
-megfigyelnünk, hogy a \clpq természetébõl adódóan az eljárás hívásakor
-nem kötelezõ úgy kitöltenünk a paramétereket, hogy azokból egyértelmûen
+megfigyelnünk, hogy a \clpq természetéből adódóan az eljárás hívásakor
+nem kötelező úgy kitöltenünk a paramétereket, hogy azokból egyértelműen
 következzen a megoldás, ugyanis ha ez nem teljesül, akkor a \clpq
 kifejezi a hiányzó adatokat a megadottak függvényében:
 
@@ -217,12 +217,12 @@ Az \cd{ordering/1} predikátum egy listát vár paraméterként, és ezzel a
 listával megadhatjuk, hogy az eredményben milyen sorrendben szerepeljenek
 a változók. Ezzel gyakorlatilag azt is szabályozhatjuk, hogy melyik változót
 melyikek segítségével fejezze ki a rendszer. A fenti példában \cd{P} áll a
-lista elsõ helyén, ezért \cd{P}-t fogja kifejezni a többi segítségével.
+lista első helyén, ezért \cd{P}-t fogja kifejezni a többi segítségével.
 
 \subsection{További könyvtári eljárások}
 
 \begin{itemize}
-\item \cd{entailed(Korlát)} --- sikerül, ha \cd{Korlát} levezethetõ a
+\item \cd{entailed(Korlát)} --- sikerül, ha \cd{Korlát} levezethető a
 jelenlegi tárból, meghiúsul, ha nem
 
 \item \cd{inf(Kif,Inf), sup(Kif,Sup)} --- kiszámolja \cd{Kif} infimumát,
@@ -243,7 +243,7 @@ X = 7, Y = 2, Z = 310 ?
 \end{verbatim}
 
 \item \cd{bb_inf(Egészek, Kif, Inf)} --- kiszámolja \cd{Kif} infimumát,
-azzal a további feltétellel, hogy az \cd{Egészek} listában levõ minden
+azzal a további feltétellel, hogy az \cd{Egészek} listában levő minden
 változó egész (ún. ,,Mixed Integer Optimisation Problem'').
 
 \begin{verbatim}
@@ -254,7 +254,7 @@ I = 1, {Y>=1/2}, {X>=1/2} ?
 I = 2, {X>=1/2}, {Y>=1/2} ?
 \end{verbatim}
 
-\item \cd{ordering(V1 < V2)} --- A \cd{V1} változó elõbb szerepeljen az
+\item \cd{ordering(V1 < V2)} --- A \cd{V1} változó előbb szerepeljen az
 eredmény-korlátban mint a \cd{V2} változó.
 
 \item \cd{ordering([V1,V2,...])} --- \cd{V1, V2, ...} ebben a sorrendben
@@ -262,12 +262,12 @@ szerepeljen az eredmény-korlátban.
 
 \end{itemize}
 
-\subsection{A \clpq és a \clpr belsõ számábrázolása}
+\subsection{A \clpq és a \clpr belső számábrázolása}
 
-A \clpr lebegõpontos szám formátumban tárolja a számokat, itt tehát
+A \clpr lebegőpontos szám formátumban tárolja a számokat, itt tehát
 semmi különlegességgel nem találkozhatunk. A \clpq azonban racionális
-számokkal dolgozik, és ezeket a számokat egy \cd{rat(Számláló,Nevezõ)}
-alakú struktúrával ábrázolja, ahol a tört számlálója és nevezõje mindig
+számokkal dolgozik, és ezeket a számokat egy \cd{rat(Számláló,Nevező)}
+alakú struktúrával ábrázolja, ahol a tört számlálója és nevezője mindig
 relatív prím. Ennek bizonyítására tekintsük az alábbi \clpq példákat:
 
 \begin{verbatim}
@@ -289,8 +289,8 @@ X = 5 ?
 
 \label{teglalap:clpqr}
 
-A feladat: egy olyan téglalap keresése, amely kirakható páronként különbözõ
-oldalú négyzetekbõl.
+A feladat: egy olyan téglalap keresése, amely kirakható páronként különböző
+oldalú négyzetekből.
 
 \enumhead{Egy lehetséges megoldás}
 (a legkevesebb, 9 db négyzet felhasználásával)
@@ -299,24 +299,24 @@ oldalú négyzetekbõl.
 \end{center}
 
 A feladat megoldása során a négyzetet a ,,tetris-elv'' alapján, alulról
-felfelé és balról jobbra fogjuk kitölteni, tehát a következõ négyzetet
+felfelé és balról jobbra fogjuk kitölteni, tehát a következő négyzetet
 mindig igyekszünk a négyzetben lent és bal oldalt elhelyezni, ameddig
 ez lehetséges. Mivel a fenti elv alapján töltjük ki a négyzetet, ezért a
-ki nem töltött terület összefüggõ, ezért jellemezhetõ a körvonalával, amit
-Prologban egy listával fogunk lekódolni, amelyben a vonal függõleges és
+ki nem töltött terület összefüggő, ezért jellemezhető a körvonalával, amit
+Prologban egy listával fogunk lekódolni, amelyben a vonal függőleges és
 vízszintes szakaszainak hosszát adjuk meg egy adott körüljárási sorrend
-szerint. A függõleges és vízszintes szakaszok váltakozva fordulnak elõ,
-ezért a listánkban minden páratlanadik elem függõleges szakaszt, minden
+szerint. A függőleges és vízszintes szakaszok váltakozva fordulnak elő,
+ezért a listánkban minden páratlanadik elem függőleges szakaszt, minden
 párosadik elem vízszintes szakaszt fog kódolni. A körüljárást a négyzet
-bal felsõ sarkából kezdjük az óramutató járásával ellenkezõ irányban, és
+bal felső sarkából kezdjük az óramutató járásával ellenkező irányban, és
 a lista utolsó elemét elhagyjuk, mivel a körvonal záródása miatt ez úgyis
 redundáns. Ezek alapján például egy 33 $\times$ 32-es üres négyzet a
 \cd{[-32,33,32]} listával kódolható. Ha tekintjük a fenti négyzetet abban
 az állapotban, amikor csak a 15 oldalhosszúságú négyzetet helyeztük el,
 akkor az üres területet a \cd{[-17,15,-15,18,32]} lista írja le.
 \br
-A keresési terünkben kétfajta választási pont fog elõfordulni: vízszintes
-és függõleges. Függõleges választási pontnál azt döntjük el, hogy amikor
+A keresési terünkben kétfajta választási pont fog előfordulni: vízszintes
+és függőleges. Függőleges választási pontnál azt döntjük el, hogy amikor
 egy négyzet mellé egy másik négyzetet lerakunk, akkor az új négyzet magassága
 milyen relációban álljon a már lerakott négyzettel. Vízszintes választási
 pontnál azt döntjük el, hogy a már kiválasztott oldalhosszúságú négyzet
@@ -325,7 +325,7 @@ pontot szemlélteti az alábbi ábra:
 
 \begin{center}
 \begin{tabular}{cc}
-Vízszintes választási pont & Függõleges választási pont
+Vízszintes választási pont & Függőleges választási pont
 \\
 \epsfig{file=rect_choice_v.eps,width=0.4\textwidth}
 &
@@ -334,7 +334,7 @@ Vízszintes választási pont & Függõleges választási pont
 \end{center}
 
 A fentiekhez még annyi kiegészítés szükséges, hogy a programban a
-négyzet függõleges oldalát mindig 1-nek választjuk, így csak a vízszintes
+négyzet függőleges oldalát mindig 1-nek választjuk, így csak a vízszintes
 oldal méretével kell variálni. A megoldáshoz használt predikátumok:
 
 \begin{verbatim}
@@ -387,11 +387,11 @@ placed_square(S, [H|L], [X,Y|L]) :-
 A program belépési pontja a \cd{filled_rectangle/2} predikátum, amely
 a \cd{Width} paraméterében fogja megadni a téglalap szélességét, \cd{Ss}-ben
 pedig a kitöltéshez felhasznált négyzetek listáját. A \cd{distinct_squares/1}
-korlát adja meg, hogy a négyzeteknek nem lehetnek azonos méretûek. Ez egy
-egyszerû ,,darálás'' az \cd{Ss} listában elõforduló összes négyzet-párra
+korlát adja meg, hogy a négyzeteknek nem lehetnek azonos méretűek. Ez egy
+egyszerű ,,darálás'' az \cd{Ss} listában előforduló összes négyzet-párra
 az \cd{outof/2} segítségével. A négyzetek elhelyezését a \cd{filled_hole/4}
-predikátum végzi. A predikátum harmadik és negyedik paramétere a kezdõ-
-és a végállapotban elhelyezett négyzetek listáját adja, az elsõ és a második
+predikátum végzi. A predikátum harmadik és negyedik paramétere a kezdő-
+és a végállapotban elhelyezett négyzetek listáját adja, az első és a második
 paraméter pedig a harmadik és negyedik paraméterben leírt állapothoz tartozó
 határoló vonalak leírása a fentebb leírt formában. A \cd{placed_square/3}
 predikátum pedig a vízszintes választási pontok három fajtáját írja le,
@@ -415,15 +415,15 @@ N = 9, MSec = 10930, Width = 33/32,
 Ss = [9/16,15/32,7/32,1/4,7/16,1/8,5/16,1/32,9/32] ? 
 \end{verbatim}
 Amint látható, 9-nél kevesebb négyzettel nem lehet lefedni a téglalapot,
-9-re viszont máris három megoldást talált a program, ebbõl az elsõ és
+9-re viszont máris három megoldást talált a program, ebből az első és
 a harmadik csak a négyzetek elhelyezésében különbözik.
 \br
-A program mûködésének megértéséhez hagyjuk ki az \cd{outof/2} által
-generált korlátokat, és nézzük meg, hogy kisebb méretû téglalapokra milyen
+A program működésének megértéséhez hagyjuk ki az \cd{outof/2} által
+generált korlátokat, és nézzük meg, hogy kisebb méretű téglalapokra milyen
 korlátokat generál a program! Kommentként közöljük az adott ágon generált
 korlátokat és lefedést, a rendundáns korlátok elhagyásával. A
 \cd{filled_rectangle/3} \cd{[eqsq]} paramétere jelzi, hogy most megengedünk
-azonos méretû négyzeteket.
+azonos méretű négyzeteket.
 \begin{verbatim}
 | ?- filled_rectangle(W, [S1,S2,S3], [eqsq]).
 
