@@ -4,7 +4,11 @@ MACROFILES = slides.mac $(wildcard *.sty)
 
 ALLFILES = $(TEXFILES) $(MACROFILES) $(PSFILES)
 
-all: pdf
+all: build
+
+build:
+	xelatex ndp.tex
+	xelatex ndp.tex
 
 show: main.dvi
 	xdvi + main.dvi
@@ -24,7 +28,7 @@ main.pdf: main.ps
 	ps2pdf main.ps main.pdf
 
 clean:
-	rm -f  main.ps main.pdf main.dvi main.log main.toc *.aux
+	rm -f  main.ps main.pdf *.dvi *.log *.toc *.aux ndp*.pdf
 
 dist:
 	tar -cvvzf nlpjegyzet02.tar.gz $(ALLFILES) cserel.c Makefile
