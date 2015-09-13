@@ -1,42 +1,42 @@
 \clearpage
 
-\section{A Mercury nagyhatékonyságú LP megvalósítás}
+\section{A Mercury nagyhatÃ©konysÃ¡gÃº LP megvalÃ³sÃ­tÃ¡s}
 
-Ebben a fejezetben a Mercury nagyhatékonyságú logikai programnyelvet mutatjuk be nagy
-vonalakban. Mivel a Prolog önmagában nem kimondottan alkalmas nagyobb méretû projektek
-kezelésére, a Mercury megalkotásakor a készítõk célja elsõdlegesen a nagybani programozás
-támogatása, valamint a produktivitás, a megbízhatóság és a hatékonyság növelése volt.
-Eközben a következõ irányelveket tartották szem elõtt:
+Ebben a fejezetben a Mercury nagyhatÃ©konysÃ¡gÃº logikai programnyelvet mutatjuk be nagy
+vonalakban. Mivel a Prolog Ã¶nmagÃ¡ban nem kimondottan alkalmas nagyobb mÃ©retÃ» projektek
+kezelÃ©sÃ©re, a Mercury megalkotÃ¡sakor a kÃ©szÃ­tÃµk cÃ©lja elsÃµdlegesen a nagybani programozÃ¡s
+tÃ¡mogatÃ¡sa, valamint a produktivitÃ¡s, a megbÃ­zhatÃ³sÃ¡g Ã©s a hatÃ©konysÃ¡g nÃ¶velÃ©se volt.
+EkÃ¶zben a kÃ¶vetkezÃµ irÃ¡nyelveket tartottÃ¡k szem elÃµtt:
 
 \begin{itemize}
-\item Teljesen deklaratív programozás
-\item Funkcionális elemek integrálása
-\item Hagyományos Prolog szintaxis megõrzése
-\item Típus, mód és determinizmus információk használata
-\item Szeparált fordítás támogatása
-\item Prologénál erõsebb modul-rendszer
-\item Sztenderd könyvtár
+\item Teljesen deklaratÃ­v programozÃ¡s
+\item FunkcionÃ¡lis elemek integrÃ¡lÃ¡sa
+\item HagyomÃ¡nyos Prolog szintaxis megÃµrzÃ©se
+\item TÃ­pus, mÃ³d Ã©s determinizmus informÃ¡ciÃ³k hasznÃ¡lata
+\item SzeparÃ¡lt fordÃ­tÃ¡s tÃ¡mogatÃ¡sa
+\item PrologÃ©nÃ¡l erÃµsebb modul-rendszer
+\item Sztenderd kÃ¶nyvtÃ¡r
 \end{itemize}
 
-A Mercury nyelv és az implementáció fejlesztõje a University Of Melbourne. A nyelv
-honlapja a \verb'http://www.cs.mu.oz.au/mercury/' címen található meg.
+A Mercury nyelv Ã©s az implementÃ¡ciÃ³ fejlesztÃµje a University Of Melbourne. A nyelv
+honlapja a \verb'http://www.cs.mu.oz.au/mercury/' cÃ­men talÃ¡lhatÃ³ meg.
 
-\subsection{Egy Mercury példaprogram}
+\subsection{Egy Mercury pÃ©ldaprogram}
 
-A feladat: operációs rendszerek file-név-illesztéséhez hasonló
-funkció megvalósítása. Egy karaktersorozat illesztésekor a \cd{?} karakter
-egy tetszõleges másik karakterrel illeszthetõ, a \cd{*} karakter egy tetszõleges
-(esetleg üres) karaktersorozattal illeszthetõ, a \verb+\+$c$ karakter-pár pedig
-a $c$ karakterrel illeszthetõ. Ha egy minta \verb+\+-re végzõdik, az illesztés
-meghiúsul. Bármely más karakter csak önmagával illeszthetõ.
+A feladat: operÃ¡ciÃ³s rendszerek file-nÃ©v-illesztÃ©sÃ©hez hasonlÃ³
+funkciÃ³ megvalÃ³sÃ­tÃ¡sa. Egy karaktersorozat illesztÃ©sekor a \cd{?} karakter
+egy tetszÃµleges mÃ¡sik karakterrel illeszthetÃµ, a \cd{*} karakter egy tetszÃµleges
+(esetleg Ã¼res) karaktersorozattal illeszthetÃµ, a \verb+\+$c$ karakter-pÃ¡r pedig
+a $c$ karakterrel illeszthetÃµ. Ha egy minta \verb+\+-re vÃ©gzÃµdik, az illesztÃ©s
+meghiÃºsul. BÃ¡rmely mÃ¡s karakter csak Ã¶nmagÃ¡val illeszthetÃµ.
 \br
-A program hívási formája: \cd{match Pattern1 Name Pattern2}, ahol a \cd{Pattern1}
-és \cd{Pattern2} mintákban a \cd{*} és \cd{?} karaktereknek azonos elrendezésben
-kell elõfordulniuk.
+A program hÃ­vÃ¡si formÃ¡ja: \cd{match Pattern1 Name Pattern2}, ahol a \cd{Pattern1}
+Ã©s \cd{Pattern2} mintÃ¡kban a \cd{*} Ã©s \cd{?} karaktereknek azonos elrendezÃ©sben
+kell elÃµfordulniuk.
 \br
-A program funkciója: a \cd{Pattern1} mintára az összes lehetséges módon illeszti
-a \cd{Name} nevet, a \cd{*} és \cd{?} karakterek helyére kerülõ szöveget \cd{Pattern2}-be
-behelyettesíti, és az így kapott neveket kiírja.
+A program funkciÃ³ja: a \cd{Pattern1} mintÃ¡ra az Ã¶sszes lehetsÃ©ges mÃ³don illeszti
+a \cd{Name} nevet, a \cd{*} Ã©s \cd{?} karakterek helyÃ©re kerÃ¼lÃµ szÃ¶veget \cd{Pattern2}-be
+behelyettesÃ­ti, Ã©s az Ã­gy kapott neveket kiÃ­rja.
 
 \begin{verbatim}
 :- module match.
@@ -44,7 +44,7 @@ behelyettesíti, és az így kapott neveket kiírja.
 :- interface.
 
 :- import_module io.
-:- pred main(io__state::di, io__state::uo) is det. % kötelezõ
+:- pred main(io__state::di, io__state::uo) is det. % kÃ¶telezÃµ
 
 /*-----------------------------------------------------*/
 :- implementation.
@@ -62,7 +62,7 @@ main -->
     ).
 
 :- pred match(string::in, string::in, string::in,
-               string::out) is nondet. % szükséges
+               string::out) is nondet. % szÃ¼ksÃ©ges
 match(Pattern1, Name1, Pattern2, Name2) :-
     to_char_list(Pattern1, Ps1),
     to_char_list(Name1, Cs1),
@@ -74,7 +74,7 @@ match(Pattern1, Name1, Pattern2, Name2) :-
 :- type subst ---> any(list(char)) ; one(char).
 
 :- pred match_list(list(char), list(char), list(subst)).
-:- mode match_list(in, in, out) is nondet. % mindkettõ,
+:- mode match_list(in, in, out) is nondet. % mindkettÃµ,
 :- mode match_list(in, out, in) is nondet. % vagy egyik se
 match_list([], [], []).
 match_list([?|Ps], [X|Cs], [one(X)|L]) :-
@@ -89,7 +89,7 @@ match_list([C|Ps], [C|Cs], L) :-
     match_list(Ps, Cs, L).
 \end{verbatim}
 
-\enumhead{A program egy futása}
+\enumhead{A program egy futÃ¡sa}
 \begin{verbatim}
 # ./match **z?c  foozkc '|*|*|?'
 Pattern '**z?c' matches 'foozkc' as '|*|*|?' matches the following:
@@ -104,173 +104,173 @@ Pattern '**z?c' matches 'foozkc' as '|*|*|?' matches the following:
 
 \subsection{A Mercury modul-rendszere}
 
-A Mercury programokat különálló modulokból lehet felépíteni, ez lehetõvé teszi a
-modulok egymástól független, szeparált fordítását. A modul-rendszer támogatja az
-absztrakt típusok használatát és a modulok egymásba ágyazhatóságát is.
+A Mercury programokat kÃ¼lÃ¶nÃ¡llÃ³ modulokbÃ³l lehet felÃ©pÃ­teni, ez lehetÃµvÃ© teszi a
+modulok egymÃ¡stÃ³l fÃ¼ggetlen, szeparÃ¡lt fordÃ­tÃ¡sÃ¡t. A modul-rendszer tÃ¡mogatja az
+absztrakt tÃ­pusok hasznÃ¡latÃ¡t Ã©s a modulok egymÃ¡sba Ã¡gyazhatÃ³sÃ¡gÃ¡t is.
 \br
-Egy Mercury modult mindig a \cd{:- module} \meta{modulename}\cd{.} sorral kezdjük
-(a fenti példában \cd{:- module match.}). A modul két részre osztható, az
-\emph{interfész} és az \emph{implementációs} részre. Az interfész részt az
-\cd{:- interface.} kulcsszóval kezdjük. Ebben a részben minden szerepelhet, kivéve
-függvények, predikátumok és almodulok definícióját. Az itt lévõ dolgok fognak
-,,kilátszani'' a modulból. Az implementációs részt az \cd{:- implementation.} kulcsszó
-vezeti be, és ide kerülnek az interfész részben deklarált függvények, predikátumok,
-absztrakt adattípusok és almodulok pontos definíciói. Az implementációs rész tartalma
-lokális a modulra nézve.
+Egy Mercury modult mindig a \cd{:- module} \meta{modulename}\cd{.} sorral kezdjÃ¼k
+(a fenti pÃ©ldÃ¡ban \cd{:- module match.}). A modul kÃ©t rÃ©szre oszthatÃ³, az
+\emph{interfÃ©sz} Ã©s az \emph{implementÃ¡ciÃ³s} rÃ©szre. Az interfÃ©sz rÃ©szt az
+\cd{:- interface.} kulcsszÃ³val kezdjÃ¼k. Ebben a rÃ©szben minden szerepelhet, kivÃ©ve
+fÃ¼ggvÃ©nyek, predikÃ¡tumok Ã©s almodulok definÃ­ciÃ³jÃ¡t. Az itt lÃ©vÃµ dolgok fognak
+,,kilÃ¡tszani'' a modulbÃ³l. Az implementÃ¡ciÃ³s rÃ©szt az \cd{:- implementation.} kulcsszÃ³
+vezeti be, Ã©s ide kerÃ¼lnek az interfÃ©sz rÃ©szben deklarÃ¡lt fÃ¼ggvÃ©nyek, predikÃ¡tumok,
+absztrakt adattÃ­pusok Ã©s almodulok pontos definÃ­ciÃ³i. Az implementÃ¡ciÃ³s rÃ©sz tartalma
+lokÃ¡lis a modulra nÃ©zve.
 \br
-Egy modul természetesen felhasználhatja egy másik modul interfész részét. Ehhez
-a használni kívánt modult importálni kell az \cd{:- import_module} \meta{modules}\cd{.}
-vagy az \cd{:- use_module} \meta{modules}\cd{.} predikátum használatával. A kettõ
-között az a lényegi különbség, hogy az \cd{import_module} alkalmazásával importált
-modulokból származó predikátumok használatához nincs szükség külön modul-kvalifikációra,
-míg a \cd{use_module} esetében igen. A modul-kvalifikáció alakja:
+Egy modul termÃ©szetesen felhasznÃ¡lhatja egy mÃ¡sik modul interfÃ©sz rÃ©szÃ©t. Ehhez
+a hasznÃ¡lni kÃ­vÃ¡nt modult importÃ¡lni kell az \cd{:- import_module} \meta{modules}\cd{.}
+vagy az \cd{:- use_module} \meta{modules}\cd{.} predikÃ¡tum hasznÃ¡latÃ¡val. A kettÃµ
+kÃ¶zÃ¶tt az a lÃ©nyegi kÃ¼lÃ¶nbsÃ©g, hogy az \cd{import_module} alkalmazÃ¡sÃ¡val importÃ¡lt
+modulokbÃ³l szÃ¡rmazÃ³ predikÃ¡tumok hasznÃ¡latÃ¡hoz nincs szÃ¼ksÃ©g kÃ¼lÃ¶n modul-kvalifikÃ¡ciÃ³ra,
+mÃ­g a \cd{use_module} esetÃ©ben igen. A modul-kvalifikÃ¡ciÃ³ alakja:
 \meta{module}\cd{:}\meta{submodule}\cd{:}\dots\cd{:}\meta{submodule}\cd{:}\meta{name}.
-A Mercury jelenlegi verzióiban a \cd{:} helyett egyelõre a \cd{\_\_} (dupla aláhúzásjel)
-javasolt, mert lehet, hogy a késõbbiekben a \cd{:} helyett a \cd{.} lesz a
-modulkvalifikátor és a \cd{:} a típuskvalifikátor. Modulkvalifikációra egyébként a
-mintaillesztõ program interfész részében a
-\cd{:- pred main(io__state::di, io__state::uo) is det.} sorban láthatunk egy egyszerû példát.
+A Mercury jelenlegi verziÃ³iban a \cd{:} helyett egyelÃµre a \cd{\_\_} (dupla alÃ¡hÃºzÃ¡sjel)
+javasolt, mert lehet, hogy a kÃ©sÃµbbiekben a \cd{:} helyett a \cd{.} lesz a
+modulkvalifikÃ¡tor Ã©s a \cd{:} a tÃ­puskvalifikÃ¡tor. ModulkvalifikÃ¡ciÃ³ra egyÃ©bkÃ©nt a
+mintaillesztÃµ program interfÃ©sz rÃ©szÃ©ben a
+\cd{:- pred main(io__state::di, io__state::uo) is det.} sorban lÃ¡thatunk egy egyszerÃ» pÃ©ldÃ¡t.
 \br
-Almodulok használata elvileg kétféleképpen is lehetséges: a fõmodul fájljába beágyazva
-(\emph{beágyazott almodul}) vagy külön fájlban (\emph{szeparált almodul}). A jelenlegi
-implementációban a beágyazott almodulok használata egyelõre problémás.
+Almodulok hasznÃ¡lata elvileg kÃ©tfÃ©lekÃ©ppen is lehetsÃ©ges: a fÃµmodul fÃ¡jljÃ¡ba beÃ¡gyazva
+(\emph{beÃ¡gyazott almodul}) vagy kÃ¼lÃ¶n fÃ¡jlban (\emph{szeparÃ¡lt almodul}). A jelenlegi
+implementÃ¡ciÃ³ban a beÃ¡gyazott almodulok hasznÃ¡lata egyelÃµre problÃ©mÃ¡s.
 
-\subsection{A Mercury típusrendszere}
+\subsection{A Mercury tÃ­pusrendszere}
 
-A Mercury a Prologtól eltérõen egy típusos nyelv. A típusoknak több fajtája lehet:
+A Mercury a PrologtÃ³l eltÃ©rÃµen egy tÃ­pusos nyelv. A tÃ­pusoknak tÃ¶bb fajtÃ¡ja lehet:
 
 \begin{itemize}
-\item primitív: \cd{char}, \cd{int}, \cd{float}, \cd{string}
-\item predikátum: \cd{pred}, \cd{pred(T)}, \cd{pred(T1, T2)}, \dots
-\item függvény: \cd{(func) = T}, \cd{func(T1) = T}, \dots
-\item univerzális: \cd{univ}
-\item ,,a világ állapota'': \cd{io\_\_state}
-\item felhasználó által bevezetett
+\item primitÃ­v: \cd{char}, \cd{int}, \cd{float}, \cd{string}
+\item predikÃ¡tum: \cd{pred}, \cd{pred(T)}, \cd{pred(T1, T2)}, \dots
+\item fÃ¼ggvÃ©ny: \cd{(func) = T}, \cd{func(T1) = T}, \dots
+\item univerzÃ¡lis: \cd{univ}
+\item ,,a vilÃ¡g Ã¡llapota'': \cd{io\_\_state}
+\item felhasznÃ¡lÃ³ Ã¡ltal bevezetett
 \end{itemize}
 
-A felhasználói adattípusok között szerepel az SML-bõl ismerõs \emph{megkülönböztetett
-unió} adattípus (SML-ben ez \cd{datatype} néven szerepelt), az \emph{ekvivalencia típus}
-(más néven típusátnevezés, SML-ben \cd{type} néven szerepelt) és az
-\emph{absztrakt típus} is. A megkülönböztetett uniónak is több alfajtája van:
+A felhasznÃ¡lÃ³i adattÃ­pusok kÃ¶zÃ¶tt szerepel az SML-bÃµl ismerÃµs \emph{megkÃ¼lÃ¶nbÃ¶ztetett
+uniÃ³} adattÃ­pus (SML-ben ez \cd{datatype} nÃ©ven szerepelt), az \emph{ekvivalencia tÃ­pus}
+(mÃ¡s nÃ©ven tÃ­pusÃ¡tnevezÃ©s, SML-ben \cd{type} nÃ©ven szerepelt) Ã©s az
+\emph{absztrakt tÃ­pus} is. A megkÃ¼lÃ¶nbÃ¶ztetett uniÃ³nak is tÃ¶bb alfajtÃ¡ja van:
 
 \begin{itemize}
-\item \emph{Enumeráció típus} \\
+\item \emph{EnumerÃ¡ciÃ³ tÃ­pus} \\
 \cd{:- type fruit ---> apple; orange; banana; pear.} \\
-A fenti példában egy \cd{fruit} nevû típust definiálunk, amely változói négy lehetséges
-értéket vehetnek fel, és ezeket az értékeket rendre az \cd{apple}, \cd{orange},
-\cd{banana}, \cd{pear} névkonstansokkal azonosítjuk.
-\item \emph{Rekord típus} \\
+A fenti pÃ©ldÃ¡ban egy \cd{fruit} nevÃ» tÃ­pust definiÃ¡lunk, amely vÃ¡ltozÃ³i nÃ©gy lehetsÃ©ges
+Ã©rtÃ©ket vehetnek fel, Ã©s ezeket az Ã©rtÃ©keket rendre az \cd{apple}, \cd{orange},
+\cd{banana}, \cd{pear} nÃ©vkonstansokkal azonosÃ­tjuk.
+\item \emph{Rekord tÃ­pus} \\
 \cd{:- type itree ---> empty; leaf(int); branch(itree, itree)} \\
-Ez a példa egy \cd{itree} nevû típust definiál, amely bináris fák reprezentálására
-szolgál. Egy \cd{itree} típusú változó értéke háromféle lehet: \cd{empty} (ez
-jelképezi az üres fát), \cd{leaf(int)} (ez jelképez egy levelet, a levél értékének
-típusa \cd{int}) és \cd{branch(itree, itree)} (ez egy elágazó csomópontot jelképez,
-ahol mindkét ág egy-egy újabb \cd{itree} típusú objektum).
-\item \emph{Polimorfikus típus} \\
+Ez a pÃ©lda egy \cd{itree} nevÃ» tÃ­pust definiÃ¡l, amely binÃ¡ris fÃ¡k reprezentÃ¡lÃ¡sÃ¡ra
+szolgÃ¡l. Egy \cd{itree} tÃ­pusÃº vÃ¡ltozÃ³ Ã©rtÃ©ke hÃ¡romfÃ©le lehet: \cd{empty} (ez
+jelkÃ©pezi az Ã¼res fÃ¡t), \cd{leaf(int)} (ez jelkÃ©pez egy levelet, a levÃ©l Ã©rtÃ©kÃ©nek
+tÃ­pusa \cd{int}) Ã©s \cd{branch(itree, itree)} (ez egy elÃ¡gazÃ³ csomÃ³pontot jelkÃ©pez,
+ahol mindkÃ©t Ã¡g egy-egy Ãºjabb \cd{itree} tÃ­pusÃº objektum).
+\item \emph{Polimorfikus tÃ­pus} \\
 \begin{verbatim}
 :- type list(T) ---> [] ; [T|list(T)].
 :- type pair(T1, T2) ---> T1 - T2.
 \end{verbatim}
-A \cd{list(T)} típus egy \cd{T} típusú elemekbõl álló lista, ahol \cd{T} maga
-egy \emph{típusváltozó}. Így például a \cd{list(int)} \cd{int} típusú elemek
-listáját adja, \cd{list(char)} karakterlistát, és így tovább. A \cd{pair(T1, T2)}
-típus \cd{T1} és \cd{T2} típusú elemekbõl álló párok típusa, ahol \cd{T1} és
-\cd{T2} szintén típusváltozók. Például \cd{pair(int,char)} egy olyan párt ír
-le, amely elsõ tagja \cd{int}, második tagja \cd{char} típusú.
+A \cd{list(T)} tÃ­pus egy \cd{T} tÃ­pusÃº elemekbÃµl Ã¡llÃ³ lista, ahol \cd{T} maga
+egy \emph{tÃ­pusvÃ¡ltozÃ³}. Ãgy pÃ©ldÃ¡ul a \cd{list(int)} \cd{int} tÃ­pusÃº elemek
+listÃ¡jÃ¡t adja, \cd{list(char)} karakterlistÃ¡t, Ã©s Ã­gy tovÃ¡bb. A \cd{pair(T1, T2)}
+tÃ­pus \cd{T1} Ã©s \cd{T2} tÃ­pusÃº elemekbÃµl Ã¡llÃ³ pÃ¡rok tÃ­pusa, ahol \cd{T1} Ã©s
+\cd{T2} szintÃ©n tÃ­pusvÃ¡ltozÃ³k. PÃ©ldÃ¡ul \cd{pair(int,char)} egy olyan pÃ¡rt Ã­r
+le, amely elsÃµ tagja \cd{int}, mÃ¡sodik tagja \cd{char} tÃ­pusÃº.
 \end{itemize}
 
-A megkülönböztetett unió leírásának megalkotására vonatkozó általános szabályok:
+A megkÃ¼lÃ¶nbÃ¶ztetett uniÃ³ leÃ­rÃ¡sÃ¡nak megalkotÃ¡sÃ¡ra vonatkozÃ³ Ã¡ltalÃ¡nos szabÃ¡lyok:
 
 \begin{itemize}
-\item A típusleírás alakja: \cd{:- type} \meta{típus} \verb`--->` \meta{törzs}\cd{.}
-\item a \meta{törzs} minden konstruktorában az argumentumok típusok vagy változók
-\item a \meta{törzs} minden változójának szerepelnie kell \meta{típus}-ban
-\item \meta{típus} változói különbözõk
-\item a típusok között névekvivalencia van
-\item egy típusban nem fordulhat elõ egynél többször azonos nevû és
-argumentumszámú konstruktor
+\item A tÃ­pusleÃ­rÃ¡s alakja: \cd{:- type} \meta{tÃ­pus} \verb`--->` \meta{tÃ¶rzs}\cd{.}
+\item a \meta{tÃ¶rzs} minden konstruktorÃ¡ban az argumentumok tÃ­pusok vagy vÃ¡ltozÃ³k
+\item a \meta{tÃ¶rzs} minden vÃ¡ltozÃ³jÃ¡nak szerepelnie kell \meta{tÃ­pus}-ban
+\item \meta{tÃ­pus} vÃ¡ltozÃ³i kÃ¼lÃ¶nbÃ¶zÃµk
+\item a tÃ­pusok kÃ¶zÃ¶tt nÃ©vekvivalencia van
+\item egy tÃ­pusban nem fordulhat elÃµ egynÃ©l tÃ¶bbszÃ¶r azonos nevÃ» Ã©s
+argumentumszÃ¡mÃº konstruktor
 \end{itemize}
 
-Az ekvivalencia típus leírása:
+Az ekvivalencia tÃ­pus leÃ­rÃ¡sa:
 
 \begin{itemize}
-\item \cd{:- type} \meta{típus} \cd{==} \meta{típus}\cd{.} (például
+\item \cd{:- type} \meta{tÃ­pus} \cd{==} \meta{tÃ­pus}\cd{.} (pÃ©ldÃ¡ul
 \cd{:- type assoc\_list(K, V) == list(pair(K, V)).})
 \item nem lehet ciklikus
-\item a jobb és a bal oldal teljesen ekvivalens egymással
+\item a jobb Ã©s a bal oldal teljesen ekvivalens egymÃ¡ssal
 \end{itemize}
 
-Az absztrakt típusra az a jellemzõ, hogy az interfész részben csak a típus neve
-van megadva (\cd{:- type} \meta{típus}\cd{.}), a típus tényleges definíciója az
-implementációs részben el van rejtve.
+Az absztrakt tÃ­pusra az a jellemzÃµ, hogy az interfÃ©sz rÃ©szben csak a tÃ­pus neve
+van megadva (\cd{:- type} \meta{tÃ­pus}\cd{.}), a tÃ­pus tÃ©nyleges definÃ­ciÃ³ja az
+implementÃ¡ciÃ³s rÃ©szben el van rejtve.
 \br
-A típusoknak a predikátum- és függvényleírásoknál van szerepe: egy predikátum
-vagy függvény leírásánál mindig meg kell adni a paraméterek típusát. Például:
+A tÃ­pusoknak a predikÃ¡tum- Ã©s fÃ¼ggvÃ©nyleÃ­rÃ¡soknÃ¡l van szerepe: egy predikÃ¡tum
+vagy fÃ¼ggvÃ©ny leÃ­rÃ¡sÃ¡nÃ¡l mindig meg kell adni a paramÃ©terek tÃ­pusÃ¡t. PÃ©ldÃ¡ul:
 
 \begin{verbatim}
 :- pred is_all_uppercase(string).
 :- func length(list(T)) = int.
 \end{verbatim}
 
-\subsection{Módok és behelyettesítettség}
+\subsection{MÃ³dok Ã©s behelyettesÃ­tettsÃ©g}
 
-\definicio egy paraméter \emph{mód}jának nevezünk egy két behelyettesítettségi állapotból
-álló párt, ahol az elsõ állapot azt jelöli, ahogyan a paraméter bemegy egy adott
-predikátumba, a második pedig azt, ahogy kijön belõle. Például az \cd{out} mód jelentése:
-szabad változó megy be, tömör kifejezés jön ki.
+\definicio egy paramÃ©ter \emph{mÃ³d}jÃ¡nak nevezÃ¼nk egy kÃ©t behelyettesÃ­tettsÃ©gi Ã¡llapotbÃ³l
+Ã¡llÃ³ pÃ¡rt, ahol az elsÃµ Ã¡llapot azt jelÃ¶li, ahogyan a paramÃ©ter bemegy egy adott
+predikÃ¡tumba, a mÃ¡sodik pedig azt, ahogy kijÃ¶n belÃµle. PÃ©ldÃ¡ul az \cd{out} mÃ³d jelentÃ©se:
+szabad vÃ¡ltozÃ³ megy be, tÃ¶mÃ¶r kifejezÃ©s jÃ¶n ki.
 \br
-Saját adattípusainkhoz különbözõ, részleges behelyettesítettséget leíró behelyettesítettségi
-állapotot is rendelhetünk. Tekintsük például a bináris fa adattípusát:
+SajÃ¡t adattÃ­pusainkhoz kÃ¼lÃ¶nbÃ¶zÃµ, rÃ©szleges behelyettesÃ­tettsÃ©get leÃ­rÃ³ behelyettesÃ­tettsÃ©gi
+Ã¡llapotot is rendelhetÃ¼nk. TekintsÃ¼k pÃ©ldÃ¡ul a binÃ¡ris fa adattÃ­pusÃ¡t:
 
 \epsfigure{instree}{0.4}
 
-Az állapot leírásakor a típust tartalmazó (,,vagy'') csúcsokhoz rendelünk
-behelyettesítettségi állapotot. A deklarációban a \cd{bound/1}, a \cd{free/0} és a
-\cd{ground/0} funktorokat használhatjuk. Például:
+Az Ã¡llapot leÃ­rÃ¡sakor a tÃ­pust tartalmazÃ³ (,,vagy'') csÃºcsokhoz rendelÃ¼nk
+behelyettesÃ­tettsÃ©gi Ã¡llapotot. A deklarÃ¡ciÃ³ban a \cd{bound/1}, a \cd{free/0} Ã©s a
+\cd{ground/0} funktorokat hasznÃ¡lhatjuk. PÃ©ldÃ¡ul:
 \begin{verbatim}
 :- inst bs = bound(empty; leaf(free); branch(bs,bs)).
 \end{verbatim}
-A fenti deklaráció alapján \cd{bs} behelyettesítettségû az olyan bináris fa, amely
-vagy üres (\cd{empty}), vagy egy szabad változót tartalmazó levél (\cd{leaf(free)}),
-vagy egy olyan elágazás, amely mindkét fele \cd{bs} behelyettesítettségû. Lehetõség
-van parametrizált \cd{inst}-ek készítésére is:
+A fenti deklarÃ¡ciÃ³ alapjÃ¡n \cd{bs} behelyettesÃ­tettsÃ©gÃ» az olyan binÃ¡ris fa, amely
+vagy Ã¼res (\cd{empty}), vagy egy szabad vÃ¡ltozÃ³t tartalmazÃ³ levÃ©l (\cd{leaf(free)}),
+vagy egy olyan elÃ¡gazÃ¡s, amely mindkÃ©t fele \cd{bs} behelyettesÃ­tettsÃ©gÃ». LehetÃµsÃ©g
+van parametrizÃ¡lt \cd{inst}-ek kÃ©szÃ­tÃ©sÃ©re is:
 \begin{verbatim}
 :- inst bs(Inst) = bound(empty ; leaf(Inst) ; branch(bs(Inst),bs(Inst))).
 :- inst listskel(Inst) = bound([] ; [Inst|listskel(Inst)]).
 \end{verbatim}
 
-Egy mód leírása a behelyettesítettségi állapotok alapján a következõképpen néz ki:
+Egy mÃ³d leÃ­rÃ¡sa a behelyettesÃ­tettsÃ©gi Ã¡llapotok alapjÃ¡n a kÃ¶vetkezÃµkÃ©ppen nÃ©z ki:
 \cd{:- mode} \meta{m} \cd{==} \meta{inst1} \verb`>>` \meta{inst2}\cd{.}, ahol
-\meta{m} a mód neve, \meta{inst1} és \meta{inst2} pedig behelyettesítettségi állapotok
-nevei. Az \cd{in} és az \cd{out} mód leírása például így néz ki:
+\meta{m} a mÃ³d neve, \meta{inst1} Ã©s \meta{inst2} pedig behelyettesÃ­tettsÃ©gi Ã¡llapotok
+nevei. Az \cd{in} Ã©s az \cd{out} mÃ³d leÃ­rÃ¡sa pÃ©ldÃ¡ul Ã­gy nÃ©z ki:
 
 \begin{verbatim}
 :- mode in == ground >> ground.
 :- mode out == free >> ground.
 \end{verbatim}
 
-Lehetõség van módok átnevezésére is: \cd{:- mode} \meta{m1} \cd{==} \meta{m2}\cd{.}
+LehetÃµsÃ©g van mÃ³dok Ã¡tnevezÃ©sÃ©re is: \cd{:- mode} \meta{m1} \cd{==} \meta{m2}\cd{.}
 
 \begin{verbatim}
 :- mode (+) == in.
 :- mode (-) == out.
 \end{verbatim}
 
-Természetesen a parametrizálás lehetõsége a móddeklarációknál is adott:
+TermÃ©szetesen a parametrizÃ¡lÃ¡s lehetÃµsÃ©ge a mÃ³ddeklarÃ¡ciÃ³knÃ¡l is adott:
 
 \begin{verbatim}
 :- mode in(Inst) == Inst -> Inst.
 :- mode out(Inst) == free -> Inst.
 \end{verbatim}
 
-A módokat a predikátum-mód deklarációkban lehet hasznosítani. Itt egy predikátumról
-azt írjuk le, hogy milyen mód-kombinációkban szabad használni a predikátum paramétereit.
-Például a \cd{lists} könyvtár \cd{append/3} eljárásának mindhárom bemeneti paramétere
-\cd{list(T)} típusú (ahol \cd{T} tetszõleges típusnév), és két módban használható.
-Az egyik módban az elsõ két paraméter bemeneti, a harmadik kimeneti, és így az
-eljárás listák összefûzésére szolgál. A másik módban az elsõ két paraméter kimeneti,
-a harmadik bemeneti, és így az eljárás a harmadik listát az összes lehetséges módon
-szétszedi. Ezt predikátum-mód deklarációval a következõképpen lehet leírni:
+A mÃ³dokat a predikÃ¡tum-mÃ³d deklarÃ¡ciÃ³kban lehet hasznosÃ­tani. Itt egy predikÃ¡tumrÃ³l
+azt Ã­rjuk le, hogy milyen mÃ³d-kombinÃ¡ciÃ³kban szabad hasznÃ¡lni a predikÃ¡tum paramÃ©tereit.
+PÃ©ldÃ¡ul a \cd{lists} kÃ¶nyvtÃ¡r \cd{append/3} eljÃ¡rÃ¡sÃ¡nak mindhÃ¡rom bemeneti paramÃ©tere
+\cd{list(T)} tÃ­pusÃº (ahol \cd{T} tetszÃµleges tÃ­pusnÃ©v), Ã©s kÃ©t mÃ³dban hasznÃ¡lhatÃ³.
+Az egyik mÃ³dban az elsÃµ kÃ©t paramÃ©ter bemeneti, a harmadik kimeneti, Ã©s Ã­gy az
+eljÃ¡rÃ¡s listÃ¡k Ã¶sszefÃ»zÃ©sÃ©re szolgÃ¡l. A mÃ¡sik mÃ³dban az elsÃµ kÃ©t paramÃ©ter kimeneti,
+a harmadik bemeneti, Ã©s Ã­gy az eljÃ¡rÃ¡s a harmadik listÃ¡t az Ã¶sszes lehetsÃ©ges mÃ³don
+szÃ©tszedi. Ezt predikÃ¡tum-mÃ³d deklarÃ¡ciÃ³val a kÃ¶vetkezÃµkÃ©ppen lehet leÃ­rni:
 
 \begin{verbatim}
 :- pred append(list(T), list(T), list(T)).
@@ -278,48 +278,48 @@ szétszedi. Ezt predikátum-mód deklarációval a következõképpen lehet leírni:
 :- mode append(out, out, in).
 \end{verbatim}
 
-Ha csak egyetlen mód van, akkor azt össze lehet vonni a \cd{pred} deklarációval:
+Ha csak egyetlen mÃ³d van, akkor azt Ã¶ssze lehet vonni a \cd{pred} deklarÃ¡ciÃ³val:
 
 \begin{verbatim}
 :- pred append(list(T)::in, list(T)::in, list(T)::out).
 \end{verbatim}
 
-Amire még figyelni kell a predikátum-mód deklarációkkal kapcsolatban:
+Amire mÃ©g figyelni kell a predikÃ¡tum-mÃ³d deklarÃ¡ciÃ³kkal kapcsolatban:
 
 \begin{itemize}
-\item \cd{free} változókat még egymással sem lehet összekapcsolni, ezért az
-alábbi példa hibás:
+\item \cd{free} vÃ¡ltozÃ³kat mÃ©g egymÃ¡ssal sem lehet Ã¶sszekapcsolni, ezÃ©rt az
+alÃ¡bbi pÃ©lda hibÃ¡s:
 \begin{verbatim}
 :- mode append(in(listskel(free)),
                 in(listskel(free)),
                 out(listskel(free))).
 \end{verbatim}
-\item Ha egy predikátumnak nincs predikátum-mód deklarációja, akkor a
-fordító kitalálja az összes szükségeset (\verb'--infer-all' kapcsoló), 
-de függvényeknél ilyenkor felteszi, hogy minden argumentuma \cd{in}
-és az eredménye \cd{out}.
-\item A fordító átrendezi a hívásokat, hogy a mód korlátokat kielégítse, ha
-ez nem megy, hibát jelez. (Jobbrekurzió!  Lásd a \cd{match_list/3}
-\cd{append/3} hívását!) Az átrendezés nem okozhat problémát, mivel a Mercury
-tisztán logikai nyelv, ezért a hívások sorrendje tetszõleges.
-\item A megadottnál ,,jobban'' behelyettesített argumentumokat
-egyesítésekkel kiküszöböli a fordító.  Ezeket a módokat le sem kell írni
-(de érdemes lehet). Például \cd{:- mode append(in, out, in).} a szétszedõ
-\cd{append}-et fogja használni.
-\item A jelenlegi implementáció nem kezeli a részlegesen behelyettesített
+\item Ha egy predikÃ¡tumnak nincs predikÃ¡tum-mÃ³d deklarÃ¡ciÃ³ja, akkor a
+fordÃ­tÃ³ kitalÃ¡lja az Ã¶sszes szÃ¼ksÃ©geset (\verb'--infer-all' kapcsolÃ³), 
+de fÃ¼ggvÃ©nyeknÃ©l ilyenkor felteszi, hogy minden argumentuma \cd{in}
+Ã©s az eredmÃ©nye \cd{out}.
+\item A fordÃ­tÃ³ Ã¡trendezi a hÃ­vÃ¡sokat, hogy a mÃ³d korlÃ¡tokat kielÃ©gÃ­tse, ha
+ez nem megy, hibÃ¡t jelez. (JobbrekurziÃ³!  LÃ¡sd a \cd{match_list/3}
+\cd{append/3} hÃ­vÃ¡sÃ¡t!) Az Ã¡trendezÃ©s nem okozhat problÃ©mÃ¡t, mivel a Mercury
+tisztÃ¡n logikai nyelv, ezÃ©rt a hÃ­vÃ¡sok sorrendje tetszÃµleges.
+\item A megadottnÃ¡l ,,jobban'' behelyettesÃ­tett argumentumokat
+egyesÃ­tÃ©sekkel kikÃ¼szÃ¶bÃ¶li a fordÃ­tÃ³.  Ezeket a mÃ³dokat le sem kell Ã­rni
+(de Ã©rdemes lehet). PÃ©ldÃ¡ul \cd{:- mode append(in, out, in).} a szÃ©tszedÃµ
+\cd{append}-et fogja hasznÃ¡lni.
+\item A jelenlegi implementÃ¡ciÃ³ nem kezeli a rÃ©szlegesen behelyettesÃ­tett
 adatokat.
 \end{itemize}
 
 \subsection{Determinizmus}
 
-A Mercury-ban lehetõség van arra is, hogy minden predikátum minden módjára
-(azaz minden eljárásra) megadjuk, hogy hányféleképpen sikerülhet, és hogy
-meghiúsulhat-e. Hatféle determinizmus kategória létezik:
+A Mercury-ban lehetÃµsÃ©g van arra is, hogy minden predikÃ¡tum minden mÃ³djÃ¡ra
+(azaz minden eljÃ¡rÃ¡sra) megadjuk, hogy hÃ¡nyfÃ©lekÃ©ppen sikerÃ¼lhet, Ã©s hogy
+meghiÃºsulhat-e. HatfÃ©le determinizmus kategÃ³ria lÃ©tezik:
 
 \begin{center}
 \begin{tabular}{|l|l|l|l|}
 \hline
-meghiúsulás \bs megoldások &    $0$          &   $1$       &     $> 1$\\
+meghiÃºsulÃ¡s \bs megoldÃ¡sok &    $0$          &   $1$       &     $> 1$\\
 \hline
   nem           &\cd{erroneous}  &\cd{det}     &     \cd{multi}\\
 \hline
@@ -328,9 +328,9 @@ meghiúsulás \bs megoldások &    $0$          &   $1$       &     $> 1$\\
 \end{tabular}
 \end{center}
 
-Egy determinizmus-deklaráció formailag majdnem megegyezik egy egyszerû predikátum-mód
-deklarációval, a különbség mindössze annyi, hogy a deklaráció végén egy \cd{is} kulcsszó
-után oda kell írni a megfelelõ determinizmus kategóriát is. Például az \cd{append/3}-ra:
+Egy determinizmus-deklarÃ¡ciÃ³ formailag majdnem megegyezik egy egyszerÃ» predikÃ¡tum-mÃ³d
+deklarÃ¡ciÃ³val, a kÃ¼lÃ¶nbsÃ©g mindÃ¶ssze annyi, hogy a deklarÃ¡ciÃ³ vÃ©gÃ©n egy \cd{is} kulcsszÃ³
+utÃ¡n oda kell Ã­rni a megfelelÃµ determinizmus kategÃ³riÃ¡t is. PÃ©ldÃ¡ul az \cd{append/3}-ra:
 
 \begin{verbatim}
 :- mode append(in, in, out) is det.
@@ -338,44 +338,44 @@ után oda kell írni a megfelelõ determinizmus kategóriát is. Például az \cd{appen
 :- mode append(in, in, in) is semidet.
 \end{verbatim}
 
-Ha csak egyetlen mód van, akkor azt össze lehet vonni a \cd{pred} deklarációval:
+Ha csak egyetlen mÃ³d van, akkor azt Ã¶ssze lehet vonni a \cd{pred} deklarÃ¡ciÃ³val:
 
 \begin{verbatim}
 :- pred p(int::in) is det.
 p(_).
 \end{verbatim}
 
-Felvetõdik a kérdés, hogy mi értelme van a két ,,egzotikus'' determinizmusnak, a
-\cd{failure}-nak és az \cd{erroneous}-nak. A \cd{failure} egy olyan predikátumot
-jelent, amely soha nem ad megoldást, és mindig meghiúsul. Ilyen például a \cd{fail/0}
-eljárás. \cd{erroneous} determinizmussal a \cd{require\_error/1} eljárás rendelkezik,
-amely hibaüzenetek kijelzésére alkalmas (az \cd{erroneous} determinizmus elvileg egy
-olyan eljárást jelent, amely soha nem ad megoldást, de nem is hiúsul meg). Ez a két
-determinizmus például hibakezelésre alkalmazható:
+FelvetÃµdik a kÃ©rdÃ©s, hogy mi Ã©rtelme van a kÃ©t ,,egzotikus'' determinizmusnak, a
+\cd{failure}-nak Ã©s az \cd{erroneous}-nak. A \cd{failure} egy olyan predikÃ¡tumot
+jelent, amely soha nem ad megoldÃ¡st, Ã©s mindig meghiÃºsul. Ilyen pÃ©ldÃ¡ul a \cd{fail/0}
+eljÃ¡rÃ¡s. \cd{erroneous} determinizmussal a \cd{require\_error/1} eljÃ¡rÃ¡s rendelkezik,
+amely hibaÃ¼zenetek kijelzÃ©sÃ©re alkalmas (az \cd{erroneous} determinizmus elvileg egy
+olyan eljÃ¡rÃ¡st jelent, amely soha nem ad megoldÃ¡st, de nem is hiÃºsul meg). Ez a kÃ©t
+determinizmus pÃ©ldÃ¡ul hibakezelÃ©sre alkalmazhatÃ³:
 
 \begin{verbatim}
 :- mode append(out, out, out) is erroneous.
 \end{verbatim}
 
-Ehhez természetesen írni kell egy olyan klózt is, amely mindhárom paraméter
-behelyettesítetlensége esetén a \cd{require\_error/1} használatával hibát jelez.
+Ehhez termÃ©szetesen Ã­rni kell egy olyan klÃ³zt is, amely mindhÃ¡rom paramÃ©ter
+behelyettesÃ­tetlensÃ©ge esetÃ©n a \cd{require\_error/1} hasznÃ¡latÃ¡val hibÃ¡t jelez.
 \br
-Függvények esetén ha minden argumentum bemenõ, akkor a determinizmusuk csak
-\cd{det}, \cd{semidet}, \cd{erroneous} vagy \cd{failure} lehet, a többszörös
-megoldásokat nem szabad megengednünk, mert ilyen esetben nem is beszélhetünk
-függvényrõl. Például a \cd{between(in, in, out)} nem írható le függvény alakban.
+FÃ¼ggvÃ©nyek esetÃ©n ha minden argumentum bemenÃµ, akkor a determinizmusuk csak
+\cd{det}, \cd{semidet}, \cd{erroneous} vagy \cd{failure} lehet, a tÃ¶bbszÃ¶rÃ¶s
+megoldÃ¡sokat nem szabad megengednÃ¼nk, mert ilyen esetben nem is beszÃ©lhetÃ¼nk
+fÃ¼ggvÃ©nyrÃµl. PÃ©ldÃ¡ul a \cd{between(in, in, out)} nem Ã­rhatÃ³ le fÃ¼ggvÃ©ny alakban.
 
 
-\subsection{Magasabbrendû eljárások}
+\subsection{MagasabbrendÃ» eljÃ¡rÃ¡sok}
 
-A hagyományos Prolog megvalósításban a \cd{call/1} eljárás segítségével lehetõség
-volt arra, hogy egy eljárásból egy másik eljárást hívjunk meg. A Mercury-ban
-bevezették a \cd{call/2}, \cd{call/3} \ldots eljárásokat is, amelyek segítségével
-úgy hívhatunk meg egy eljárást, hogy annak paraméterlistáját a \cd{call}-ban
-átadott paraméterekkel kiegészítjük. Például a \cd{call/4} definíciója Prologban:
+A hagyomÃ¡nyos Prolog megvalÃ³sÃ­tÃ¡sban a \cd{call/1} eljÃ¡rÃ¡s segÃ­tsÃ©gÃ©vel lehetÃµsÃ©g
+volt arra, hogy egy eljÃ¡rÃ¡sbÃ³l egy mÃ¡sik eljÃ¡rÃ¡st hÃ­vjunk meg. A Mercury-ban
+bevezettÃ©k a \cd{call/2}, \cd{call/3} \ldots eljÃ¡rÃ¡sokat is, amelyek segÃ­tsÃ©gÃ©vel
+Ãºgy hÃ­vhatunk meg egy eljÃ¡rÃ¡st, hogy annak paramÃ©terlistÃ¡jÃ¡t a \cd{call}-ban
+Ã¡tadott paramÃ©terekkel kiegÃ©szÃ­tjÃ¼k. PÃ©ldÃ¡ul a \cd{call/4} definÃ­ciÃ³ja Prologban:
 
 \begin{verbatim}
-% Pred az A, B és C utolsó argumentumokkal meghívva igaz.
+% Pred az A, B Ã©s C utolsÃ³ argumentumokkal meghÃ­vva igaz.
 call(Pred, A, B, C) :- 
     Pred =.. FArgs, 
     append(FArgs, [A,B,C], FArgs3), 
@@ -383,12 +383,12 @@ call(Pred, A, B, C) :-
     call(Pred3).
 \end{verbatim}
 
-Az ilyen jellegû \cd{call} hívások segítségével lehetõség nyílik magasabb rendû
-eljárások egyszerû megvalósítására. Például az SML-bõl ismert \cd{map} funkció:
+Az ilyen jellegÃ» \cd{call} hÃ­vÃ¡sok segÃ­tsÃ©gÃ©vel lehetÃµsÃ©g nyÃ­lik magasabb rendÃ»
+eljÃ¡rÃ¡sok egyszerÃ» megvalÃ³sÃ­tÃ¡sÃ¡ra. PÃ©ldÃ¡ul az SML-bÃµl ismert \cd{map} funkciÃ³:
 
 \begin{verbatim}
 % map(Pred, Xs, Ys): Az Xs lista elemeire 
-% a Pred transzformációt alkalmazva kapjuk az Ys listát.
+% a Pred transzformÃ¡ciÃ³t alkalmazva kapjuk az Ys listÃ¡t.
 :- pred map(pred(X, Y), list(X), list(Y)).
 :- mode map(pred(in, out) is det, in, out) is det.
 :- mode map(pred(in, out) is semidet, in, out) is semidet.
@@ -401,13 +401,13 @@ map(P, [H|T], [X|L]) :-
 map(_, [], []).
 \end{verbatim}
 
-Itt \cd{Pred} egy olyan eljárás, amelynek két paramétere van, és amely a két
-paraméter között egy transzformációt valósít meg. A \cd{map} eljárás módjai
-és determinizmusa a \cd{Pred} eljárástól függ, hiszen ha \cd{Pred} mondjuk
-\cd{pred(in, out) is multi}, akkor a \cd{map} második és harmadik paramétere
-is rendre \cd{in} és \cd{out} lesz, \cd{map} determinizmusát pedig \cd{Pred}
-determinizmusa fogja megszabni. Néhány (szám szerint 5) lehetõség leírása a
-fenti programkódban is megtalálható. A \cd{map} használata:
+Itt \cd{Pred} egy olyan eljÃ¡rÃ¡s, amelynek kÃ©t paramÃ©tere van, Ã©s amely a kÃ©t
+paramÃ©ter kÃ¶zÃ¶tt egy transzformÃ¡ciÃ³t valÃ³sÃ­t meg. A \cd{map} eljÃ¡rÃ¡s mÃ³djai
+Ã©s determinizmusa a \cd{Pred} eljÃ¡rÃ¡stÃ³l fÃ¼gg, hiszen ha \cd{Pred} mondjuk
+\cd{pred(in, out) is multi}, akkor a \cd{map} mÃ¡sodik Ã©s harmadik paramÃ©tere
+is rendre \cd{in} Ã©s \cd{out} lesz, \cd{map} determinizmusÃ¡t pedig \cd{Pred}
+determinizmusa fogja megszabni. NÃ©hÃ¡ny (szÃ¡m szerint 5) lehetÃµsÃ©g leÃ­rÃ¡sa a
+fenti programkÃ³dban is megtalÃ¡lhatÃ³. A \cd{map} hasznÃ¡lata:
 
 \begin{verbatim}
 :- import_module int.
@@ -420,15 +420,15 @@ p(L) :-
          map(negyzet, [1,2,3,4], L).
 \end{verbatim}
 
-Itt \cd{negyzet/2} egy olyan predikátum, amely a négyzetre emelés transzformációját
-valósítja meg. Érdemes észrevenni, hogy a Mercury-ban kikerülhetjük az aritmetikai
-számításoknál az \cd{is}-zel való vacakolást, hiszen mivel a \cd{negyzet/2}
-predikátum-mód deklarációja tartalmazza, hogy a második paraméter is \cd{int},
-ebbõl a Mercury már rájön, hogy az \cd{X*X} kifejezés nem egy \cd{'*'/2} struktúrát
-jelent, hanem egy szorzást.
+Itt \cd{negyzet/2} egy olyan predikÃ¡tum, amely a nÃ©gyzetre emelÃ©s transzformÃ¡ciÃ³jÃ¡t
+valÃ³sÃ­tja meg. Ã‰rdemes Ã©szrevenni, hogy a Mercury-ban kikerÃ¼lhetjÃ¼k az aritmetikai
+szÃ¡mÃ­tÃ¡soknÃ¡l az \cd{is}-zel valÃ³ vacakolÃ¡st, hiszen mivel a \cd{negyzet/2}
+predikÃ¡tum-mÃ³d deklarÃ¡ciÃ³ja tartalmazza, hogy a mÃ¡sodik paramÃ©ter is \cd{int},
+ebbÃµl a Mercury mÃ¡r rÃ¡jÃ¶n, hogy az \cd{X*X} kifejezÃ©s nem egy \cd{'*'/2} struktÃºrÃ¡t
+jelent, hanem egy szorzÃ¡st.
 \br
-Az SML-bõl ismert $\lambda$ (\emph{lambda}) kifejezés Mercury-ban is használható,
-így a fenti két predikátumot egyetlen predikátumba vonhatjuk össze:
+Az SML-bÃµl ismert $\lambda$ (\emph{lambda}) kifejezÃ©s Mercury-ban is hasznÃ¡lhatÃ³,
+Ã­gy a fenti kÃ©t predikÃ¡tumot egyetlen predikÃ¡tumba vonhatjuk Ã¶ssze:
 
 \begin{verbatim} 
 :- pred p1(list(int)::out) is det.
@@ -436,61 +436,61 @@ p1(L) :-
          map((pred(X::in, Y::out) is det :- Y = X*X), [1,2,3,4], L).
 \end{verbatim}
 
-Itt a négyzetre emelés predikátumát a \cd{map} hívásba ágyazottan egy névtelen
-$\lambda$-függvény segítségével valósítjuk meg.
+Itt a nÃ©gyzetre emelÃ©s predikÃ¡tumÃ¡t a \cd{map} hÃ­vÃ¡sba Ã¡gyazottan egy nÃ©vtelen
+$\lambda$-fÃ¼ggvÃ©ny segÃ­tsÃ©gÃ©vel valÃ³sÃ­tjuk meg.
 \br
-Magasabbrendû kifejezéseket háromféleképpen hozhatunk létre:
+MagasabbrendÃ» kifejezÃ©seket hÃ¡romfÃ©lekÃ©ppen hozhatunk lÃ©tre:
 
 \begin{itemize}
-\item tegyük fel, hogy létezik
+\item tegyÃ¼k fel, hogy lÃ©tezik
 \begin{verbatim}
 :- pred sum(list(int)::in, int::out) is det.
 \end{verbatim}
-\item $\lambda$-kifejezéssel:
+\item $\lambda$-kifejezÃ©ssel:
 \begin{verbatim}
 X = (pred(Lst::in, Len::out) is det :- sum(Lst, Len))
 \end{verbatim}
-\item az eljárás nevét használva (a nevezett dolognak csak egyféle módja lehet
-és nem lehet 0 aritású függvény):
+\item az eljÃ¡rÃ¡s nevÃ©t hasznÃ¡lva (a nevezett dolognak csak egyfÃ©le mÃ³dja lehet
+Ã©s nem lehet 0 aritÃ¡sÃº fÃ¼ggvÃ©ny):
 \begin{verbatim}
 Y = sum
 \end{verbatim}
 \end{itemize}
 
-\cd{X} és \cd{Y} típusa a fenti példákban \cd{pred(list(int), int)}.
+\cd{X} Ã©s \cd{Y} tÃ­pusa a fenti pÃ©ldÃ¡kban \cd{pred(list(int), int)}.
 \br
-Magasabbrendû függvények létrehozására is háromféle lehetõség van:
+MagasabbrendÃ» fÃ¼ggvÃ©nyek lÃ©trehozÃ¡sÃ¡ra is hÃ¡romfÃ©le lehetÃµsÃ©g van:
 
 \begin{itemize}
 \item ha adott
 \begin{verbatim}
 :- func mult_vec(int, list(int)) = list(int).
 \end{verbatim}
-\item $\lambda$-kifejezéssel:
+\item $\lambda$-kifejezÃ©ssel:
 \begin{verbatim}
 X = (func(N, Lst) = NLst :- NLst = mult_vec(N, Lst))
 Y = (func(N::in, Lst::in) = (NLst::out) is det
          :- NLst = mult_vec(N, Lst))
 \end{verbatim}
-\item a függvény nevét használva:
+\item a fÃ¼ggvÃ©ny nevÃ©t hasznÃ¡lva:
 \begin{verbatim}
 Z = mult_vec
 \end{verbatim}
 \end{itemize}
 
 
-Az SML-bõl ismert ,,curry''-zés mechanizmusa Mercury-ban is mûködik (kivéve
-a beépített nyelvi konstruktorokra (pl. \cd{=}, \cd{\bs=}, \cd{call}, \cd{apply}),
+Az SML-bÃµl ismert ,,curry''-zÃ©s mechanizmusa Mercury-ban is mÃ»kÃ¶dik (kivÃ©ve
+a beÃ©pÃ­tett nyelvi konstruktorokra (pl. \cd{=}, \cd{\bs=}, \cd{call}, \cd{apply}),
 ezeket nem lehet ,,curry''-zni:
 
 \begin{itemize}
-\item \cd{Sum123 = sum([1,2,3])}: \cd{Sum123} típusa \cd{pred(int)}
-\item \cd{Double = mult_vec(2)}: \cd{Double} típusa \cd{func(list(int)) =
+\item \cd{Sum123 = sum([1,2,3])}: \cd{Sum123} tÃ­pusa \cd{pred(int)}
+\item \cd{Double = mult_vec(2)}: \cd{Double} tÃ­pusa \cd{func(list(int)) =
 list(int)}
 \end{itemize}
 
-A DCG nyelvtanok leírásánál külön szintaxis van az olyan eljárásokra, amelyek
-egy akkumulátor-párt is használnak:
+A DCG nyelvtanok leÃ­rÃ¡sÃ¡nÃ¡l kÃ¼lÃ¶n szintaxis van az olyan eljÃ¡rÃ¡sokra, amelyek
+egy akkumulÃ¡tor-pÃ¡rt is hasznÃ¡lnak:
 
 \begin{verbatim}
 Pred = (pred(Strings::in, Num::out, di, uo) is det -->
@@ -501,47 +501,47 @@ Pred = (pred(Strings::in, Num::out, di, uo) is det -->
 )
 \end{verbatim}
 
-Magasabbrendû eljárásokat kétféleképpen hívhatunk meg:
+MagasabbrendÃ» eljÃ¡rÃ¡sokat kÃ©tfÃ©lekÃ©ppen hÃ­vhatunk meg:
 
 \begin{itemize}
 \item \cd{call(Closure, Arg$_1$, \dots, Arg$_n$)} ($n\geq 0$)--- a \cd{Closure}
-argumentumlistája kiegészül az \cd{Arg$_1$, \dots, Arg$_n$} argumentumokkal,
-és úgy hívódik meg.
-\item \cd{solutions(match(P1, N1, P2), Sols)} --- összegyûjti a \cd{match(P1, N1, P2)}
-hívás összes megoldását \cd{Sols}-ba. Természetesen \cd{match(P1, N1, P2)} helyett
-tetszõleges más predikátum is használható.
+argumentumlistÃ¡ja kiegÃ©szÃ¼l az \cd{Arg$_1$, \dots, Arg$_n$} argumentumokkal,
+Ã©s Ãºgy hÃ­vÃ³dik meg.
+\item \cd{solutions(match(P1, N1, P2), Sols)} --- Ã¶sszegyÃ»jti a \cd{match(P1, N1, P2)}
+hÃ­vÃ¡s Ã¶sszes megoldÃ¡sÃ¡t \cd{Sols}-ba. TermÃ©szetesen \cd{match(P1, N1, P2)} helyett
+tetszÃµleges mÃ¡s predikÃ¡tum is hasznÃ¡lhatÃ³.
 \end{itemize}
 
-Függvények meghívására az \cd{apply} használható:
-\cd{apply(Closure2, Arg$_1$, \dots, Arg$_n$)} ($n\geq 0$) hívásakor a \cd{Closure2}
-argumentumlistája kiegészül az \cd{Arg$_1$, \dots, Arg$_n$} argumentumokkal,
-és úgy hívódik meg, \cd{apply} eredménye a hívás eredménye lesz. Használata:
+FÃ¼ggvÃ©nyek meghÃ­vÃ¡sÃ¡ra az \cd{apply} hasznÃ¡lhatÃ³:
+\cd{apply(Closure2, Arg$_1$, \dots, Arg$_n$)} ($n\geq 0$) hÃ­vÃ¡sakor a \cd{Closure2}
+argumentumlistÃ¡ja kiegÃ©szÃ¼l az \cd{Arg$_1$, \dots, Arg$_n$} argumentumokkal,
+Ã©s Ãºgy hÃ­vÃ³dik meg, \cd{apply} eredmÃ©nye a hÃ­vÃ¡s eredmÃ©nye lesz. HasznÃ¡lata:
 \cd{List = apply(Double, [1,2,3])}.
 
-A magasabbrendû kifejezések determinizmusa a módjuk része (és nem a típusuké).
-Például:
+A magasabbrendÃ» kifejezÃ©sek determinizmusa a mÃ³djuk rÃ©sze (Ã©s nem a tÃ­pusukÃ©).
+PÃ©ldÃ¡ul:
 
 \begin{verbatim}
 :- pred map(pred(X, Y), list(X), list(Y)).
 :- mode map(pred(in, out) is det, in, out) is det.
 \end{verbatim}
 
-\enumhead{Beépített behelyettesítettségek}
+\enumhead{BeÃ©pÃ­tett behelyettesÃ­tettsÃ©gek}
 \begin{itemize}
-\item Eljárások:\\
+\item EljÃ¡rÃ¡sok:\\
 \cd{pred(}\meta{mode$_1$}\cd{,} \dots\cd{,} \meta{mode$_n$}\cd{) is}
 \meta{determinism}, ahol $n\geq 0$
-\item Függvények:\\
+\item FÃ¼ggvÃ©nyek:\\
 \cd{(func) =} \meta{mode} \cd{is} \meta{determinism}\\
 \cd{func(}\meta{mode$_1$}\cd{,} \dots\cd{,} \meta{mode$_n$}\cd{) =}
 \meta{mode} \cd{is} \meta{determinism}, ahol $n>0$
 \end{itemize}
 
-\enumhead{Beépített módok}
+\enumhead{BeÃ©pÃ­tett mÃ³dok}
 \begin{itemize}
-\item A nevük megegyezik a behelyettesítettségek nevével, és a pár mindkét
-tagja ugyanolyan, a névnek megfelelõ behelyettesítettségû.
-\item Egy lehetséges definíció lenne:
+\item A nevÃ¼k megegyezik a behelyettesÃ­tettsÃ©gek nevÃ©vel, Ã©s a pÃ¡r mindkÃ©t
+tagja ugyanolyan, a nÃ©vnek megfelelÃµ behelyettesÃ­tettsÃ©gÃ».
+\item Egy lehetsÃ©ges definÃ­ciÃ³ lenne:
 \begin{verbatim}
 :- mode (pred(Inst) is Det) == in(pred(Inst) is Det).
 \end{verbatim}
@@ -549,53 +549,53 @@ tagja ugyanolyan, a névnek megfelelõ behelyettesítettségû.
 
 \enumhead{Amire figyelni kell}
 \begin{itemize}
-\item Magasabbrendû kimenõ paraméter:
+\item MagasabbrendÃ» kimenÃµ paramÃ©ter:
 \begin{verbatim}
 :- pred foo(pred(int)).
 :- mode foo(free -> pred(out) is det) is det.
 foo(sum([1,2,3])).
 \end{verbatim}
-\item Magasabbrendû kifejezések nem egyesíthetõk:\\
-\cd{foo((pred(X::out) is det :- X = 6))} hibás.
+\item MagasabbrendÃ» kifejezÃ©sek nem egyesÃ­thetÃµk:\\
+\cd{foo((pred(X::out) is det :- X = 6))} hibÃ¡s.
 \end{itemize}
 
-\subsection{Problémák a determinizmussal}
+\subsection{ProblÃ©mÃ¡k a determinizmussal}
 
-A determinizmus bevezetésével ésszerû néhány korlátozást bevezetni. Ilyen például az,
-hogy \cd{det} vagy \cd{semidet} módú eljárásokból nem hívhatunk \cd{nondet} vagy
-\cd{multi} eljárást, hiszen ezzel elrontjuk a determinizmust. A Mercury programoknál a
-fõprogramnak (\cd{main/2}) szükségszerûen \cd{det}-nek kell lennie, ezzel viszont
-látszólag elvesztettük a \cd{nondet} és a \cd{multi} eljárások hívásának lehetõségét,
-hiszen a fõprogram \cd{det}, és belõle nem hívhatóak \cd{nondet} és \cd{multi} eljárások.
-Ilyen eljárások hívásakor döntenünk kell:
+A determinizmus bevezetÃ©sÃ©vel Ã©sszerÃ» nÃ©hÃ¡ny korlÃ¡tozÃ¡st bevezetni. Ilyen pÃ©ldÃ¡ul az,
+hogy \cd{det} vagy \cd{semidet} mÃ³dÃº eljÃ¡rÃ¡sokbÃ³l nem hÃ­vhatunk \cd{nondet} vagy
+\cd{multi} eljÃ¡rÃ¡st, hiszen ezzel elrontjuk a determinizmust. A Mercury programoknÃ¡l a
+fÃµprogramnak (\cd{main/2}) szÃ¼ksÃ©gszerÃ»en \cd{det}-nek kell lennie, ezzel viszont
+lÃ¡tszÃ³lag elvesztettÃ¼k a \cd{nondet} Ã©s a \cd{multi} eljÃ¡rÃ¡sok hÃ­vÃ¡sÃ¡nak lehetÃµsÃ©gÃ©t,
+hiszen a fÃµprogram \cd{det}, Ã©s belÃµle nem hÃ­vhatÃ³ak \cd{nondet} Ã©s \cd{multi} eljÃ¡rÃ¡sok.
+Ilyen eljÃ¡rÃ¡sok hÃ­vÃ¡sakor dÃ¶ntenÃ¼nk kell:
 
 \begin{itemize}
-\item Ha az összes megoldást akarjuk, akkor a \cd{std\_util\_\_solutions/2} használatával
-explicit módon meg kell kerestetnünk az összes megoldást. Ezzel a \cd{nondet} vagy
-\cd{multi} eljárást \cd{det}-té tudjuk tenni, mert a \cd{std\_util\_\_solutions/2} mindig
-sikerülni fog
-\item Ha csak egy megoldás akarunk, és mindegy, hogy melyiket, akkor vagy azt csináljuk,
-hogy az eljárás kimenõ változóit nem használjuk fel (mert ekkor az elsõ utáni megoldásokat
-levágja a rendszer), vagy pedig az úgynevezett \emph{committed choice nondeterminism}
-kihasználásával (\cd{cc\_nondet}, \cd{cc\_multi} determinizmus) determinizáljuk a
-nemdeterminisztikus eljárásokat. A \emph{committed choice nondeterminism} mechanizmust
-olyan helyeken használjuk, ahol biztosan nem lesz szükség több megoldásra. Fontos
-megjegyezni, hogy IO mûveletek csak \cd{det}, \cd{cc\_nondet} és \cd{cc\_multi}
-eljárásokban használhatóak, mivel az IO mûveleteket a visszalépés során nem lehet
-visszavonni, ezért fontos, hogy csak olyan helyeken lehessen õket alkalmazni, ahol
-biztosan nem lesz visszalépés.
-\item Ha csak néhány megoldást akarunk, akkor a \cd{std\_util\_\_do\_while/4} eljárást
-használhatjuk.
+\item Ha az Ã¶sszes megoldÃ¡st akarjuk, akkor a \cd{std\_util\_\_solutions/2} hasznÃ¡latÃ¡val
+explicit mÃ³don meg kell kerestetnÃ¼nk az Ã¶sszes megoldÃ¡st. Ezzel a \cd{nondet} vagy
+\cd{multi} eljÃ¡rÃ¡st \cd{det}-tÃ© tudjuk tenni, mert a \cd{std\_util\_\_solutions/2} mindig
+sikerÃ¼lni fog
+\item Ha csak egy megoldÃ¡s akarunk, Ã©s mindegy, hogy melyiket, akkor vagy azt csinÃ¡ljuk,
+hogy az eljÃ¡rÃ¡s kimenÃµ vÃ¡ltozÃ³it nem hasznÃ¡ljuk fel (mert ekkor az elsÃµ utÃ¡ni megoldÃ¡sokat
+levÃ¡gja a rendszer), vagy pedig az Ãºgynevezett \emph{committed choice nondeterminism}
+kihasznÃ¡lÃ¡sÃ¡val (\cd{cc\_nondet}, \cd{cc\_multi} determinizmus) determinizÃ¡ljuk a
+nemdeterminisztikus eljÃ¡rÃ¡sokat. A \emph{committed choice nondeterminism} mechanizmust
+olyan helyeken hasznÃ¡ljuk, ahol biztosan nem lesz szÃ¼ksÃ©g tÃ¶bb megoldÃ¡sra. Fontos
+megjegyezni, hogy IO mÃ»veletek csak \cd{det}, \cd{cc\_nondet} Ã©s \cd{cc\_multi}
+eljÃ¡rÃ¡sokban hasznÃ¡lhatÃ³ak, mivel az IO mÃ»veleteket a visszalÃ©pÃ©s sorÃ¡n nem lehet
+visszavonni, ezÃ©rt fontos, hogy csak olyan helyeken lehessen Ãµket alkalmazni, ahol
+biztosan nem lesz visszalÃ©pÃ©s.
+\item Ha csak nÃ©hÃ¡ny megoldÃ¡st akarunk, akkor a \cd{std\_util\_\_do\_while/4} eljÃ¡rÃ¡st
+hasznÃ¡lhatjuk.
 \end{itemize}
 
-Arra az esetre, ha egy olyan eljárást akarunk meghívni, amelynek minden megoldása
-ekvivalens, még nincs igazi megoldás. A tervekben a \cd{unique [X] goal(X)} szerkezet
-szerepel, de egyelõre még a C interfésszel kell trükközni ilyen esetekben.
+Arra az esetre, ha egy olyan eljÃ¡rÃ¡st akarunk meghÃ­vni, amelynek minden megoldÃ¡sa
+ekvivalens, mÃ©g nincs igazi megoldÃ¡s. A tervekben a \cd{unique [X] goal(X)} szerkezet
+szerepel, de egyelÃµre mÃ©g a C interfÃ©sszel kell trÃ¼kkÃ¶zni ilyen esetekben.
 \br
-Tekintsük például az alábbi feladatot: soroljuk fel egy halmaz összes részhalmazát,
-és minden megoldást pontosan egyszer adjunk ki! Egy halmaz egy részhalmazának
-kiválasztása nyilvánvalóan többféleképpen is sikerülhet, ezért valamilyen módon
-(például a \cd{cc\_multi} determinizmus használatával) ki kell küszöbölni a
+TekintsÃ¼k pÃ©ldÃ¡ul az alÃ¡bbi feladatot: soroljuk fel egy halmaz Ã¶sszes rÃ©szhalmazÃ¡t,
+Ã©s minden megoldÃ¡st pontosan egyszer adjunk ki! Egy halmaz egy rÃ©szhalmazÃ¡nak
+kivÃ¡lasztÃ¡sa nyilvÃ¡nvalÃ³an tÃ¶bbfÃ©lekÃ©ppen is sikerÃ¼lhet, ezÃ©rt valamilyen mÃ³don
+(pÃ©ldÃ¡ul a \cd{cc\_multi} determinizmus hasznÃ¡latÃ¡val) ki kell kÃ¼szÃ¶bÃ¶lni a
 nemdeterminizmust:
 
 \begin{verbatim}
@@ -627,8 +627,8 @@ read_int_listset(L, S) -->
          }.
 \end{verbatim}
 
-A \cd{resze(S)} a halmazokat \cd{set} absztrakt adattípussal fogja ábrázolni,
-az \cd{lresze(L)} pedig \cd{list} adattípussal. A kétféle megoldás:
+A \cd{resze(S)} a halmazokat \cd{set} absztrakt adattÃ­pussal fogja Ã¡brÃ¡zolni,
+az \cd{lresze(L)} pedig \cd{list} adattÃ­pussal. A kÃ©tfÃ©le megoldÃ¡s:
 
 \begin{verbatim}
 :- pred resze(set(T)::in, set(T)::out) is multi.
@@ -660,10 +660,10 @@ lresze(A, B, Fix) :-
          ).
 \end{verbatim}
 
-A \cd{set\_\_member/2} felsoroló jellege miatt nem teljesíti azt a feltételt, hogy
-minden megoldás pontosan egyszer jelenjen meg, a lista fejének leválasztása viszont
-(szemi)determinisztikus, ezért a \cd{set}-ekkel operáló verzió többször is kiad
-egy megoldást, míg a listákkal operáló nem:
+A \cd{set\_\_member/2} felsorolÃ³ jellege miatt nem teljesÃ­ti azt a feltÃ©telt, hogy
+minden megoldÃ¡s pontosan egyszer jelenjen meg, a lista fejÃ©nek levÃ¡lasztÃ¡sa viszont
+(szemi)determinisztikus, ezÃ©rt a \cd{set}-ekkel operÃ¡lÃ³ verziÃ³ tÃ¶bbszÃ¶r is kiad
+egy megoldÃ¡st, mÃ­g a listÃ¡kkal operÃ¡lÃ³ nem:
 
 \begin{verbatim}
 benko:~/mercury$ ls resze*
@@ -690,9 +690,9 @@ List version:
 benko:~/mercury$
 \end{verbatim}
 
-Egy másik \cd{cc\_multi} példa az N királynõ feladat megoldására (egyszerû
-generate-and-test jellegû megoldás, ahol \cd{perm/2} generálja a királynõk
-elrendezéseit, \cd{safe/1} pedig ellenõriz):
+Egy mÃ¡sik \cd{cc\_multi} pÃ©lda az N kirÃ¡lynÃµ feladat megoldÃ¡sÃ¡ra (egyszerÃ»
+generate-and-test jellegÃ» megoldÃ¡s, ahol \cd{perm/2} generÃ¡lja a kirÃ¡lynÃµk
+elrendezÃ©seit, \cd{safe/1} pedig ellenÃµriz):
 
 \begin{verbatim}
 :- module queens.

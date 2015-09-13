@@ -2,133 +2,133 @@
 
 \section{CHR---Constraint Handling Rules}
 
-A CHR (\emph{Constraint Handling Rules}) egy deklaratÌv nyelv-kiterjesztÈs,
-amely determinisztikus kifejezÈs-·tÌr·son alapul. Prolog, CLP, Haskell
-vagy Java \emph{gazda}nyelvbe ·gyazÛdva kÈpes m˚kˆdni. ¡ltal·nos szimbolikus
-(nem numerikus) felhaszn·lÛi korl·tok Ìr·s·ra alkalmas, de nem tartalmaz
-konzisztencia-vizsg·latot, errıl a megfelelı szab·lyok megÌr·s·val
-nek¸nk kell gondoskodnunk. Fı szerzıje Thom Fr¸hwirth (ECRC, LMU M¸nchen, Ulm Uni.).
+A CHR (\emph{Constraint Handling Rules}) egy deklarat√≠v nyelv-kiterjeszt√©s,
+amely determinisztikus kifejez√©s-√°t√≠r√°son alapul. Prolog, CLP, Haskell
+vagy Java \emph{gazda}nyelvbe √°gyaz√≥dva k√©pes m√ªk√∂dni. √Åltal√°nos szimbolikus
+(nem numerikus) felhaszn√°l√≥i korl√°tok √≠r√°s√°ra alkalmas, de nem tartalmaz
+konzisztencia-vizsg√°latot, err√µl a megfelel√µ szab√°lyok meg√≠r√°s√°val
+nek√ºnk kell gondoskodnunk. F√µ szerz√µje Thom Fr√ºhwirth (ECRC, LMU M√ºnchen, Ulm Uni.).
 \br
-A nyelv-kiterjesztÈs honlapja:
+A nyelv-kiterjeszt√©s honlapja:
 \verb'http://www.pst.informatik.uni-muenchen.de/~fruehwir/chr-intro.html'.
 \br
-SICStus Prologban a CHR kiterjesztÈst a kˆvetkezı paranccsal vehetj¸k haszn·latba:
+SICStus Prologban a CHR kiterjeszt√©st a k√∂vetkez√µ paranccsal vehetj√ºk haszn√°latba:
 \begin{verbatim}
 :- use_module(library(chr)).
 \end{verbatim}
 
-\subsection{CHR szab·lyok}
+\subsection{CHR szab√°lyok}
 
-A CHR kiterjesztÈsben a korl·t-t·r alakul·s·t saj·t magunk ·ltal Ìrt szab·lyok
-segÌtsÈgÈvel Ìrhatjuk le. A szab·lyoknak h·rom fajt·ja van:
+A CHR kiterjeszt√©sben a korl√°t-t√°r alakul√°s√°t saj√°t magunk √°ltal √≠rt szab√°lyok
+seg√≠ts√©g√©vel √≠rhatjuk le. A szab√°lyoknak h√°rom fajt√°ja van:
 
 \begin{itemize}
-\item \emph{Egyszer˚sÌtÈs} (\emph{simplification}):\\
+\item \emph{Egyszer√ªs√≠t√©s} (\emph{simplification}):\\
  $H_1$, \ldots, $H_i$ \cd{<=>} $G_1$, \ldots, $G_j$ \cd{|} $B_1$,
  \ldots, $B_k$.
-\item \emph{Propag·ciÛ} (\emph{propagation}):\\
+\item \emph{Propag√°ci√≥} (\emph{propagation}):\\
  $H_1$, \ldots, $H_i$ \cd{==>} $G_1$, \ldots, $G_j$ \cd{|} $B_1$,
  \ldots, $B_k$. 
-\item \emph{Egypag·ciÛ} (\emph{simpagation}):\\
+\item \emph{Egypag√°ci√≥} (\emph{simpagation}):\\
  $H_1$, \ldots, $H_l$ \cd{\bs} $H_{l+1}$, \ldots, $H_i$ \cd{==>} $G_1$, \ldots, $G_j$ \cd{|} $B_1$,
  \ldots, $B_k$. 
 \end{itemize}
 
-Amint l·thatÛ, egy CHR szab·ly alapvetıen h·rom rÈszre oszthatÛ:
+Amint l√°that√≥, egy CHR szab√°ly alapvet√µen h√°rom r√©szre oszthat√≥:
 
 \begin{itemize}
-\item \emph{multi-fej} (\emph{multi-head}): ez alatt a ,,$H_1$, \ldots, $H_i$'' rÈszt
-Èrtj¸k, ahol a $H_m$-ek CHR-korl·tok
-\item \emph{ır} (\emph{guard}): $G_1$, \ldots, $G_j$, ahol a $G_m$-ek a gazda-nyelvben
-Èrtelmezett korl·tok
-\item \emph{tˆrzs} (\emph{body}): $B_1$, \ldots, $B_k$, ahol a $B_m$-ek CHR- vagy
-gazda-korl·tok
-\item mindvÈgig $i > 0, j \geq 0, k \geq 0, l > 0$.
+\item \emph{multi-fej} (\emph{multi-head}): ez alatt a ,,$H_1$, \ldots, $H_i$'' r√©szt
+√©rtj√ºk, ahol a $H_m$-ek CHR-korl√°tok
+\item \emph{√µr} (\emph{guard}): $G_1$, \ldots, $G_j$, ahol a $G_m$-ek a gazda-nyelvben
+√©rtelmezett korl√°tok
+\item \emph{t√∂rzs} (\emph{body}): $B_1$, \ldots, $B_k$, ahol a $B_m$-ek CHR- vagy
+gazda-korl√°tok
+\item mindv√©gig $i > 0, j \geq 0, k \geq 0, l > 0$.
 \end{itemize}
 
-A fentiekben mindvÈgig $i > 0, j \geq 0, k \geq 0, l > 0$.
+A fentiekben mindv√©gig $i > 0, j \geq 0, k \geq 0, l > 0$.
 \br
-Az \emph{egyszer˚sÌtÈs} azt fejezi ki, hogy ha az ırben felÌrt korl·tok igazak, akkor
-a fej ekvivalens a tˆrzzsel, ezÈrt a fejet ki lehet tˆrˆlni a korl·t-t·rbÛl, Ès helyette
-a tˆrzset fel lehet venni. A \emph{propag·ciÛ} esetÈben ha az ır igaz, akkor a fejbıl
-kˆvetkezik a tˆrzs, ezÈrt a tˆrzset fel lehet venni a korl·t-t·rba. Az \emph{egypag·ciÛ}
-az egyszer˚sÌtÈs Ès a propag·ciÛ ˆsszegy˙r·s·bÛl keletkezik, Ès vissza is lehet vezetni
-r·juk, hiszen: \cd{Heads1 \bs ~Heads2 <=> Body} ugyanazt jelenti, mint
-\cd{Heads1, Heads2 <=> Heads1, Body}, csak sokkal hatÈkonyabb, mert \cd{Heads1}-et
-nem kell ˙jra felvenni a korl·t-t·rba.
+Az \emph{egyszer√ªs√≠t√©s} azt fejezi ki, hogy ha az √µrben fel√≠rt korl√°tok igazak, akkor
+a fej ekvivalens a t√∂rzzsel, ez√©rt a fejet ki lehet t√∂r√∂lni a korl√°t-t√°rb√≥l, √©s helyette
+a t√∂rzset fel lehet venni. A \emph{propag√°ci√≥} eset√©ben ha az √µr igaz, akkor a fejb√µl
+k√∂vetkezik a t√∂rzs, ez√©rt a t√∂rzset fel lehet venni a korl√°t-t√°rba. Az \emph{egypag√°ci√≥}
+az egyszer√ªs√≠t√©s √©s a propag√°ci√≥ √∂sszegy√∫r√°s√°b√≥l keletkezik, √©s vissza is lehet vezetni
+r√°juk, hiszen: \cd{Heads1 \bs ~Heads2 <=> Body} ugyanazt jelenti, mint
+\cd{Heads1, Heads2 <=> Heads1, Body}, csak sokkal hat√©konyabb, mert \cd{Heads1}-et
+nem kell √∫jra felvenni a korl√°t-t√°rba.
 
-\subsection{A CHR szab·lyok vÈgrehajt·sa}
+\subsection{A CHR szab√°lyok v√©grehajt√°sa}
 
-A CHR korl·toknak h·rom ·llapota lehet: \emph{aktÌv}, \emph{aktiv·lhatÛ passzÌv} Ès
-\emph{alvÛ passzÌv}. AktÌv korl·tbÛl legfeljebb egy van minden pillanatban. Egy
-korl·t akkor v·lik aktiv·lhatÛv·, ha valamelyik v·ltozÛj·t \emph{megÈrintik}, azaz
-egyesÌtik egy tıle k¸lˆnbˆzı kifejezÈssel. Minden alkalommal, amikor egy korl·t aktÌvv·
-v·lik, az ˆsszes r· vonatkozÛ szab·lyt vÈgigprÛb·ljuk az al·bbiak szerint:
-
-\begin{itemize}
-\item mindegyik fejre \emph{illesztj¸k} a korl·tot (ez egyir·ny˙ egyesÌtÈs,
-hÌv·sbeli v·ltozÛ nem kaphat ÈrtÈket)
-\item tˆbbfej˚ szab·lyok esetÈn a korl·t-t·rban keres¸nk megfelelı
-(illeszthetı) \emph{partner}-korl·tot,
-\item sikeres illesztÈs ut·n vÈgrehajtjuk az ır-rÈszt, ha ez is sikeres, a
-szab·ly \emph{t¸zel}, k¸lˆnben folytatjuk a prÛb·lkoz·st a kˆvetkezı szab·llyal.
-\item A t¸zelÈs abbÛl ·ll, hogy (egyszer˚sÌtÈs vagy egypag·ciÛ esetÈn)
-kivessz¸k a t·rbÛl a kijelˆlt korl·tokat, majd minden esetben vÈgrehajtjuk a tˆrzset.
-\item Ha ezzel az aktÌv korl·tot nem hagytuk el a t·rbÛl, folytatjuk a r· vonatkozÛ
-prÛb·lkoz·st a kˆvetkezı szab·llyal.
-\item Amikor az ˆsszes szab·lyt kiprÛb·ltuk, akkor a korl·tot \emph{elaltatjuk}, azaz
-visszatessz¸k a t·rba (az alvÛ passzÌv korl·tok kˆzÈ).
-\end{itemize}
-
-A fut·s akkor fejezıdik be, amikor m·r nem marad aktiv·lhatÛ korl·t. Az ır-rÈszben
-(elvben) nem lehet v·ltozÛt Èrinteni. Az ır-rÈsz kÈt komponensbıl ·ll: \cd{Ask \& Tell}
+A CHR korl√°toknak h√°rom √°llapota lehet: \emph{akt√≠v}, \emph{aktiv√°lhat√≥ passz√≠v} √©s
+\emph{alv√≥ passz√≠v}. Akt√≠v korl√°tb√≥l legfeljebb egy van minden pillanatban. Egy
+korl√°t akkor v√°lik aktiv√°lhat√≥v√°, ha valamelyik v√°ltoz√≥j√°t \emph{meg√©rintik}, azaz
+egyes√≠tik egy t√µle k√ºl√∂nb√∂z√µ kifejez√©ssel. Minden alkalommal, amikor egy korl√°t akt√≠vv√°
+v√°lik, az √∂sszes r√° vonatkoz√≥ szab√°lyt v√©gigpr√≥b√°ljuk az al√°bbiak szerint:
 
 \begin{itemize}
-\item \cd{Ask} --- v·ltozÛ-ÈrintÈs vagy behelyettesÌtÈsi hiba meghi˙sul·st okoz
-\item \cd{Tell} --- nincs ellenırzÈs, a rendszer ,,elhiszi'', hogy ilyen dolog nem
-fordul elı
+\item mindegyik fejre \emph{illesztj√ºk} a korl√°tot (ez egyir√°ny√∫ egyes√≠t√©s,
+h√≠v√°sbeli v√°ltoz√≥ nem kaphat √©rt√©ket)
+\item t√∂bbfej√ª szab√°lyok eset√©n a korl√°t-t√°rban keres√ºnk megfelel√µ
+(illeszthet√µ) \emph{partner}-korl√°tot,
+\item sikeres illeszt√©s ut√°n v√©grehajtjuk az √µr-r√©szt, ha ez is sikeres, a
+szab√°ly \emph{t√ºzel}, k√ºl√∂nben folytatjuk a pr√≥b√°lkoz√°st a k√∂vetkez√µ szab√°llyal.
+\item A t√ºzel√©s abb√≥l √°ll, hogy (egyszer√ªs√≠t√©s vagy egypag√°ci√≥ eset√©n)
+kivessz√ºk a t√°rb√≥l a kijel√∂lt korl√°tokat, majd minden esetben v√©grehajtjuk a t√∂rzset.
+\item Ha ezzel az akt√≠v korl√°tot nem hagytuk el a t√°rb√≥l, folytatjuk a r√° vonatkoz√≥
+pr√≥b√°lkoz√°st a k√∂vetkez√µ szab√°llyal.
+\item Amikor az √∂sszes szab√°lyt kipr√≥b√°ltuk, akkor a korl√°tot \emph{elaltatjuk}, azaz
+visszatessz√ºk a t√°rba (az alv√≥ passz√≠v korl√°tok k√∂z√©).
 \end{itemize}
 
-\subsection{A CHR szab·lyok szintaxisa}
+A fut√°s akkor fejez√µdik be, amikor m√°r nem marad aktiv√°lhat√≥ korl√°t. Az √µr-r√©szben
+(elvben) nem lehet v√°ltoz√≥t √©rinteni. Az √µr-r√©sz k√©t komponensb√µl √°ll: \cd{Ask \& Tell}
 
-A SICStus kÈzikˆnyv alapj·n a CHR szab·lyok szintaxisa az al·bbi szab·lyrendszerrel
-ÌrhatÛ le:
+\begin{itemize}
+\item \cd{Ask} --- v√°ltoz√≥-√©rint√©s vagy behelyettes√≠t√©si hiba meghi√∫sul√°st okoz
+\item \cd{Tell} --- nincs ellen√µrz√©s, a rendszer ,,elhiszi'', hogy ilyen dolog nem
+fordul el√µ
+\end{itemize}
+
+\subsection{A CHR szab√°lyok szintaxisa}
+
+A SICStus k√©zik√∂nyv alapj√°n a CHR szab√°lyok szintaxisa az al√°bbi szab√°lyrendszerrel
+√≠rhat√≥ le:
 
 \begin{alltt}
-Szab·ly       --> [NÈv @] 
-                    (Egyszer˚sÌtÈs | Propag·ciÛ | Egypag·ciÛ)
+Szab√°ly       --> [N√©v @] 
+                    (Egyszer√ªs√≠t√©s | Propag√°ci√≥ | Egypag√°ci√≥)
                        [pragma Pragma].
 
-Egyszer˚sÌtÈs --> Fejek         <=> [’r '|'] Tˆrzs
-Propag·ciÛ    --> Fejek         ==> [’r '|'] Tˆrzs
-Egypag·ciÛ    --> Fejek \bs Fejek <=> [’r '|'] Tˆrzs
+Egyszer√ªs√≠t√©s --> Fejek         <=> [√ïr '|'] T√∂rzs
+Propag√°ci√≥    --> Fejek         ==> [√ïr '|'] T√∂rzs
+Egypag√°ci√≥    --> Fejek \bs Fejek <=> [√ïr '|'] T√∂rzs
 
 Fejek         --> Fej | Fej, Fejek
-Fej           --> Korl·t | Korl·t \# AzonosÌtÛ
-Korl·t        --> {\rm egy korl·tkÈnt deklar·lt meghÌvhatÛ kifejezÈs}
-AzonosÌtÛ     --> {\rm egy egyedi v·ltozÛ}
+Fej           --> Korl√°t | Korl√°t \# Azonos√≠t√≥
+Korl√°t        --> {\rm egy korl√°tk√©nt deklar√°lt megh√≠vhat√≥ kifejez√©s}
+Azonos√≠t√≥     --> {\rm egy egyedi v√°ltoz√≥}
 
-’r            --> Ask | Ask & Tell
-Ask           --> CÈlsorozat
-Tell          --> CÈlsorozat
-CÈlsorozat    --> {\rm egy meghÌvhatÛ kifejezÈs, konjunkciÛkkal Ès diszjunkciÛkkal}
+√ïr            --> Ask | Ask & Tell
+Ask           --> C√©lsorozat
+Tell          --> C√©lsorozat
+C√©lsorozat    --> {\rm egy megh√≠vhat√≥ kifejez√©s, konjunkci√≥kkal √©s diszjunkci√≥kkal}
 
-Tˆrzs         --> CÈlsorozat
+T√∂rzs         --> C√©lsorozat
 
-Pragma        --> {\rm kifejezÈsek konjunkciÛja, amik a \cd{\#/2}-vel azonosÌtott fejekre hivatkoznak}
+Pragma        --> {\rm kifejez√©sek konjunkci√≥ja, amik a \cd{\#/2}-vel azonos√≠tott fejekre hivatkoznak}
 \end{alltt}
 
-KÈt fontosabb pragm·t Èrdemes ismerni:
+K√©t fontosabb pragm√°t √©rdemes ismerni:
 
 \begin{itemize}
-\item \cd{already_in_heads(Id)} --- kik¸szˆbˆli ugyanazon korl·t kivÈtelÈt Ès
-                   visszarak·s·t
-\item \cd{passive(Id)} --- a hivatkozott fej-korl·t csak passzÌv szerep˚ lehet. 
+\item \cd{already_in_heads(Id)} --- kik√ºsz√∂b√∂li ugyanazon korl√°t kiv√©tel√©t √©s
+                   visszarak√°s√°t
+\item \cd{passive(Id)} --- a hivatkozott fej-korl√°t csak passz√≠v szerep√ª lehet. 
 \end{itemize}
 
-\subsection{CHR pÈld·k}
+\subsection{CHR p√©ld√°k}
 
-Az al·bbi pÈlda az $X \leq Y$ rel·ciÛt valÛsÌtja meg CHR-ben.
+Az al√°bbi p√©lda az $X \leq Y$ rel√°ci√≥t val√≥s√≠tja meg CHR-ben.
 \begin{verbatim}
 :- use_module(library(chr)).
 
@@ -151,32 +151,32 @@ transitivity @ X leq Y , Y leq Z ==> X leq Z.
 Y = X, Z = X ? 
 \end{verbatim}
 
-A $\leq$ rel·ciÛ leÌr·s·hoz nÈgy szab·lyt vezet¸nk be, mindegyik egy-egy elÈg
-trivi·lis tulajdons·got Ìr le:
+A $\leq$ rel√°ci√≥ le√≠r√°s√°hoz n√©gy szab√°lyt vezet√ºnk be, mindegyik egy-egy el√©g
+trivi√°lis tulajdons√°got √≠r le:
 
 \begin{itemize}
-\item Reflexivit·s (\cd{reflexivity}) --- kifejezi, hogy ha a korl·t-t·rban van
-egy \cd{X leq Y} korl·t, Ès ugyanekkor az \cd{X = Y} rel·ciÛ teljes¸l, akkor
-a korl·t trivi·lisan igaz, teh·t helyettesÌthetj¸k a \cd{true} korl·ttal, azaz
-tulajdonkÈppen elt·volÌthatjuk a korl·t-t·rbÛl.
+\item Reflexivit√°s (\cd{reflexivity}) --- kifejezi, hogy ha a korl√°t-t√°rban van
+egy \cd{X leq Y} korl√°t, √©s ugyanekkor az \cd{X = Y} rel√°ci√≥ teljes√ºl, akkor
+a korl√°t trivi√°lisan igaz, teh√°t helyettes√≠thetj√ºk a \cd{true} korl√°ttal, azaz
+tulajdonk√©ppen elt√°vol√≠thatjuk a korl√°t-t√°rb√≥l.
 
-\item Antiszimmetria (\cd{antisymmetry}) --- kifejezi, hogy ha a korl·t-t·rban
-egyszerre van jelen az \cd{X leq Y} Ès az \cd{Y leq X} korl·t, akkor az csak ˙gy
-lehetsÈges, ha \cd{X=Y}.
+\item Antiszimmetria (\cd{antisymmetry}) --- kifejezi, hogy ha a korl√°t-t√°rban
+egyszerre van jelen az \cd{X leq Y} √©s az \cd{Y leq X} korl√°t, akkor az csak √∫gy
+lehets√©ges, ha \cd{X=Y}.
 
-\item Idempotencia (\cd{idempotency}) --- kifejezi, hogy ha a korl·t-t·rban
-kÈtszer szerepel az \cd{X leq Y} korl·t, akkor az egyiket elt·volÌthatjuk.
+\item Idempotencia (\cd{idempotency}) --- kifejezi, hogy ha a korl√°t-t√°rban
+k√©tszer szerepel az \cd{X leq Y} korl√°t, akkor az egyiket elt√°vol√≠thatjuk.
 
-\item Tranzitivit·s (\cd{transitivity}) --- az
-$X \leq Y \wedge Y \leq Z \Longrightarrow X \leq Z$ azonoss·g kifejezÈse.
+\item Tranzitivit√°s (\cd{transitivity}) --- az
+$X \leq Y \wedge Y \leq Z \Longrightarrow X \leq Z$ azonoss√°g kifejez√©se.
 \end{itemize}
 
-Ezen nÈgy szab·ly segÌtsÈgÈvel az \cd{X leq Y, Y leq Z, Z leq X} cÈlsorozatbÛl
-a kˆvetkezıkÈppen jˆn r· a rendszer, hogy \cd{X = Y} Ès \cd{X = Z}:
+Ezen n√©gy szab√°ly seg√≠ts√©g√©vel az \cd{X leq Y, Y leq Z, Z leq X} c√©lsorozatb√≥l
+a k√∂vetkez√µk√©ppen j√∂n r√° a rendszer, hogy \cd{X = Y} √©s \cd{X = Z}:
 
 \begin{center} \begin{tabular}{|l|l|l|}
 \hline
-Korl·t-t·r                 & CÈlsorozat                     & T¸zelÈs \\
+Korl√°t-t√°r                 & C√©lsorozat                     & T√ºzel√©s \\
 \hline
 \hline
 ---                        & \cd{X leq Y, Y leq Z, Z leq X} & ---     \\
@@ -190,7 +190,7 @@ Korl·t-t·r                 & CÈlsorozat                     & T¸zelÈs \\
 \cd{X leq Y, Y leq Z, X leq Z} & & \cd{antisymmetry} $\Longrightarrow$ \cd{Z = X}\\
 \cd{Z leq X} & & \\
 \hline
-\cd{X leq Y, Y leq X, X leq X} & & \cd{reflexivity} kÈtszer \\
+\cd{X leq Y, Y leq X, X leq X} & & \cd{reflexivity} k√©tszer \\
 \cd{X leq X, Z = X}            & & \\
 \hline
 \cd{X leq Y, Y leq X, Z = X}   & & \cd{antisymmetry} $\Longrightarrow$ \cd{Y = X} \\
@@ -199,26 +199,26 @@ Korl·t-t·r                 & CÈlsorozat                     & T¸zelÈs \\
 \hline
 \end{tabular} \end{center}
 
-NÈzz¸nk egy bonyolultabb CHR pÈld·t vÈgeshalmaz-korl·tokra! Az al·bbi pÈlda egy egyszer˚
-\clpfd keretrendszert valÛsÌt meg:
+N√©zz√ºnk egy bonyolultabb CHR p√©ld√°t v√©geshalmaz-korl√°tokra! Az al√°bbi p√©lda egy egyszer√ª
+\clpfd keretrendszert val√≥s√≠t meg:
 
 \begin{itemize}
-\item kÈt-argumentum˙ korl·tokat kezel;
-\item a korl·tokat  egy (a keretrendszeren kÌv¸l megadott) {\tt test/3}
-elj·r·s Ìrja le:
+\item k√©t-argumentum√∫ korl√°tokat kezel;
+\item a korl√°tokat  egy (a keretrendszeren k√≠v√ºl megadott) {\tt test/3}
+elj√°r√°s √≠rja le:
 \begin{quote}
-{\tt test(C, X, Y)} sikeres, ha a {\tt C} ,,nev˚'' korl·t fenn·ll {\tt X}
-Ès {\tt Y} kˆzˆtt;
+{\tt test(C, X, Y)} sikeres, ha a {\tt C} ,,nev√ª'' korl√°t fenn√°ll {\tt X}
+√©s {\tt Y} k√∂z√∂tt;
 \end{quote}
-\item nem csak numerikus tartom·nyokra jÛ.
+\item nem csak numerikus tartom√°nyokra j√≥.
 \end{itemize}
 
 \begin{verbatim}
 handler dom_consistency.
 constraints dom/2, con/3.
-% dom(X,D) - az X v·ltozÛ a D list·bÛl veheti az ÈrtÈkeit
+% dom(X,D) - az X v√°ltoz√≥ a D list√°b√≥l veheti az √©rt√©keit
 %            (D elemei ground-ok)
-% con(C,X,Y) - a C korl·t az X Ès Y v·ltozÛk kˆzˆtt fenn·ll
+% con(C,X,Y) - a C korl√°t az X √©s Y v√°ltoz√≥k k√∂z√∂tt fenn√°ll
 
 con(C, X, Y) <=> ground(X), ground(Y) | test(C, X, Y).
 con(C, X, Y), dom(X, XD) \ dom(Y, YD) <=> 
@@ -227,7 +227,7 @@ con(C, X, Y), dom(Y, YD) \ dom(X, XD) <=>
         reduce(y_x, YD, XD, C, NXD) | new_dom(NXD, X).
 
   reduce(CXY, XD, YD, C, NYD):- 
-        select(GY, YD, NYD1), % megprÛb·lja YD-t csˆkkenteni GY-nal
+        select(GY, YD, NYD1), % megpr√≥b√°lja YD-t cs√∂kkenteni GY-nal
         (   member(GX, XD), test(CXY, C, GX, GY) -> fail
         ;   reduce(CXY, XD, NYD1, C, NYD) -> true
         ;   NYD = NYD1
@@ -249,46 +249,46 @@ labeling, dom(X, L) #Id <=> member(X, L), labeling
         pragma passive(Id).
 \end{verbatim}
 
-A \cd{passive(Id)} ˙gynevezett \cd{pragma} direktÌva jelentÈse: az \cd{\#Id}
-jelˆlÈssel hivatkozott fej csak passzÌv szerep˚ lehet. A fenti keretrendszer
-alkalmaz·s·val az N kir·lynı pÈlda megold·sa:
+A \cd{passive(Id)} √∫gynevezett \cd{pragma} direkt√≠va jelent√©se: az \cd{\#Id}
+jel√∂l√©ssel hivatkozott fej csak passz√≠v szerep√ª lehet. A fenti keretrendszer
+alkalmaz√°s√°val az N kir√°lyn√µ p√©lda megold√°sa:
 
 \begin{verbatim}
 
-% Qs az N-kir·lynı feladat megold·sa
+% Qs az N-kir√°lyn√µ feladat megold√°sa
 queens(N, Qs) :-
         length(Qs, N), 
         make_list(1, N, L1_N), 
-        domains(Qs, L1_N),       % tartom·nyok megad·sa
-        safe(Qs),                % korl·tok felvÈtele
-        labeling.                % cÌmkÈzÈs
+        domains(Qs, L1_N),       % tartom√°nyok megad√°sa
+        safe(Qs),                % korl√°tok felv√©tele
+        labeling.                % c√≠mk√©z√©s
 
-% make_list(I, N, L): Az L lista az I, I+1, ..., N elemekbıl ·ll.
+% make_list(I, N, L): Az L lista az I, I+1, ..., N elemekb√µl √°ll.
 make_list(I, N, []) :- I > N, !.
 make_list(I, N, [I|L]) :-
         I1 is I+1,
         make_list(I1, N, L).
 
-% domains(Vs, Dom): A Vs-beli v·ltozÛk tartom·nya Dom.
+% domains(Vs, Dom): A Vs-beli v√°ltoz√≥k tartom√°nya Dom.
 domains([], _).
 domains([V|Vs], Dom) :- dom(V, Dom), domains(Vs, Dom).
 
-% queens(Qs): Qs egy biztons·gos kir·lynı-elrendezÈs.
+% queens(Qs): Qs egy biztons√°gos kir√°lyn√µ-elrendez√©s.
 safe([]).
 safe([Q|Qs]) :- no_attack(Qs, Q, 1), safe(Qs).
 
-% no_attack(Qs, Q, I): A Qs lista ·ltal leÌrt kir·lynık
-% egyike sem t·madja a Q ·ltal leÌrt kir·lynıt, ahol I a Qs
-% lista elsı elemÈnek t·vols·ga Q-tÛl.
+% no_attack(Qs, Q, I): A Qs lista √°ltal le√≠rt kir√°lyn√µk
+% egyike sem t√°madja a Q √°ltal le√≠rt kir√°lyn√µt, ahol I a Qs
+% lista els√µ elem√©nek t√°vols√°ga Q-t√≥l.
 no_attack([], _, _).
 no_attack([X|Xs], Y, I) :-
-        con(no_threat(I), X, Y),  % a korl·t felvÈtele
+        con(no_threat(I), X, Y),  % a korl√°t felv√©tele
         I1 is I+1, 
         no_attack(Xs, Y, I1).
 
-% "Az X Ès Y oszlopokban  I sort·vols·gra levı kir·lynık nem 
-% t·madj·k egym·st" korl·t definÌciÛja, a dom_consistency 
-% keretrendszernek megfelelıen
+% "Az X √©s Y oszlopokban  I sort√°vols√°gra lev√µ kir√°lyn√µk nem 
+% t√°madj√°k egym√°st" korl√°t defin√≠ci√≥ja, a dom_consistency 
+% keretrendszernek megfelel√µen
 test(no_threat(I), X, Y) :-
         Y =\= X, Y =\= X-I, Y =\= X+I.
 
@@ -297,7 +297,7 @@ test(no_threat(I), X, Y) :-
                                 Qs = [2,4,1,3], labeling ? ; no
 \end{verbatim}
 
-Egy nem korl·t-jelleg˚ pÈlda: az eratoszthenÈszi prÌmszita CHR-ben:
+Egy nem korl√°t-jelleg√ª p√©lda: az eratoszthen√©szi pr√≠mszita CHR-ben:
 
 \begin{verbatim}
 handler eratosthenes.
@@ -311,7 +311,7 @@ absorb(J) @ prime(I) \ prime(J) <=>
         J mod I =:= 0 | true.
 \end{verbatim}
 
-Boole-korl·tok (ld. mÈg \cd{library('chr/examples/bool.pl')}):
+Boole-korl√°tok (ld. m√©g \cd{library('chr/examples/bool.pl')}):
 
 \begin{verbatim}
 handler bool.
@@ -339,12 +339,12 @@ label_and(1,X,X).
   no
 \end{verbatim}
 
-Sz·moss·g-korl·t megvalÛsÌt·sa 0-1 ÈrtÈk˚ v·ltozÛkra:
+Sz√°moss√°g-korl√°t megval√≥s√≠t√°sa 0-1 √©rt√©k√ª v√°ltoz√≥kra:
 
 \begin{verbatim}
 constraints card/4.
 
-% L-ben a 1-ek sz·ma >= A Ès =< B.
+% L-ben a 1-ek sz√°ma >= A √©s =< B.
 card(A, B, L):-  
         length(L,N), A=<B,0=<B,A=<N, card(A,B,L,N).
 
@@ -356,7 +356,7 @@ pos_red @ card(A,B,L,N) <=> select(X,L,L1),X==1 |
                 card(A1,B1,L1,N1).
 neg_red @ card(A,B,L,N) <=> select(X,L,L1),X==0 | 
                 N1 is N-1, card(A,B,L1,N1).
-% speci·lis esetek kÈt v·ltozÛra
+% speci√°lis esetek k√©t v√°ltoz√≥ra
 card2nand @ card(0,1,[X,Y],2) <=> and(X,Y,0).           
 % ...
 labeling, card(A,B,L,N)#Pc <=> 
@@ -380,28 +380,28 @@ L = [0,1,1,_A] , labeling ? ;
 % ...
 \end{verbatim}
 
-\subsection{Egy nagyobb CHR pÈlda kezdemÈnye}
+\subsection{Egy nagyobb CHR p√©lda kezdem√©nye}
 
-A feladat: adott egy nÈgyzet, ahol bizonyos mezıkben egÈsz sz·mok vannak.
-A cÈl: minden mezıbe sz·mot Ìrni, ˙gy, hogy az azonos sz·mot tartalmazÛ
-ˆsszef¸ggı ter¸letek mÈrete megegyezzÈk a ter¸let mezıibe Ìrt sz·mmal. 
+A feladat: adott egy n√©gyzet, ahol bizonyos mez√µkben eg√©sz sz√°mok vannak.
+A c√©l: minden mez√µbe sz√°mot √≠rni, √∫gy, hogy az azonos sz√°mot tartalmaz√≥
+√∂sszef√ºgg√µ ter√ºletek m√©rete megegyezz√©k a ter√ºlet mez√µibe √≠rt sz√°mmal. 
 \br
-A feladv·nyt leÌrÛ adatstrukt˙ra: \cd{tf(Meret,Adottak)}, ahol \cd{Meret}
-a nÈgyzet oldalhossza, az \cd{Adottak} egy lista, amelynek elemei 
-\cd{t(O,S,M)} alak˙ strukt˙r·k. Egy ilyen strukt˙ra azt jelenti, hogy a
-nÈgyzet \cd{S}. sor·nak \cd{O}. oszlop·ban az \cd{M} sz·m ·ll.
+A feladv√°nyt le√≠r√≥ adatstrukt√∫ra: \cd{tf(Meret,Adottak)}, ahol \cd{Meret}
+a n√©gyzet oldalhossza, az \cd{Adottak} egy lista, amelynek elemei 
+\cd{t(O,S,M)} alak√∫ strukt√∫r√°k. Egy ilyen strukt√∫ra azt jelenti, hogy a
+n√©gyzet \cd{S}. sor√°nak \cd{O}. oszlop√°ban az \cd{M} sz√°m √°ll.
 
 \begin{verbatim}
 handler terulet.
 constraints orszag/3, tabla/1, cimkez/0.
 
-% orszag(Mezok, M, N): A Mezok mezılista egy ˆsszef¸ggı, M mÈret˚
-% ter¸let, amelynek kÌv·nt mÈrete N. Egy mezı Sor-Oszlop
-% koordin·t·ival van megadva.
+% orszag(Mezok, M, N): A Mezok mez√µlista egy √∂sszef√ºgg√µ, M m√©ret√ª
+% ter√ºlet, amelynek k√≠v√°nt m√©rete N. Egy mez√µ Sor-Oszlop
+% koordin√°t√°ival van megadva.
 
-% tabla(Matrix): A teljes tÈglalap, list·k list·jakÈnt.
+% tabla(Matrix): A teljes t√©glalap, list√°k list√°jak√©nt.
 
-% cimkez: CÌmkÈzÈsi segÈdkorl·t (ld. labeling az elızı pÈld·kban)
+% cimkez: C√≠mk√©z√©si seg√©dkorl√°t (ld. labeling az el√µz√µ p√©ld√°kban)
 
 foglalas(tf(Meret,Adottak), Mtx) :-
     bagof(Sor,
@@ -409,15 +409,15 @@ foglalas(tf(Meret,Adottak), Mtx) :-
                   O^tabla_mezo(Meret, Adottak, S, O, Mezo), 
                   Sor),
           Mtx),
-    append_lists(Mtx, Valtozok),         % list·v· lapÌtja Mtx-t
+    append_lists(Mtx, Valtozok),         % list√°v√° lap√≠tja Mtx-t
     MaxTerulet is Meret*Meret,
     domain(Valtozok, 1, MaxTerulet),
-    tabla(Mtx),                          % tabla/1 korl·t felvÈtele
-    matrix_korlatok(Mtx, 1),             % orszag/3 korl·tok
-    cimkez.                              % cÌmkÈzÈsi segÈdkorl·t
+    tabla(Mtx),                          % tabla/1 korl√°t felv√©tele
+    matrix_korlatok(Mtx, 1),             % orszag/3 korl√°tok
+    cimkez.                              % c√≠mk√©z√©si seg√©dkorl√°t
 
 tabla_mezo(Meret, Adottak, S, O, M) :-
-    between(1, Meret, S),               % 1..Meret felsorol·sa
+    between(1, Meret, S),               % 1..Meret felsorol√°sa
     between(1, Meret, O),
     (   member(t(S,O,M), Adottak) -> true
     ;   true
@@ -436,10 +436,10 @@ sor_korlatok([M|Mk], S, O) :-
     sor_korlatok(Mk, S, O1).
 
 
-% Az orszag/3 korl·tra vonatkozÛ szab·lyok
+% Az orszag/3 korl√°tra vonatkoz√≥ szab√°lyok
 
-% Ha kÈt orsz·g szomszÈdos, Ès azonos sz·mot tartalmaz, akkor
-% ˆssze kell vonni ıket
+% Ha k√©t orsz√°g szomsz√©dos, √©s azonos sz√°mot tartalmaz, akkor
+% √∂ssze kell vonni √µket
 orszag(Mezok1, H1, M), orszag(Mezok2, H2, M) <=>
                 szomszedos_orszag(Mezok1, Mezok2) |
                 H is H1+H2,
@@ -447,51 +447,51 @@ orszag(Mezok1, H1, M), orszag(Mezok2, H2, M) <=>
                 append(Mezok1, Mezok2, Mezok),
                 orszag(Mezok, H, M).
 
-% Ha kÈt orsz·g szomszÈdos, Ès az egyik m·r pont annyi mezıbıl ·ll,
-% ah·nyas sz·mot tartalmaz, akkor a m·sik orsz·gban m·r nem szerepelhet
-% ilyen sz·m
+% Ha k√©t orsz√°g szomsz√©dos, √©s az egyik m√°r pont annyi mez√µb√µl √°ll,
+% ah√°nyas sz√°mot tartalmaz, akkor a m√°sik orsz√°gban m√°r nem szerepelhet
+% ilyen sz√°m
 orszag(Mezok, M, M), orszag(Mezok1, _, M1) ==>
                 szomszedos_orszag(Mezok, Mezok1) |
                 M1 #\= M.
 
-% Ha egy orsz·g pont annyi mezıbıl ·ll, ah·nyas sz·mot tartalmaz,
-% akkor nem kell vele tov·bb foglalkozni (mivel a szab·lyok sorban
-% t¸zelnek, ezÈrt ez mindig kÈsıbb t¸zel, mint az elızı)
+% Ha egy orsz√°g pont annyi mez√µb√µl √°ll, ah√°nyas sz√°mot tartalmaz,
+% akkor nem kell vele tov√°bb foglalkozni (mivel a szab√°lyok sorban
+% t√ºzelnek, ez√©rt ez mindig k√©s√µbb t√ºzel, mint az el√µz√µ)
 orszag(Mezok, M, M) <=> 
                 true.
 
-% Ha egy orsz·g m·r nem terjeszkedhet, de kevesebb mezıbıl ·ll, mint
-% ah·nyas sz·m van benne, akkor meghi˙sulunk
+% Ha egy orsz√°g m√°r nem terjeszkedhet, de kevesebb mez√µb√µl √°ll, mint
+% ah√°nyas sz√°m van benne, akkor meghi√∫sulunk
 orszag(Mezok, H, M), tabla(Mtx) ==>
                 nonvar(M), H < M, 
                 \+ terjeszkedhet(Mezok, M, Mtx) | fail.
 
-% CÌmkÈzÈsi segÈdszab·ly
+% C√≠mk√©z√©si seg√©dszab√°ly
 (orszag(Mezok, H, M) # Id1, tabla(Mtx) # Id2) \ cimkez  <=>
                 fd_max(M, Max), H < Max | 
                 szomszedos_mezo(Mezok, Mtx, M), cimkez
                         pragma passive(Id1), passive(Id2).
 
-% A Mezok mezıbıl ·llÛ, M mÈret˚ orsz·g az Mtx t·bl·ban terjeszkedhet
+% A Mezok mez√µb√µl √°ll√≥, M m√©ret√ª orsz√°g az Mtx t√°bl√°ban terjeszkedhet
 terjeszkedhet(Mezok, M, Mtx) :-
     szomszedos_mezo(Mezok, Mtx, M0),
     fd_set(M0, Set), fdset_member(M, Set).
 
-% Az Mk1 Ès az Mk2 mezıkbıl ·llÛ orsz·gok szomszÈdosak
+% Az Mk1 √©s az Mk2 mez√µkb√µl √°ll√≥ orsz√°gok szomsz√©dosak
 szomszedos_orszag(Mk1, Mk2) :-
     member(S1-O1, Mk1), member(S2-O2, Mk2),
     (   S1 == S2 -> abs(O1-O2) =:= 1
     ;   O1 == O2, abs(S1-S2) =:= 1
     ).
 
-% A Mezok orsz·gnak az Mtx m·trixban az M mezı a szomszÈdja
+% A Mezok orsz√°gnak az Mtx m√°trixban az M mez√µ a szomsz√©dja
 szomszedos_mezo(Mezok, Mtx, M) :-
     member(S-O, Mezok),
     relativ_szomszed(S1, O1),
     S2 is S+S1, O2 is O+O1,
     non_member(S2-O2, Mezok),
     matrix_elem(S2, O2, Mtx, M).   
-    % A Mtx m·trix S2. sor·nak O2. eleme M.
+    % A Mtx m√°trix S2. sor√°nak O2. eleme M.
 
 relativ_szomszed(1, 0).
 relativ_szomszed(0, -1).
