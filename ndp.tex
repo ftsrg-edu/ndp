@@ -1,0 +1,226 @@
+% !TeX spellcheck = hu_HU
+% !TeX encoding = UTF-8
+% !TeX program = xelatex
+\documentclass{article}
+
+\usepackage{ifxetex}
+\ifxetex
+	\usepackage{fontspec}
+\else
+	\usepackage[T1]{fontenc}
+	\usepackage[utf8]{inputenc}
+	\usepackage{lmodern}
+\fi
+
+\usepackage[magyar]{babel}
+\usepackage{latexsym}
+%\usepackage{prolog}
+\usepackage{alltt}
+\usepackage{times}
+\usepackage{amsfonts} % \mathbb miatt
+\usepackage{epsfig}
+
+
+\newcommand{\insertfig}[2]{
+	\begin{figure}[hbt]
+		\begin{center}
+			\leavevmode\epsfxsize=#2\epsffile{#1}
+		\end{center}
+		\vspace{0.5cm}
+	\end{figure}
+}
+
+\newcommand{\SetFigFont}[3]{\large\bf}
+
+\newcounter{pelda}[section]
+\newcounter{definicio}[section]
+\newcounter{tetel}[section]
+
+\renewcommand{\thepelda}        {\arabic{pelda}.}
+\renewcommand{\thedefinicio}    {\arabic{definicio}.}
+\renewcommand{\thetetel}    {\arabic{tetel}.}
+
+\newcommand{\pelda}[1]{
+	\vspace{1.5ex}
+	\stepcounter{pelda}
+	{\bf \thepelda ~p\'elda: #1}
+	\vspace{0.5ex}
+}
+\newcommand{\definicio}{
+	\stepcounter{definicio}
+	{\bf \thesection .\thedefinicio ~definíció:}~
+}
+\newcommand{\tetel}{
+	\stepcounter{tetel}
+	{\bf \thesection .\thetetel ~tétel:}~
+}
+
+\newcommand{\ho}{o\hspace{-0.57em}\raisebox{0.15mm}{'}\hspace{-0.36em}\raisebox{0.15mm}{'}}
+\newcommand{\hu}{u\hspace{-0.58em}\raisebox{0.15mm}{'}\hspace{-0.37em}\raisebox{0.15mm}{'}}
+
+\newcommand{\myfbox}[1]{\fbox{#1}}
+\newcommand{\myfboxdef}{\fbox{keretez\'{e}ssel}}
+
+\newcommand{\caplab}[2]{\caption{\label{#2}\sc #1}}
+\newcommand{\figbegin}{\begin{figure*}[htbp]}
+	\newcommand{\figend}[2]{\caplab{#1}{#2}\end{figure*}}
+
+\newcommand{\disprol}[1]{
+	\begin{quote}
+		{\tt
+			\begin{tabbing}
+				xxxxxx\= xxxxxx\= xxxx xxxx xxxx xxxx xxxx xxxx \= \kill
+				#1
+			\end{tabbing}
+		}
+	\end{quote}
+}
+
+\newcommand{\ac}[1]{\rm\begin{minipage}{5.5in}#1\end{minipage}}
+\newcommand{\ttac}[1]{\tt\begin{minipage}{5.5in}#1\end{minipage}}
+\newcommand{\ttacvi}[1]{\tt\begin{minipage}{6in}#1\end{minipage}}
+\newcommand{\halfpage}[1]{\begin{minipage}{2.5in}#1\end{minipage}}
+\newcommand{\gap}{\vspace*{0.75cm}}
+
+\topmargin -1.7cm
+% \textwidth 6.5in
+\textwidth 17.1cm
+\textheight 9in
+\oddsidemargin -0.25in
+\evensidemargin -0.25in
+\headheight 1cm
+\headsep 1.5cm
+\raggedright
+\raggedbottom
+\footskip 0.35in 
+\marginparwidth 1cm
+\marginparsep 0.5cm
+
+\newcommand{\head}[1]{{\centering\huge\bf #1 \par
+		\vspace{0.5cm}}}
+\newcommand{\s}{\hspace*{1cm}}
+
+\newcommand{\enumhead}[1]{{\vspace{0.7cm} \bf #1\par}}
+\newcommand{\enum}[2]{\enumhead{#1}
+% \vspace{0.3cm}
+\begin{itemize}
+	#2
+\end{itemize}}
+
+\newcommand{\var}[1]{\textit{#1}}
+\newcommand{\cd}[1]{\texttt{#1}}
+\newcommand{\bcd}[1]{{\bf\texttt{#1}}}
+\newcommand{\scd}[1]{{\large\texttt{#1}}}
+\newcommand{\bs}{\char92}       % backslash
+
+\newcommand{\meta}[1]{$\left<\hbox{#1}\right>$}
+
+\newcommand{\tuple}[1]{\left\langle#1\right\rangle}
+\newcommand{\tb}{$\langle$}
+\newcommand{\te}{$\rangle$}
+
+\newcommand{\domxm}[1]{D(#1,s)}
+\newcommand{\valxm}[1]{V(#1,s)}
+\newcommand{\setxm}[1]{S(#1,s)}
+
+\newcommand{\domx}[1]{$\domxm{#1}$}
+\newcommand{\valx}[1]{$\valxm{#1}$}
+\newcommand{\setx}[1]{$\setxm{#1}$}
+
+\newcommand{\epsfigure}[2]{ %\epsfigure{ file }{ width }
+	\begin{figure}[htbp]
+		\begin{center}
+			\epsfig{file=#1.eps, width=#2\linewidth}
+		\end{center}
+	\end{figure}
+}
+
+\pagestyle{plain}
+
+%%%%%%%%%%
+
+\newcommand{\set}[1]{\mathbb{#1}}
+\newcommand{\btab}[1]{\begin{center}\begin{tabular}{#1}}
+		\newcommand{\etab}{\end{tabular}\end{center}}
+\newcommand{\bul}{\begin{itemize}}
+	\newcommand{\eul}{\end{itemize}}
+\newcommand{\br}{
+	\vspace{\baselineskip}
+	
+}
+\newcommand{\clpq}{\cd{clpq}~}
+\newcommand{\clpr}{\cd{clpr}~}
+\newcommand{\clpb}{\cd{clpb}~}
+\newcommand{\clpfd}{\cd{clpfd}~}
+\newcommand{\fdbg}{\cd{fdbg}~}
+\newcommand{\Clpq}{\cd{clpq}}
+\newcommand{\Clpr}{\cd{clpr}}
+\newcommand{\Clpb}{\cd{clpb}}
+\newcommand{\Clpfd}{\cd{clpfd}}
+\newcommand{\Fdbg}{\cd{fdbg}}
+
+\providecommand{\ifnotdefined}[1]{ }
+
+\begin{document}
+	
+	\vspace*{3cm}
+	\thispagestyle{empty}
+	
+	\centerline{\Huge\bf Nagyhatékonyságú logikai programozás}
+	
+	\vspace{0.5cm}
+	
+	\centerline{\Large  Jegyzetek a BME informatikus hallgatói számára}
+	\vspace{1cm}
+	
+	\centerline{\large\bf Kézirat}
+	\vspace{3cm}
+
+
+\begin{center}
+{\Large Szeredi Péter, Benk{\H o} Tamás
+	\vspace{0.3cm}
+	
+	Számítástudományi\\
+	és Információelméleti Tanszék
+	\vspace{0.3cm}
+	
+	IQSOFT Rt.}
+\vspace{0.3cm}
+
+{\large\tt \{szeredi,benko\}@iqsoft.hu}
+
+\vspace{2cm}
+
+{\large A jegyzetet az el{\H o}ad{\'a}sv{\'a}zlatok alapj{\'a}n elk{\'e}sz{\'\i}tette:\\
+	
+	\vspace{0.3cm}
+	
+	\Large Nepusz Tamás \\
+	\vspace{0.3cm}
+	{\large\tt tamas@eet.bme.hu}
+}
+	
+\end{center}
+
+\vspace{3cm}
+
+\centerline{\large Budapest, 2002}
+
+\clearpage
+
+\tableofcontents
+
+\clearpage
+
+\input{clp1} % Constraint Logic Programming (CLP)
+\input{clp2} % CLP segédeszközök SICStusban
+\input{clp3} % A SICStus clpq és clpr könyvtárai
+\input{clp4} % A SICStus clpb könyvtára
+\input{clp5} % A SICStus clpfd könyvtára
+\input{clp6} % Az fdbg nyomkövetõ csomag
+\input{clp7} % Esettanulmányok clpfd-ben
+\input{clp8} % A Mercury nagyhatékonyságú LP megvalósítás
+\input{clp9} % CHR---Constraint Handling Rules
+
+\end{document}
