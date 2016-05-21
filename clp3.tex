@@ -1,11 +1,11 @@
 \clearpage
 
-\section{A SICStus \clpq és \clpr könyvtárai}
+\chapter{A SICStus \clpq és \clpr könyvtárai}
 
 A következő fejezetben a SICStus \clpq, illetve \clpr könyvtáraival
 fogunk foglalkozni.
 
-\subsection{A \clpq és \clpr könyvtár általános jellemzése}
+\section{A \clpq és \clpr könyvtár általános jellemzése}
 
 A \clpq könyvtár egy, a racionális számok tartományára
 alapuló CLP rendszert valósít meg, a \clpr könyvtár pedig ugyanezt, csak
@@ -32,7 +32,7 @@ Mivel a \clpq és a \clpr könyvtárak nagy mértékben hasonlítanak
 egymásra, ezért a továbbiakban csak a \Clpq-val foglalkozunk, de az
 elmondottak ugyanúgy érvényesek a \Clpr-re is.
 
-\subsection{Egy példafutás a \clpq könyvtár segítségével}
+\section{Egy példafutás a \clpq könyvtár segítségével}
 
 Az alábbiakban egy rövid példán keresztül fogjuk bemutatni a \clpq
 könyvtár használatát.
@@ -101,7 +101,7 @@ Persze a nemlineáris korlátok is megoldhatóak:
 X = 1/3 ?
 \end{verbatim}
 
-\subsection{Összetett korlátok kezelése \Clpq-ban}
+\section{Összetett korlátok kezelése \Clpq-ban}
 
 Ahogy azt már említettük, \Clpq-ban és \Clpr-ben összetett korlátnak
 számítanak a nemlineáris (vagy a rendszer által nem linearizálható, de
@@ -169,7 +169,7 @@ találjuk az egyetlen megoldást:
                         Y = X, {X-Z>0} ? 
 \end{verbatim}
 
-\subsection{Bonyolultabb \clpq példa: hiteltörlesztés}
+\section{Bonyolultabb \clpq példa: hiteltörlesztés}
 
 \begin{verbatim}
 % Hiteltörlesztés számítása: P összegű hitelt
@@ -219,7 +219,7 @@ a változók. Ezzel gyakorlatilag azt is szabályozhatjuk, hogy melyik változó
 melyikek segítségével fejezze ki a rendszer. A fenti példában \cd{P} áll a
 lista első helyén, ezért \cd{P}-t fogja kifejezni a többi segítségével.
 
-\subsection{További könyvtári eljárások}
+\section{További könyvtári eljárások}
 
 \begin{itemize}
 \item \cd{entailed(Korlát)} --- sikerül, ha \cd{Korlát} levezethető a
@@ -262,7 +262,7 @@ szerepeljen az eredmény-korlátban.
 
 \end{itemize}
 
-\subsection{A \clpq és a \clpr belső számábrázolása}
+\section{A \clpq és a \clpr belső számábrázolása}
 
 A \clpr lebegőpontos szám formátumban tárolja a számokat, itt tehát
 semmi különlegességgel nem találkozhatunk. A \clpq azonban racionális
@@ -285,7 +285,7 @@ no
 X = 5 ?
 \end{verbatim}
 
-\subsection{Egy nagyobb \clpq feladat: tökéletes téglalapok}
+\section{Egy nagyobb \clpq feladat: tökéletes téglalapok}
 
 \label{teglalap:clpqr}
 

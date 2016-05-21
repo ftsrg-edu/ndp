@@ -1,6 +1,6 @@
 \clearpage
 
-\section{Az \fdbg nyomkövető csomag}
+\chapter{Az \fdbg nyomkövető csomag}
 
 \label{fdbg}
 Ebben a fejezetben a \clpfd programok nyomkövetésére szolgáló \fdbg csomagot
@@ -49,7 +49,7 @@ Az \fdbg könyvtár szolgáltatásait az alábbi paranccsal lehet igénybe venni
 | ?- use_module(library(fdbg)).
 \end{verbatim}
 
-\subsection{A nyomkövetés be- és kikapcsolása}
+\section{A nyomkövetés be- és kikapcsolása}
 
 \begin{itemize}
 \item \bcd{fdbg\_on}\\ \bcd{fdbg\_on(+{\em Options})}\\
@@ -95,7 +95,7 @@ megjelenítő együttes használata:
               stream(user_error)]).
 \end{verbatim}
 
-\subsection{Kifejezések elnevezése}
+\section{Kifejezések elnevezése}
 
 Az \fdbg által produkált kimeneten az FD változók alaphelyzetben \cd{<fdvar_1>},
 \cd{<fdvar_2>}, \ldots formában jelennek meg, ami megnehezíti az olvashatóságot.
@@ -138,7 +138,7 @@ generálódnak:
 \end{tabular}
 \end{center}
 
-\subsection{Egyszerűbb \fdbg nyomkövetési példák}
+\section{Egyszerűbb \fdbg nyomkövetési példák}
 
 \begin{verbatim}
 | ?- use_module([library(clpfd),library(fdbg)]).
@@ -196,7 +196,7 @@ Labeling [2, <fdvar_1>]: failed.
 no
 \end{verbatim}
 
-\subsection{Beépített megjelenítők}
+\section{Beépített megjelenítők}
 
 Az \fdbg könyvtár egy-egy alapértelmezett megjelenítőt bocsájt a felhasználó
 rendelkezésére. A korlát-megjelenítőt az \cd{fdbg_show/2}, a címkézés-megjelenítőt
@@ -259,7 +259,7 @@ fdbg_label_show(step('$labeling_step'(X,=,3,indomain_up)),1,X)
 fdbg_label_show(fail,1,X)
 \end{verbatim}
 
-\subsection{Testreszabás kampó-eljárásokkal}
+\section{Testreszabás kampó-eljárásokkal}
 
 Az alábbi kampó-eljárások a következő három argumentummal rendelkeznek:
 
@@ -317,7 +317,7 @@ exactly(3,[<X>,2],1)~~~~~~~ & exactly(3,[<X = 1..3>,2],1) \\
     Constraint exited.      &     Constraint exited. \\
 \end{tabular}\end{center}
 
-\subsection{Testreszabás saját megjelenítővel}
+\section{Testreszabás saját megjelenítővel}
 
 \begin{itemize}
 \item \bcd{{\em my\_global\_visualizer}(+{\em Arg1}, +{\em Arg2}, \ldots, {\em Constraint},
@@ -376,7 +376,7 @@ megjelenítő használata:
 :- fdbg_on([constraint_hook(filtered_show), file('fdbg.log', write)]).
 \end{verbatim}
 
-\subsection{Egyéb segéd-predikátumok}
+\section{Egyéb segéd-predikátumok}
 
 A változók tartományának kiírásához és az úgynevezett ~\emph{annotáláshoz} több
 predikátum adott.  Ezeket használják a beépített nyomkövetők, de hívhatók
@@ -426,7 +426,7 @@ Látható, hogy az \cd{fdvar/3} struktúrákra az \fdbg modul definiál egy saj�
 
 \end{itemize}
 
-\subsection{A mágikus sorozatok feladat nyomkövetése}
+\section{A mágikus sorozatok feladat nyomkövetése}
 
 Ebben az alfejezetben a mágikus sorozatok feladat egy lehetséges megoldásán
 mutatjuk be az \fdbg nyomkövető csomag kimenetét. A programkódban csak a 

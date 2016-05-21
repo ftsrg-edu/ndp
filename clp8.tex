@@ -1,6 +1,6 @@
 \clearpage
 
-\section{A Mercury nagyhatékonyságú LP megvalósítás}
+\chapter{A Mercury nagyhatékonyságú LP megvalósítás}
 
 Ebben a fejezetben a Mercury nagyhatékonyságú logikai programnyelvet mutatjuk be nagy
 vonalakban. Mivel a Prolog önmagában nem kimondottan alkalmas nagyobb méretű projektek
@@ -21,7 +21,7 @@ Eközben a következő irányelveket tartották szem előtt:
 A Mercury nyelv és az implementáció fejlesztője a University Of Melbourne. A nyelv
 honlapja a \verb'http://www.cs.mu.oz.au/mercury/' címen található meg.
 
-\subsection{Egy Mercury példaprogram}
+\section{Egy Mercury példaprogram}
 
 A feladat: operációs rendszerek file-név-illesztéséhez hasonló
 funkció megvalósítása. Egy karaktersorozat illesztésekor a \cd{?} karakter
@@ -102,7 +102,7 @@ Pattern '**z?c' matches 'foozkc' as '|*|*|?' matches the following:
 *** No (more) solutions
 \end{verbatim}
 
-\subsection{A Mercury modul-rendszere}
+\section{A Mercury modul-rendszere}
 
 A Mercury programokat különálló modulokból lehet felépíteni, ez lehetővé teszi a
 modulok egymástól független, szeparált fordítását. A modul-rendszer támogatja az
@@ -135,7 +135,7 @@ Almodulok használata elvileg kétféleképpen is lehetséges: a főmodul fájlj
 (\emph{beágyazott almodul}) vagy külön fájlban (\emph{szeparált almodul}). A jelenlegi
 implementációban a beágyazott almodulok használata egyelőre problémás.
 
-\subsection{A Mercury típusrendszere}
+\section{A Mercury típusrendszere}
 
 A Mercury a Prologtól eltérően egy típusos nyelv. A típusoknak több fajtája lehet:
 
@@ -212,7 +212,7 @@ vagy függvény leírásánál mindig meg kell adni a paraméterek típusát. P�
 :- func length(list(T)) = int.
 \end{verbatim}
 
-\subsection{Módok és behelyettesítettség}
+\section{Módok és behelyettesítettség}
 
 \definicio egy paraméter \emph{mód}jának nevezünk egy két behelyettesítettségi állapotból
 álló párt, ahol az első állapot azt jelöli, ahogyan a paraméter bemegy egy adott
@@ -310,7 +310,7 @@ egyesítésekkel kiküszöböli a fordító.  Ezeket a módokat le sem kell írn
 adatokat.
 \end{itemize}
 
-\subsection{Determinizmus}
+\section{Determinizmus}
 
 A Mercury-ban lehetőség van arra is, hogy minden predikátum minden módjára
 (azaz minden eljárásra) megadjuk, hogy hányféleképpen sikerülhet, és hogy
@@ -366,7 +366,7 @@ megoldásokat nem szabad megengednünk, mert ilyen esetben nem is beszélhetünk
 függvényről. Például a \cd{between(in, in, out)} nem írható le függvény alakban.
 
 
-\subsection{Magasabbrendű eljárások}
+\section{Magasabbrendű eljárások}
 
 A hagyományos Prolog megvalósításban a \cd{call/1} eljárás segítségével lehetőség
 volt arra, hogy egy eljárásból egy másik eljárást hívjunk meg. A Mercury-ban
@@ -559,7 +559,7 @@ foo(sum([1,2,3])).
 \cd{foo((pred(X::out) is det :- X = 6))} hibás.
 \end{itemize}
 
-\subsection{Problémák a determinizmussal}
+\section{Problémák a determinizmussal}
 
 A determinizmus bevezetésével ésszerű néhány korlátozást bevezetni. Ilyen például az,
 hogy \cd{det} vagy \cd{semidet} módú eljárásokból nem hívhatunk \cd{nondet} vagy

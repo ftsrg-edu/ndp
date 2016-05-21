@@ -1,6 +1,6 @@
 \clearpage
 
-\section{A SICStus \clpfd könyvtára}
+\chapter{A SICStus \clpfd könyvtára}
 
 A következő fejezetben a SICStus \clpfd könyvtárával fogunk foglalkozni.
 A \clpfd könyvtárat az alábbi módon lehet használatba venni:
@@ -8,7 +8,7 @@ A \clpfd könyvtárat az alábbi módon lehet használatba venni:
 :- use_module(library(clpfd)).
 \end{verbatim}
 
-\subsection{A \clpfd könyvtár általános jellemzése}
+\section{A \clpfd könyvtár általános jellemzése}
 
 A \clpfd könyvtár az egész számok véges tartományain (\emph{finite domain, FD})
 alapuló CLP rendszert valósít meg. A könyvtár általános alapelve, hogy a
@@ -85,7 +85,7 @@ maximuma által megadott intervallumra szűkíti \cd{Z}-t. Ezt a mechanizmust
 \emph{intervallum-szűkítés}nek nevezzük, és az \ref{szukites} fejezetben
 részletesen foglalkozunk majd vele.
 
-\subsection{A \clpfd feladatok megoldási struktúrája}
+\section{A \clpfd feladatok megoldási struktúrája}
 
 Minden \clpfd feladat megoldása hasonló struktúrájú programot eredményez,
 ezért érdemes megkülönböztetnünk a megoldási folyamat fő lépéseit:
@@ -145,7 +145,7 @@ Az alábbi ábrasorozaton láthatóak az egyes lépésekhez tartozó állapotok:
 1. lépés & 2. lépés & 3. lépés & 4. lépés
 \etab
 
-\subsection{A CSP problémakör áttekintése}
+\section{A CSP problémakör áttekintése}
 \label{cspfogalmak}
 
 Mint említettük, a \clpfd könyvtár a mesterséges intelligencia CSP megoldási
@@ -225,7 +225,7 @@ korlát-tár tartalmából, akkor megszűnnek létezni. A démonokat mindig az
 mértéke a démontól függ, néha nem előnyös az összes lehetséges szűkítést
 elvégezni, mert túlságosan költséges lenne.
 
-\subsection{A \clpfd könyvtár jellegzetességei}
+\section{A \clpfd könyvtár jellegzetességei}
 
 Ebben az alfejezetben a \clpfd könyvtár néhány jellegzetességét mutatjuk be
 példákon keresztül. A példák megértéséhez egyetlen, nagyon fontos állítást
@@ -328,9 +328,9 @@ démon észre nem veszi, hogy itt meghiúsulás fog következni. Nagyobb
 tartományhatárok esetén ez a láncreakció értelemszerűen tovább tart, sőt,
 mint láttuk, végtelen tartományhatárok esetén nem is indul el.
 
-\subsection{Egyszerű constraint feladatok megoldása}
+\section{Egyszerű constraint feladatok megoldása}
 
-\subsubsection{Térképszínezés}
+\subsection{Térképszínezés}
 
 Emlékeztetőül a feladat: színezzük ki az alábbi térképet kék, piros és
 sárga színekkel úgy, hogy a szomszédos országok különböző színűek legyenek,
@@ -402,7 +402,7 @@ A = 3, B = 2, C = 1, D = 1, E = 2 ? ; no
 Látható, hogy itt már címkézésre se volt szükség, mivel az \cd{all_distinct}
 korlát ,,erősebb'' a páronkénti különbözőségnél.
 
-\subsubsection{Kódaritmetika (SEND+MORE=MONEY)}
+\subsection{Kódaritmetika (SEND+MORE=MONEY)}
 
 \label{sendmoremoney}
 
@@ -472,7 +472,7 @@ csak 1 lehet. Ha viszont \cd{M} 1, akkor \cd{S}-nek 9-nek kell lennie,
 különben nem keletkezhet átvitel, ilyenkor viszont \cd{O} csak nulla lehet.
 A többi változó értéke csak a címkézés után derül ki.
 
-\subsubsection{A zebra feladat}
+\subsection{A zebra feladat}
 Szintén egy \Clpfd -ben könnyen megfogható feladat: adott 5 különböző
 nemzetiségű ember, 5 különböző színű ház, 5 különböző foglalkozás, 5
 különböző állat és 5 különböző ital. Egy embernek pontosan egy
@@ -535,7 +535,7 @@ nextto(A, B) :-  A #= B+1.
 nextto(A, B) :-  A #= B-1.
 \end{verbatim}
 
-\subsubsection{N királynő a sakktáblán}
+\subsection{N királynő a sakktáblán}
 
 A feladat elhelyezni egy $n * n$-es sakktáblán $n$ királynőt úgy, hogy
 egyik se üsse a másikat.
@@ -588,7 +588,7 @@ no_threat(X, Y, I) :-
 
 
 
-\subsection{Szűkítési szintek}
+\section{Szűkítési szintek}
 \label{szukites}
 
 A könnyebb megértés érdekében először informálisan, egy egyszerű
@@ -715,7 +715,7 @@ X in -4..2, Y in 0..9 ?
 
 
 
-\subsection{Korlátok végrehajtása}
+\section{Korlátok végrehajtása}
 
 \label{korlatvegrehajtas}
 
@@ -813,7 +813,7 @@ korlát intervallum-szűkítő, és az intervallum-szűkítés a már fennálló
 korlát viszont ugyan garantáltan nem tartományszűkítő, de itt mégis elvégzi a
 tartományszűkítést, és ezzel megtalálja a megoldást.
 
-\subsection{Korlátok tükrözése: \emph{reifikáció}}
+\section{Korlátok tükrözése: \emph{reifikáció}}
 
 \definicio egy $C$ korlát \emph{reifikáció}ja (\emph{tükrözés}e) a korlát
 igazságértékének megjelenítése egy 0-1 értékű korlát változóban. Jelölése:
@@ -890,7 +890,7 @@ kap értéket.
 \end{alltt}
 \end{itemize}
 
-\subsection{Levezethetőségi szintek}
+\section{Levezethetőségi szintek}
 
 \label{levezethetoseg}
 
@@ -920,7 +920,7 @@ tükrözött \emph{lineáris} aritmetikai korlátok legalább az intervallum-lev
 példáját). A tükrözött nemlineáris aritmetikai korlátokra még az intervallum-levezethetőség
 kiderítése sem garantálható.
 
-\subsection{Egy bonyolultabb \clpfd példa: mágikus sorozatok}
+\section{Egy bonyolultabb \clpfd példa: mágikus sorozatok}
 
 \definicio egy $L = (x_{0}, x_{1}, \ldots, x_{n-1})$ sorozat \emph{mágikus}
 ($x_{i} \in [0..n-1]$), ha minden $i \in [0..n-1]$-re $L$-ben az $i$ szám pontosan
@@ -935,7 +935,7 @@ $Y = \mathcal{E}(X) = (y_{0}, y_{1}, \ldots, y_{n-1})$ sorozat az
 \emph{előfordulás-sorozat}a, ha minden $i \in [0..n-1]$-re $X$-ben az $i$ szám
 pontosan $y_{i}$-szer fordul elő.
 
-\subsubsection{Egyszerű \clpfd megoldás}
+\subsection{Egyszerű \clpfd megoldás}
 
 Látható, hogy a mágikus sorozatok azok a sorozatok, amelyek erre a $\mathcal{E}$
 transzformációra nézve fixpontok (azaz olyan sorozatok, amelyeket a transzformáció
@@ -988,7 +988,7 @@ Példafutás (csak a \cd{pontosan/3} hívások érdekelnek minket):
 ?+      1      1 Exit: pontosan(0,[2,0,_D,0],2) ?
 \end{verbatim}
 
-\subsubsection{Redundáns korlátok bevezetése}
+\subsection{Redundáns korlátok bevezetése}
 
 A fenti változat hatékonyságán sokat segíthetünk \emph{redundáns korlátok}
 felvételével. A redundáns korlátok olyan korlátok, amelyek formálisan nem
@@ -1030,7 +1030,7 @@ fázis késleltetése jelenti a \cd{call/1} segítségével. Egyébként a progr
 változata \cd{N=10} esetben kb. ötvenszer gyorsabb az előző verziónál, és a 4 hosszú
 mágikus sorozatok közül az első megoldást visszalépés nélkül adja ki!
 
-\subsubsection{Tükrözéses megoldás}
+\subsection{Tükrözéses megoldás}
 
 A tükrözés mechanizmusának felhasználásával egy elegáns, ráadásul hatékonyabb
 megfogalmazást is adhatunk a \cd{pontosan/3} eljárásra, és ezzel az egész
@@ -1082,7 +1082,7 @@ tükr.+\cd{ossz}+\cd{szorzossz} &  0.01 & 0.05 &  0.19 &  0.95 & 4.61 & 23.57  \
 \end{tabular}
 \end{center}
 
-\subsection{Logikai korlátok}
+\section{Logikai korlátok}
 
 Annak ellenére, hogy a \clpfd könyvtár alapvetően véges, egész értékű tartományok 
 kezelésére használatos, lehetőség van logikai korlátok használatára is. Logikai
@@ -1124,7 +1124,7 @@ diszjunkció csak akkor tud szűkíteni, ha egy kivételével valamennyi tagján
 negáltja levezethetővé válik (a fenti példában akkor, ha \cd{X \#\= 4} vagy \cd{Y \#\=< 6}
 levezethető lesz).
 
-\subsection{Példa a logikai korlátokra: lovagok, lókötők és normálisak}
+\section{Példa a logikai korlátokra: lovagok, lókötők és normálisak}
 
 Egy szigeten minden bennszülött lovag, lókötő, vagy normális. A lovagok mindig
 igazat mondanak, a lókötők mindig hazudnak, a normális emberek pedig néha
@@ -1173,7 +1173,7 @@ A = 0, B = 2, C = 1 ? ;
 no
 \end{verbatim}
 
-\subsection{További globális aritmetikai korlátok}
+\section{További globális aritmetikai korlátok}
 
 Az eddigiek során már megismerkedhettünk két globális korláttal: az \cd{all_different/1}
 és az \cd{all_distinct/1} korlátokkal. A SICStus azonban ismer még néhány hasznos
@@ -1219,7 +1219,7 @@ send(List, SEND, MORE, MONEY) :-
         SEND+MORE #= MONEY.
 \end{verbatim}
 
-\subsection{A formulakorlátok belső megvalósítása}
+\section{A formulakorlátok belső megvalósítása}
 \label{korlatkif}
 
 \definicio \emph{formulakorlát}oknak nevezzük az összes operátoros
@@ -1299,7 +1299,7 @@ hívásával magunk is megvizsgálhatjuk:
         G = clpfd:prune_and_propagate(X,[[1|2],[5|5]]) ?
 \end{verbatim}
 
-\subsection{Segédeljárások a \Clpfd -ben}
+\section{Segédeljárások a \Clpfd -ben}
 
 \enumhead{Statisztika}
 \begin{itemize}
@@ -1353,7 +1353,7 @@ run_queens(Lab, N, Ss, Time, Btrks) :-
 | ?- X+Y #= Z #<=> B.              \(\Rightarrow\) B in 0..1, \ldots
 \end{alltt}
 
-\subsection{FD-változók és FD-halmazok}
+\section{FD-változók és FD-halmazok}
 \label{fdset}
 
 \definicio \emph{FD-változó}nak nevezünk minden olyan Prolog változót,
@@ -1446,7 +1446,7 @@ mivel a szűkítés csak \cd{Y} tartományának aktuális állásától függőe
 fog végrehajtódni. Az \cd{in_set} szűkítés leginkább globális korlátokban
 és testreszabott címkézésnél használatos.
 
-\subsection{A címkézés (labeling) testreszabása}
+\section{A címkézés (labeling) testreszabása}
 
 Elevenítsük fel a CLP programok szerkezetére vonatkozóan tett megállapításainkat!
 Egy CLP programot három fő részre lehet szeparálni:
@@ -1857,13 +1857,13 @@ címkézés                     & sec & btrk & sec & btrk & sec & btrk \\
 %% bele kéne venni a 91. oldalon lévő részt is???? (szélsőértékek ismételt hívással való
 %% előállítása témakör)
 
-\subsection{Kombinatorikus korlátok}
+\section{Kombinatorikus korlátok}
 
 Az ebben a fejezetben ismertetett globális korlátok az eddigiekhez hasonlóan
 nem tükrözhetőek. Minden olyan helyen, ahol a korlátok FD-változót várnak,
 írhatunk számértéket is.
 
-\subsubsection{Értékek számolása és különbözősége}
+\subsection{Értékek számolása és különbözősége}
 
 \medskip
 
@@ -1944,7 +1944,7 @@ a második paraméterben megadott érték lehet. Az első és az ötödik példa
 illetve \cd{bound} algoritmus gyengesége miatt nem végzi el a szűkítést, a második
 és a negyedik pedig a nem megfelelő ébresztési feltétel miatt.
 
-\subsubsection{Függvénykapcsolatok és relációk}
+\subsection{Függvénykapcsolatok és relációk}
 
 {\bcd{element(X, List, Y)}}
 
@@ -2039,7 +2039,7 @@ felemasok_vacak(X, Y, Z) :-
      ], [on(val(X)),on(val(Y)),on(val(Y))/*,prune(val(X)), ...*/]).
 \end{verbatim}
 
-\subsubsection{Leképezések, gráfok}
+\subsection{Leképezések, gráfok}
 
 {\bcd{sorting(X, I, Y)}}
 
@@ -2159,7 +2159,7 @@ tsp(Lab, Successor, Cost) :-
 Cost = 2276, Succs = [2,4,5,6,7,3,1] ? 
 \end{verbatim}
 
-\subsubsection{Ütemezési korlátok}
+\subsection{Ütemezési korlátok}
 
 {\bcd{cumulative(Starts, Durations, Resources, Limit{\em[}, Opts{\em ]})}}
 
@@ -2370,7 +2370,7 @@ no
 Látható, hogy az \cd{order_resource/2} csak a lehetséges elrendezésekre vonatkozóan
 címkéz, de az egyes elrendezéseken belül a változók értékeit ,,függőben'' hagyja.
 
-\subsubsection{Diszjunkt szakaszok és téglalapok}
+\subsection{Diszjunkt szakaszok és téglalapok}
 
 {\bcd{disjoint1(Lines{\em [}, Options{\em ]})}}
 
@@ -2462,7 +2462,7 @@ $x$ koordinátája nem lehet 2.
 X1 in 0..1, Y1 = 0,   X2 = 0, Y2 = 1,   X3 = 2, Y3 = 1 ?
 \end{verbatim}
 
-\subsection{Felhasználói korlátok definiálása}
+\section{Felhasználói korlátok definiálása}
 
 A SICStus Prolog kétféle lehetőséget kínál a \clpfd modul korlátainak
 felhasználói korlátokkal való bővítésére: a \emph{globális korlát}okat és
@@ -2489,7 +2489,7 @@ Prolog kód egy példa egy FD predikátumra:
 
 Az indexikális nyelv bővebb elemzése az \ref{fdpred}. fejezetben olvasható.
 
-\subsubsection{Globális korlátok}
+\subsection{Globális korlátok}
 
 \label{globalis}
 
@@ -2756,7 +2756,7 @@ a $dg$ függvényről, hogy az nem idempotens, ezért újra és újra meghívja 
 korlát démonát egészen addig, amíg van szűkítés. Így a második meghívás alkalmával
 már kiderül a fent megtalált megoldásról, hogy az hibás.
 
-\subsubsection{FD predikátumok}
+\subsection{FD predikátumok}
 
 \label{fdpred}
 
@@ -2959,7 +2959,7 @@ indexikálisos megvalósítására:
 X in 0..1, T in 1..3 ?
 \end{alltt}
 
-\subsubsection{Indexikálisok monotonitása}
+\subsection{Indexikálisok monotonitása}
 
 Az imént említettük azt is, hogy a \cd{{\em Változó} in {\em TKif}} alakú indexikális
 \cd{\em Változó} értékét csak bizonyos feltételek teljesülése mellett szűkíti
@@ -3056,7 +3056,7 @@ vizsgálja, pl. a \cd{(min(X)..sup) \bs/ (0..sup)} kifejezést csak akkor tekint
 konstansnak, ha \cd{X} behelyettesített.
 \end{itemize}
 
-\subsubsection{Szűkítő indexikálisok feldolgozási lépései}
+\subsection{Szűkítő indexikálisok feldolgozási lépései}
 
 Egy \cd{X in R} szűkítő indexikális feldolgozása mindig a végrehajthatóság vizsgálatával
 kezdődik: ha \cd{R}-ben behelyettesítetlen (,,pucér'') változó van, vagy \cd{R}-ről a
@@ -3153,7 +3153,7 @@ figyelembe venné, hogy a korlát a \cd{15} $\not\leq$ \cd{5} feltétel miatt el
 fenn. A javításhoz meg kell ismerkednünk azzal a három tartománykifejezéssel is, amelyekről
 eddig még nem esett szó.
 
-\subsubsection{Bonyolultabb tartománykifejezések}
+\subsection{Bonyolultabb tartománykifejezések}
 
 \label{unio:ind}
 \enumhead{Unió-kifejezés: \cd{unionof(X, H, T)}}
@@ -3279,7 +3279,7 @@ Y in 5..7 ---> (4..3)?(inf..sup) \/ unionof(B,5..7,\{B,B+1,B-1}) =
                 {} \/ \{5,6,4} \/ \{6,7,5} \/ \{7,8,6} = \{6}
 \end{verbatim}
 
-\subsubsection{Reifikálható FD predikátumok}
+\subsection{Reifikálható FD predikátumok}
 
 Egy reifikálható FD predikátumban általában mind a négy nyakjelű klóz szerepel. Ha
 valamelyiket elhagyjuk, akkor az ahhoz tartozó szűkítés, illetve levezethetőség-vizsgálat
@@ -3318,7 +3318,7 @@ egy külön démon figyeli, hogy \cd{B} behelyettesítődik-e, ha igen, és \cd{
 akkor elindítja az 1. klózbeli indexikálisokat. \cd{B=0} esetben a 2. klóz
 indexikálisai indulnak el.
 
-\subsubsection{Kérdező indexikálisok feldolgozási lépései}
+\subsection{Kérdező indexikálisok feldolgozási lépései}
 
 A kérdező indexikálisokra másfajta feldolgozási szabályok érvényesek, mint a
 szűkítő indexikálisokra. A legfontosabb különbség, hogy egy kérdező indexikális
@@ -3372,7 +3372,7 @@ negáltja levezethetővé vált, a démon befejezi működését, és a reifiká
 változó a \cd{0} értéket kapja.
 }
 
-\subsubsection{Korlátok automatikus fordítása indexikálisokká}
+\subsection{Korlátok automatikus fordítása indexikálisokká}
 
 A SICStus lehetőséget kínál arra, hogy egy egyszerű \clpfd korlátot
 automatikusan indexikálissá fordítsunk. A következő korlátozások érvényesek:
@@ -3409,7 +3409,7 @@ A torpedó feladatban a \cd{relation/3} korlátot, a dominó feladatban a
 \cd{B1+...+BN \#= 1} alakú korlátokat (\cd{Bi 0..1} értékű változók, \cd{N=<5})
 fejtettünk ki indexikálisokká.
 
-\subsubsection{Indexikálisok összefoglalása}
+\subsection{Indexikálisok összefoglalása}
 
 Legyen \cd{C(Y$_1$, $\ldots$, Y$_n$)} egy FD-predikátum, amelyben szerepel egy
 \begin{center}

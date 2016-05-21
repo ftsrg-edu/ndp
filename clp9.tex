@@ -1,6 +1,6 @@
 \clearpage
 
-\section{CHR---Constraint Handling Rules}
+\chapter{CHR---Constraint Handling Rules}
 
 A CHR (\emph{Constraint Handling Rules}) egy deklaratív nyelv-kiterjesztés,
 amely determinisztikus kifejezés-átíráson alapul. Prolog, CLP, Haskell
@@ -17,7 +17,7 @@ SICStus Prologban a CHR kiterjesztést a következő paranccsal vehetjük haszn�
 :- use_module(library(chr)).
 \end{verbatim}
 
-\subsection{CHR szabályok}
+\section{CHR szabályok}
 
 A CHR kiterjesztésben a korlát-tár alakulását saját magunk által írt szabályok
 segítségével írhatjuk le. A szabályoknak három fajtája van:
@@ -57,7 +57,7 @@ rájuk, hiszen: \cd{Heads1 \bs ~Heads2 <=> Body} ugyanazt jelenti, mint
 \cd{Heads1, Heads2 <=> Heads1, Body}, csak sokkal hatékonyabb, mert \cd{Heads1}-et
 nem kell újra felvenni a korlát-tárba.
 
-\subsection{A CHR szabályok végrehajtása}
+\section{A CHR szabályok végrehajtása}
 
 A CHR korlátoknak három állapota lehet: \emph{aktív}, \emph{aktiválható passzív} és
 \emph{alvó passzív}. Aktív korlátból legfeljebb egy van minden pillanatban. Egy
@@ -89,7 +89,7 @@ A futás akkor fejeződik be, amikor már nem marad aktiválható korlát. Az ő
 fordul elő
 \end{itemize}
 
-\subsection{A CHR szabályok szintaxisa}
+\section{A CHR szabályok szintaxisa}
 
 A SICStus kézikönyv alapján a CHR szabályok szintaxisa az alábbi szabályrendszerrel
 írható le:
@@ -126,7 +126,7 @@ Két fontosabb pragmát érdemes ismerni:
 \item \cd{passive(Id)} --- a hivatkozott fej-korlát csak passzív szerepű lehet. 
 \end{itemize}
 
-\subsection{CHR példák}
+\section{CHR példák}
 
 Az alábbi példa az $X \leq Y$ relációt valósítja meg CHR-ben.
 \begin{verbatim}
@@ -380,7 +380,7 @@ L = [0,1,1,_A] , labeling ? ;
 % ...
 \end{verbatim}
 
-\subsection{Egy nagyobb CHR példa kezdeménye}
+\section{Egy nagyobb CHR példa kezdeménye}
 
 A feladat: adott egy négyzet, ahol bizonyos mezőkben egész számok vannak.
 A cél: minden mezőbe számot írni, úgy, hogy az azonos számot tartalmazó

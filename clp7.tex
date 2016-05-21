@@ -1,12 +1,12 @@
 \clearpage
 
-\section{Esettanulmányok \Clpfd -ben}
+\chapter{Esettanulmányok \Clpfd -ben}
 
 Ebben a fejezetben néhány nagyobb \clpfd feladat megoldását ismertetjük, közben
 pedig bemutatjuk a \emph{konstruktív diszjunkció}, a \emph{duális címkézés} és a
 \emph{borotválás} módszerét.
 
-\subsection{Négyzetdarabolás}
+\section{Négyzetdarabolás}
 
 Adott egy nagy négyzet oldalhosszúsága (pl. \cd{Limit = 10}), valamint adottak
 kis négyzetek oldalhosszúságai (pl. \cd{Sizes = [6,4,4,4,2,2,2,2]}). A kis
@@ -52,7 +52,7 @@ a programvariáns nem adott eredményt 120 másodpercen belül, ott a futási t�
 a mezőt üresen hagytuk. A táblázatokban a futási időt és a visszalépések számát
 is feltüntetjük.
 
-\subsubsection{Egyszerű Prolog megoldás}
+\subsection{Egyszerű Prolog megoldás}
 
 Az alábbi program Colmerauer \clpr megoldásán alapul, a működési elve hasonlít a
 \pageref{teglalap:clpqr}. oldalon található téglalap-lefedő feladathoz.
@@ -108,7 +108,7 @@ Prolog          &  0.000 &     0&  0.87& 271K &  0.38 &  183K & 5.72 & 2.6M
 \end{tabular}
 \end{center}
 
-\subsubsection{Egyszerű \clpfd megoldás}
+\subsection{Egyszerű \clpfd megoldás}
 
 Ez a megoldás veszi a kis négyzetek összes koordinátáját, és beállítja
 őket úgy, hogy értéküket a nagy négyzeten belül vegyék fel. Ezután
@@ -179,7 +179,7 @@ meg, addig ehhez a \cd{spec} változatnak 34 ezer visszalépésre volt szükség
 a \cd{no_overlap/6} korlát spekulatív diszjunkcióval való megvalósítása jelenti, hiszen
 ez a kombinatorikus robbanás miatt nagyon sok visszalépést eredményez.
 
-\subsubsection{A diszjunkció megvalósítási módszerei}
+\subsection{A diszjunkció megvalósítási módszerei}
 
 \label{diszjunkcio}
 
@@ -260,7 +260,7 @@ korlátok hatását is figyelembe tudja venni, lásd az alábbi példát:
 X in(0..5)\/(15..20), Y in(0..5)\/(15..20) ? 
 \end{verbatim}
 
-\subsubsection{\clpfd megvalósítás reifikációval és indexikálissal}
+\subsection{\clpfd megvalósítás reifikációval és indexikálissal}
 
 \enumhead{Számosság-alapú \cd{no\_overlap} változatok}
 
@@ -323,7 +323,7 @@ Prolog     &0.00&    0&  0.87& 271K &  0.38 &  183K & 5.72 & 2.6M & 93.58 & 29M 
 A visszalépések száma lényegesen javult a spekulatív diszjunkcióval kapott változathoz
 képest, azonban a program még így is nyomába sem ér a hagyományos Prolog megvalósításnak.
 
-\subsubsection{Kapacitás-korlátok és paraméterezhető címkézés}
+\subsection{Kapacitás-korlátok és paraméterezhető címkézés}
 
 Mint azt már említettük, lehetőség van a címkézés menetének befolyásolására a
 \cd{labeling/2} eljárás paraméterlistáján keresztül. Az eredeti Prolog megoldás
@@ -395,7 +395,7 @@ Prolog     &0.00&    0&  0.87& 271K &  0.38 &  183K & 5.72 & 2.6M & 93.58 & 29M 
 Amint látható, a kapacitás-korlátokkal a nagyobb méretekre a \clpfd megoldás már
 lekörözi a hagyományos Prolog megoldást.
 
-\subsubsection{Ütemezési és lefedési korlátok használata}
+\subsection{Ütemezési és lefedési korlátok használata}
 
 A négyzetdarabolás felfogható ütemezési problémaként, illetve diszjunkt téglalapok
 problémájaként is. Mindkét feladatra van beépített korlát a SICStusban. Ütemezési
@@ -447,7 +447,7 @@ variáns   & 10     &      &  20   &      & 112    &      & 175   &    & 503  &\
 \end{tabular}
 \end{center}
 
-\subsubsection{Duális címkézés}
+\subsection{Duális címkézés}
 
 Duális címkézés során nem a változókhoz keresünk megfelelő értéket, hanem az értékekhez
 megfelelő változót. Kicsit formálisabban fogalmazva az algoritmus lényege:
@@ -505,7 +505,7 @@ variáns; címkézés   & 10     &      &  20   &      & 112    &      & 175   &
 
 
 
-\subsection{Torpedó}
+\section{Torpedó}
 
 Adott egy téglalap alakú táblázat, amelyben $1 \times n$-es hajókat kell elhelyezni
 úgy, hogy még átlósan se érintkezzenek. A hajók különböző színűek lehetnek. Minden
@@ -552,7 +552,7 @@ kikövetkeztetett tengerdarabkákat pedig \cd{:} (kettőspont).
 A feladat az 1999. évi NLP kurzus nagyházifeladata volt, a mintamegoldás letölthető
 az alábbi címről: \verb'http://www.inf.bme.hu/~szeredi/hf_99_torpedo.tgz'.
 
-\subsubsection{A feladat modellezése}
+\subsection{A feladat modellezése}
 
 A feladat komplexitásából kifolyólag eleve érdemes azon elgondolkoznunk, hogy hogyan
 feleltessük meg a feladatot a CLP világnak. Például a korlát-változók felvételére
@@ -629,7 +629,7 @@ darabja, stb. A kódkiosztás:
 \end{verbatim}
 \end{itemize}
 
-\subsubsection{Alapvető korlátok}
+\subsection{Alapvető korlátok}
 
 A feladat megoldásához két alapvető korlátra lesz szükségünk:
 
@@ -680,7 +680,7 @@ $\sum_{K} sor^K_{\tt hI1} + \sum_{L} oszl^L_{\tt vI1} \ \ \ \ ({\tt I} > 1)$
 az 1 hosszú hajók száma = $\sum_{K} sor^K_{\tt h11} $
 \end{center}
 
-\subsubsection{Redundáns korlátok, címkézés és borotválás}
+\subsection{Redundáns korlátok, címkézés és borotválás}
 
 A fenti alapvető korlátok mellé még az alábbi redundáns korlátokat érdemes
 bevezetni:
@@ -745,7 +745,7 @@ filter_count_vars([V|Vs], [V|Fs], Cnt0, Cnt) :-
         ), filter_count_vars(Vs, Fs, Cnt1, Cnt).
 \end{verbatim}
 
-\subsubsection{További finomhangolási lehetőségek}
+\subsection{További finomhangolási lehetőségek}
 
 A szomszédsági reláció megvalósítására több lehetőség is kínálkozik:
 
@@ -771,7 +771,7 @@ lehet:
 \end{itemize}
 \end{itemize}
 
-\subsubsection{Futási eredmények}
+\subsection{Futási eredmények}
 
 Az alábbi időeredmények az összes megoldás megtalálására vonatkoznak, és egy
 DEC Alpha 433 MHz-es gépen születtek. A táblázatokban lévő adatpárok a futási
@@ -820,7 +820,7 @@ Opciók/példa   & \multicolumn{2}{l|}{\cd{fules2a}}      & \multicolumn{2}{l|}{
 
 
 
-\subsection{Dominó}
+\section{Dominó}
 
 Adott egy $(n+1)\times(n+2)$-es téglalap, amelyen egy teljes $n$-es dominókészlet
 összes elemét elhelyeztük, majd a határokat eltávolítottuk. A feladat a határok
@@ -864,7 +864,7 @@ tesztadatai négy csoportba oszthatóak:
 \item \cd{hard} --- egy nagyon nehéz feladat 28-as méretben.
 \end{itemize}
 
-\subsubsection{A feladat modellezése}
+\subsection{A feladat modellezése}
 
 A torpedó feladathoz hasonlóan itt is először érdemes meggondolnunk, hogy a modellezéshez
 milyen változókat használjunk, és ezeknek milyen értékkészletet válasszunk. A korlátváltozók
@@ -899,7 +899,7 @@ be kell húzni. Érdemes azonban ennek negáltjával dolgozni: legyen 1 az ért�
 ha az adott vonal egy dominó középvonala. Ez azért jó, mert ettől az összes korlát
 \cd{A+B+... \#= 1} alakú lesz.
 
-\subsubsection{Egy lehetséges megoldás}
+\subsection{Egy lehetséges megoldás}
 
 \enumhead{Változók, korlátok}
 \begin{itemize}
@@ -954,7 +954,7 @@ az adott elemet kivesszük a változó tartományából. \cd{szur} lehet: \cd{el
 címkézés előtt szűrünk) vagy \cd{N} (minden \cd{N}. változó címkézése után szűrünk).
 \cd{L} alapértelmezése \cd{[{\em w},{\em n}]}.
 
-\subsubsection{Egy másik lehetséges megoldás}
+\subsection{Egy másik lehetséges megoldás}
 
 \enumhead{Változók, korlátok}
 \begin{itemize}
@@ -994,7 +994,7 @@ osszege1(A, B, C, D) +:        A+B+C+D #= 1.
 (...)
 \end{verbatim}
 
-\subsubsection{Futási eredmények}
+\subsection{Futási eredmények}
 
 Az alábbi időeredmények az összes megoldás megtalálására vonatkoznak, és egy
 DEC Alpha 433 MHz-es gépen születtek. A táblázatokban lévő adatpárok a futási

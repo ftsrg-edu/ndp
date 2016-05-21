@@ -1,6 +1,6 @@
 \clearpage
 
-\section{A SICStus \clpb könyvtára}
+\chapter{A SICStus \clpb könyvtára}
 
 A következő fejezetben a SICStus \clpb könyvtárával fogunk foglalkozni.
 A \clpb könyvtárat az alábbi módon lehet használatba venni:
@@ -8,7 +8,7 @@ A \clpb könyvtárat az alábbi módon lehet használatba venni:
 :- use_module(library(clpb)).
 \end{verbatim}
 
-\subsection{A \clpb könyvtár általános jellemzése}
+\section{A \clpb könyvtár általános jellemzése}
 
 A \clpb könyvtár a kétértékű Boole-logikán alapuló CLP rendszert valósít meg,
 ennek megfelelően a \clpb változók értékkészlete a ${0,1}$ halmaz.
@@ -56,7 +56,7 @@ elemét 1-re vagy 0-ra úgy, hogy a korlát-tár teljesüljön. Visszalépésre 
 összes lehetséges megoldást felsorolja.
 }
 
-\subsection{Példafutások a \clpb könyvtár segítségével}
+\section{Példafutások a \clpb könyvtár segítségével}
 
 \begin{verbatim}
 | ?- sat(X + Y).
@@ -147,7 +147,7 @@ Cin = 1, X = 1, Y = 0 ? ;
 no
 \end{verbatim}
 
-\subsection{A Boole-egyesítés}
+\section{A Boole-egyesítés}
 
 A \clpb könyvtár két Boole-kifejezés egyesítésére ,,meglepő módon'' a
 Boole-egyesítés nevű algoritmust használja. A feladat pontos megfogalmazása:
@@ -211,7 +211,7 @@ $\longrightarrow$ \cd{X = W * Y \# Y \# 1};
 $\longrightarrow$ \cd{X = 1}, \cd{Y = {\~{}}Z}.
 \end{itemize}
 
-\subsection{A \clpb belső ábrázolási formája}
+\section{A \clpb belső ábrázolási formája}
 
 A \clpb könyvtár a Boole-kifejezéseket az úgynevezett \emph{Boole/bináris
 döntési diagram}ok (\emph{Boole/Binary Decision Diagram}s, \emph{BDD})
@@ -246,7 +246,7 @@ diagramja:
 \hspace*{1cm}\raisebox{2cm}{\epsfig{file=bdd2.eps, width=0.23\linewidth}} & & \epsfig{file=bdd1.eps, width=0.3\linewidth}  \\
 \etab
 
-\subsection{Összetett \clpb példa: hibakeresés áramkörben}
+\section{Összetett \clpb példa: hibakeresés áramkörben}
 
 Legyen adott egy egybites összeadó áramköri modellje (funkcionális elemekkel
 és összeköttetésekkel). Írjunk egy olyan \clpb programot, amely adott
@@ -352,7 +352,7 @@ az XOR függvényt valósítja-e meg:
 | ?- xor(a, b, X).               sat(X=:=a#b) ?
 \end{verbatim}
 
-\subsection{Aknakereső játék \Clpb -ben}
+\section{Aknakereső játék \Clpb -ben}
 
 Az alábbi programkód egy aknakereső játékot valósít meg \clpb programkód
 formájában.

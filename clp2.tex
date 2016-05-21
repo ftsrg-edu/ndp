@@ -1,13 +1,13 @@
 \clearpage
 
-\section{CLP segédeszközök SICStusban}
+\chapter{CLP segédeszközök SICStusban}
 
 Ez a fejezet bemutatja azokat az eszközöket, amelyeket a SICStus Prolog
 kínál egy rá épülő CLP nyelv megvalósításához. Az eszközök megismerése után
 egy, a természetes számok tartományára épülő CLP nyelvet (CLP(MiniNat))
 fogunk megvalósítani.
 
-\subsection{Korutinszervezés}
+\section{Korutinszervezés}
 
 A korutin egy olyan Prolog rutin, amely végrehajtása egy adott feltétel
 teljesüléséig felfüggeszthető. Amint a feltétel igazzá válik, a korutin
@@ -16,7 +16,7 @@ behelyettesítettségére vonatkozik, de a SICStus támogat más feltételtípus
 is. A korutinszervezés hatékonyabbá és átláthatóbbá teszi a programkódot,
 ezért érdemes használni.
 
-\subsubsection{Blokk-deklarációk}
+\subsection{Blokk-deklarációk}
 
 Lehetőség van arra, hogy előírjuk, hogy egy adott eljárás addig ne fusson
 le, amíg bizonyos paraméterváltozói be nem helyettesítődnek. Például:
@@ -88,7 +88,7 @@ no
 no
 \end{verbatim}
 
-\subsubsection{Blokkolás alkalmazása: végtelen választási pontok kiküszöbölése}
+\subsection{Blokkolás alkalmazása: végtelen választási pontok kiküszöbölése}
 \br
 
 \halfpage{\disprol{
@@ -131,7 +131,7 @@ blokk-deklarációval kiegészítve visszafelé is működik:
 L = [1,2] ? 
 \end{verbatim}
 
-\subsubsection{Blokkolás alkalmazása: generál-és-ellenőriz típusú
+\subsection{Blokkolás alkalmazása: generál-és-ellenőriz típusú
 programok gyorsítása
 }
 
@@ -177,7 +177,7 @@ gen-test+korutin&   0.55s & 4.37s & 40.71s \\
 blokkolásért árat kell fizetni: ha feleslegesen alkalmazzuk,
 lelassíthatja a programot.
 
-\subsubsection{További korutinszervező eljárások}
+\subsection{További korutinszervező eljárások}
 
 Hívások késleltetésére a \cd{freeze/2}, \cd{dif/2} és \cd{when/2} eljárások
 is felhasználhatóak. A \cd{freeze(X,Hívás)} mindaddig felfüggeszti a
@@ -235,7 +235,7 @@ Maradek = [[Y,Z]-(prolog:dif(f(Z),f(Y)))] ?
 Látható, hogy a \cd{Maradek} változó egyúttal feltünteti azt is, hogy melyik
 hívás melyik változók miatt maradt felfüggesztve.
 
-\subsection{További Prolog eszközök a CLP nyelvek megvalósítására}
+\section{További Prolog eszközök a CLP nyelvek megvalósítására}
 \enumhead{Tetszőleges nagyságú egész számok}
 
 A Prologban tetszőleges nagyságú egész számokat tárolhatunk, nincs rájuk
@@ -284,7 +284,7 @@ végrehajtja \cd{Kif}-et. Például:
 
 \disprol{assert_b(Cl) :- assert(Cl), undo(retract(Cl)).}
 
-\subsection{A CLP(MiniNat) nyelv megvalósítása}
+\section{A CLP(MiniNat) nyelv megvalósítása}
 
 \enum{A CLP(MiniNat) nyelv jellemzése}{
 \item Tartomány ($\mathcal{D}$): a nem negatív egészek halmaza
@@ -311,7 +311,7 @@ X = 5, Y = 0 ? ;
 no
 \end{verbatim}
 
-\subsubsection{Számábrázolás}
+\subsection{Számábrázolás}
 
 A korábban látott \cd{plusz/3} eljárásban (ld. \ref{plusz3} fejezet) az
 N szám ábrázolására egy N elemű listát használtunk. A lista elemei érdektelenek
@@ -327,7 +327,7 @@ módban mindent a 0 konstanssal és az \cd{s} operátorral fejezünk ki, ahol
 az általunk megvalósítandó CLP(MiniNat)-ban, tehát \cd{0=0}, \cd{1=s(0)},
 \cd{2=s(s(0))} stb.
 
-\subsubsection{Összeadás és kivonás megvalósítása}
+\subsection{Összeadás és kivonás megvalósítása}
 
 Az előző fejezetben vázolt számábrázolási mód segítségével az összeadás
 és a kivonás megvalósítása:
@@ -361,7 +361,7 @@ már akkor lefut, ha a három argumentuma közül bármelyik behelyettesített,
 és ha történetesen az első argumentum pont behelyettesítetlen lenne, akkor
 megcseréli az első kettőt és úgy hívja meg a \cd{plusz/3} predikátumot.
 
-\subsubsection{A szorzás megvalósítása}
+\subsection{A szorzás megvalósítása}
 
 A szorzás megvalósítása során az alábbi alapelvekhez tartjuk magunkat:
 
@@ -403,7 +403,7 @@ szor(s(X), Y, Z) :-
         szor(X, Y, Z1).
 \end{verbatim}
 
-\subsubsection{Korlátok lefordítása célsorozatokra}
+\subsection{Korlátok lefordítása célsorozatokra}
 
 Az előző két fejezetben megvalósítottuk az összeadás, kivonás, szorzás
 műveleteket Prolog eljárások formájában. Szükségünk lesz azonban egy
@@ -474,7 +474,7 @@ jelek egyike. Ha egy kifejezés helyén csak egy szám áll önmagában, akkor a
 lefordított formája az ő Peano-alakja. Minden egyéb (változó, vagy Peano-alakú
 szám) változatlan formában marad a fordításkor.
 
-\subsubsection{Formázott kiírás}
+\subsection{Formázott kiírás}
 
 Természetes elvárás a rendszerrel szemben, hogy az esetlegesen (pl. nyomkövetés
 esetén) kiírásra kerülő Peano-számokat ne a CLP(MiniNat) belső ábrázolási
@@ -514,7 +514,7 @@ user:portray(user:Rel) :-
         print({Fun=C}).
 \end{verbatim}
 
-\subsubsection{Klózok fordítási időben történő átalakítása}
+\subsection{Klózok fordítási időben történő átalakítása}
 
 Az eddig összeállított CLP(MiniNat) rendszerünk már használható, azonban
 teljesítményét jelentősen rontja, hogy a \cd{'\{\}'/1} struktúrával felvett
@@ -569,7 +569,7 @@ hozásával, azt nekünk kell külön elvégezni:
 | ?- {F=120}, fact(N, F).   --> F = 120, N = 5 ?
 \end{verbatim}
 
-\subsubsection{További problémák a CLP(MiniNat)-ban}
+\subsection{További problémák a CLP(MiniNat)-ban}
 
 Kis kísérletezés után könnyen rátalálhatunk a CLP(MiniNat) alábbi problémájára
 (amit a nulla szorzat problémájának nevezhetünk):

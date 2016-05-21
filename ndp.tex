@@ -1,7 +1,7 @@
 % !TeX spellcheck = hu_HU
 % !TeX encoding = UTF-8
 % !TeX program = xelatex
-\documentclass[a4paper,11pt]{article}
+\documentclass[a4paper,11pt]{report}
 
 \usepackage{ifxetex}
 \ifxetex
@@ -19,7 +19,7 @@
 \usepackage{alltt}
 \usepackage{amsfonts}
 \usepackage{epsfig}
-
+\usepackage[linewidth=1pt,leftmargin=1pt,skipabove=16pt,innertopmargin=7pt]{mdframed}
 
 \newcommand{\insertfig}[2]{
 	\begin{figure}[hbt]
@@ -41,11 +41,17 @@
 \renewcommand{\thetetel}    {\arabic{tetel}.}
 
 \newcommand{\pelda}[1]{
-	\vspace{1.5ex}
+%	\vspace{1.5ex}
+	\begin{mdframed}
 	\stepcounter{pelda}
-	{\bf \thepelda ~p\'elda: #1}
-	\vspace{0.5ex}
+	{\bf \thepelda~példa: #1}
+	\end{mdframed}
+%	\vspace{0.5ex}
 }
+
+%\newenvironment{pelda}{\begin{minipage}{\textwidth}\begin{mdframed}[backgroundcolor=white,linecolor=orange] \textbf{Példa.}}{\end{mdframed}\end{minipage}}
+
+
 \newcommand{\definicio}{
 	\stepcounter{definicio}
 	{\bf \thesection .\thedefinicio ~definíció:}~
