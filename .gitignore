@@ -125,5 +125,5 @@ sympy-plots-for-*.tex/
 *.bak
 *.sav
 
-main.pdf
 ndp.pdf
+*.mintedcmd
