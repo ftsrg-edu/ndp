@@ -62,8 +62,8 @@ Az alábbi program Colmerauer \clpr megoldásán alapul, a működési elve haso
 % négyzetekkel, amelyek X és Y kooridnátáit az Xs és Ys lista tartalmazza
 squares_prolog(Ss, Limit, Xs, Ys) :-
         triples(Ss, Xs, Ys, SXYs),
-        Y0 is Limit+1, 
-        XY0 = 1-Y0, 
+        Y0 is Limit+1,
+        XY0 = 1-Y0,
         NLimit is -Limit,
         filled_hole([NLimit,Limit,Limit], _, XY0, SXYs, []).
 
@@ -78,22 +78,22 @@ triples([], [], [], []).
 filled_hole(L, L, _, SXYs, SXYs) :-
         L = [V|_], V >= 0, !.
 filled_hole([V|HL], L, X0-Y0, SXYs00, SXYs) :-
-        V < 0 , Y1 is Y0+V,  
+        V < 0 , Y1 is Y0+V,
         select(s(S,X0,Y1), SXYs00, SXYs0),
-        placed_square(S, HL, L1),  
+        placed_square(S, HL, L1),
         Y2 is Y1+S, X2 is X0+S,
-        filled_hole(L1, L2, X2-Y2, SXYs0, SXYs1),  
+        filled_hole(L1, L2, X2-Y2, SXYs0, SXYs1),
         V1 is V+S,
         filled_hole([V1,S|L2], L, X0-Y0, SXYs1, SXYs).
 
 % placed_square(S, HL, L): a HL vízszintes vonalon az S méretű négyzetet
 % elhelyezve az L függőleges vonalat kapjuk
-placed_square(S, [H,0,H1|L], L1) :- 
+placed_square(S, [H,0,H1|L], L1) :-
         S > H, !, H2 is H+H1,
         placed_square(S, [H2|L], L1).
-placed_square(S, [H,V|L], [X|L]) :- 
+placed_square(S, [H,V|L], [X|L]) :-
         S = H, !, X is V-S.
-placed_square(S, [H|L], [X,Y|L]) :- 
+placed_square(S, [H|L], [X,Y|L]) :-
         S < H, X is -S, Y is H-S.
 \end{verbatim}
 
@@ -148,16 +148,16 @@ state_no_overlap(X, Y, S, [X1|Xs], [Y1|Ys], [S1|Ss]) :-
         state_no_overlap(X, Y, S, Xs, Ys, Ss).
 state_no_overlap(_, _, _, [], [], []).
 
-% no_overlap_spec(X1,Y1,S1, X2,Y2,S2): 
+% no_overlap_spec(X1,Y1,S1, X2,Y2,S2):
 % Az SQ1 = <X1,Y1,S1> négyzet nem fedi át SQ2 = <X2,Y2,S2> -t
 % Spekulatív megoldás
-no_overlap_spec(X1, _Y1, _S1, X2, _Y2, S2) :-   
+no_overlap_spec(X1, _Y1, _S1, X2, _Y2, S2) :-
         X2+S2 #=< X1.   % SQ1 is above SQ2
-no_overlap_spec(X1, _Y1, S1, X2, _Y2, _S2) :- 
+no_overlap_spec(X1, _Y1, S1, X2, _Y2, _S2) :-
         X1+S1 #=< X2.   % SQ1 is below SQ2
 no_overlap_spec(_X1, Y1, _S1, _X2, Y2, S2) :-
         Y2+S2 #=< Y1.   % SQ1 is to the right of SQ2
-no_overlap_spec(_X1, Y1, S1, _X2, Y2, _S2) :-   
+no_overlap_spec(_X1, Y1, S1, _X2, Y2, _S2) :-
         Y1+S1 #=< Y2.   % SQ1 is to the left of SQ2
 \end{verbatim}
 
@@ -219,7 +219,7 @@ Ezt azonban nagyon sok esetben nem tehetjük meg. Átírhatjuk viszont a diszjun
 indexikálissá:
 
 \begin{verbatim}
-ix_disj(X, Y) +: 
+ix_disj(X, Y) +:
         X in \(max(Y)-4..min(Y)+4), Y in \(max(X)-4..min(X)+4).
 
 | ?- ix_disj(X, Y).
@@ -239,7 +239,7 @@ uniójára szűkíthető: \cd{X in_set $\cup D({\tt X}, S_i)$}. A konstruktív d
 
 \begin{verbatim}
 cdisj(Cs, Var) :-
-        empty_fdset(S0), cdisj(Cs, Var, S0, S), 
+        empty_fdset(S0), cdisj(Cs, Var, S0, S),
         Var in_set S.
 
 cdisj([Constraint|Cs], Var, Set0, Set) :-
@@ -249,7 +249,7 @@ cdisj([Constraint|Cs], Var, Set0, Set) :-
 cdisj([], _, Set, Set).
 
 | ?- domain([X,Y], 0, 6), cdisj([X+5 #=< Y,Y+5 #=< X], X).
-X in(0..1)\/(5..6), Y in 0..6 ? 
+X in(0..1)\/(5..6), Y in 0..6 ?
 \end{verbatim}
 
 A konstruktív diszjunkció akár erősebb is lehet, mint a tartomány-szűkítés, mert más
@@ -257,7 +257,7 @@ korlátok hatását is figyelembe tudja venni, lásd az alábbi példát:
 
 \begin{verbatim}
 | ?- domain([X,Y], 0, 20), X+Y #= 20, cdisj([X#=<5,Y#=<5],X).
-X in(0..5)\/(15..20), Y in(0..5)\/(15..20) ? 
+X in(0..5)\/(15..20), Y in(0..5)\/(15..20) ?
 \end{verbatim}
 
 \subsection{\clpfd megvalósítás reifikációval és indexikálissal}
@@ -362,7 +362,7 @@ squares_cap(Lab, Sizes, Limit, Xs, Ys) :-
 % Pos..Limit intervallum összes elemére
 state_capacity(Pos, Limit, Cs, Sizes) :-
         Pos =< Limit, !, accumulate(Cs, Sizes, Pos, Bs),
-        scalar_product(Sizes, Bs, #=, Limit), 
+        scalar_product(Sizes, Bs, #=, Limit),
         Pos1 is Pos+1, state_capacity(Pos1, Limit, Cs, Sizes).
 state_capacity(_Pos, _Limit, _, _).
 \end{verbatim}
@@ -409,7 +409,7 @@ A két újabb változat:
 squares_cum(Lab, Opts, Sizes, Limit, Xs, Ys) :-
         generate_coordinates(Xs, Ys, Sizes, Limit),
         state_asymmetry(Xs, Ys, Sizes, Limit),
-        state_no_overlap(Xs, Ys, Sizes),   
+        state_no_overlap(Xs, Ys, Sizes),
         cumulative(Xs, Sizes, Sizes, Limit, Opts),
         cumulative(Ys, Sizes, Sizes, Limit, Opts),
         labeling(Lab, Xs), labeling(Lab, Ys).
@@ -417,7 +417,7 @@ squares_cum(Lab, Opts, Sizes, Limit, Xs, Ys) :-
 squares_dis(Lab, Opts, Sizes, Limit, Xs, Ys) :-
         generate_coordinates(Xs, Ys, Sizes, Limit),
         state_asymmetry(Xs, Ys, Sizes, Limit),
-        state_no_overlap(Xs, Ys, Sizes),    % ez elmarad a`none' 
+        state_no_overlap(Xs, Ys, Sizes),    % ez elmarad a`none'
                                             % variáns esetén
         disjoint2_data(Xs, Ys, Sizes, Rects),
         disjoint2(Rects, Opts),
@@ -479,9 +479,9 @@ dual_labeling(L0, Min0, Limit) :-
 dual_labeling([], [], _, Min, Min).
 dual_labeling([X|L0], L, I, Min0, Min) :-
         (   integer(X) -> dual_labeling(L0, L, I, Min0, Min)
-        ;   X = I, 
+        ;   X = I,
             dual_labeling(L0, L, I, Min0, Min)
-        ;   X #> I, 
+        ;   X #> I,
             fd_min(X, Min1), Min2 is min(Min0,Min1),
             L = [X|L1], dual_labeling(L0, L1, I, Min2, Min)
         ).
@@ -496,7 +496,7 @@ variáns; címkézés   & 10     &      &  20   &      & 112    &      & 175   &
 \cd{cum(e)-ix; dual}     &  0.01&    0&  0.02&    0&  0.19&  139&  0.13&   67&  0.54&  421\\
 \hline
 \cd{cap-cum(e)-ix;}      &  0.02&    0&  0.07&    0&  1.77&  100&  3.22&   65& 17.26&  395\\
-\cd{cap-dis(g)-none;}    &  0.01&    0&  0.06&    0&  1.71&   97&  3.24&   66& 17.98&  393\\ 
+\cd{cap-dis(g)-none;}    &  0.01&    0&  0.06&    0&  1.71&   97&  3.24&   66& 17.98&  393\\
 \cd{cum(e),dis(g)-none;} &  0.00&    0&  0.01&    0&  0.23&  136&  0.16&   67&  0.99&  419\\
 \hline
 \end{tabular}
@@ -525,15 +525,15 @@ hajó tatja (jobb vége).
      {\rm \em A feladat:}                                     {\rm \em A megoldás:}
 \end{alltt}
 \begin{alltt}
-      1 2 3 4 5     <-- {\em oszlopszám     }              1 2 3 4 5     
-      0 1 1 1 0     <-- {\em 1. oszlopössz. }              0 1 1 1 0     
-                        {\em                }                            
+      1 2 3 4 5     <-- {\em oszlopszám     }              1 2 3 4 5
+      0 1 1 1 0     <-- {\em 1. oszlopössz. }              0 1 1 1 0
+                        {\em                }
 1  2  =   r      0      {\em                }        1  2  = * r : :  0
-2  0             1      {\em                }        2  0  : : : : #  1  
-3  0             1      {\em                }        3  0  # : : : :  1  
-4  1             1      {\em                }        4  1  # : : * :  1  
-   ^-------------^------{\em sorösszegek    }          
-      2 0 0 0 1     <-- {\em 2. oszlopössz. }              2 0 0 0 1     
+2  0             1      {\em                }        2  0  : : : : #  1
+3  0             1      {\em                }        3  0  # : : : :  1
+4  1             1      {\em                }        4  1  # : : * :  1
+   ^-------------^------{\em sorösszegek    }
+      2 0 0 0 1     <-- {\em 2. oszlopössz. }              2 0 0 0 1
 \end{alltt}
 
 A fenti példában alkalmazott jelölésrendszer: a tábla felett az első számsor az
@@ -617,7 +617,7 @@ az orr-elemek helyettesítődnek be)
 \end{itemize}
 \item Példa-kódolás: 1 szín, max 3 hosszú hajók, \cd{h$ij$} = horizontális (vízszintes),
 $i$ hosszú hajó $j$-edik darabja, \cd{v$ij$} = vertikális (függőleges) hajó megfelelő
-darabja, stb. A kódkiosztás: 
+darabja, stb. A kódkiosztás:
 
 \begin{verbatim}
 0:       tenger
@@ -672,7 +672,7 @@ ill.\ az $L$-edik oszlopban. A hajók számolásához a $sor^K_{\tt hI1}$ és
 $oszl^L_{\tt vI1}$ mennyiségekre segédváltozókat vezetünk be, ezekkel a 3. korlát:
 
 \begin{center}
-az \cd{I} hosszú hajók száma = 
+az \cd{I} hosszú hajók száma =
 $\sum_{K} sor^K_{\tt hI1} + \sum_{L} oszl^L_{\tt vI1} \ \ \ \ ({\tt I} > 1)$
 \end{center}
 
@@ -767,7 +767,7 @@ lehet:
 \ \ \ \ \ \ CF1 in 0 .. (1000-(min(CF2)/>1000)*1000), ...}
 \item \cd{ind\_cond} (alapértelmezés) --- feltételes indexikálissal:
 \cd{\ \ \ diagonal\_neighbour\_cond(CF1, CF2) +:\\
-\ \ \ \ \ \ CF1 in (min(CF2)..0) ? (inf..sup) \bs/ {0}, ...} 
+\ \ \ \ \ \ CF1 in (min(CF2)..0) ? (inf..sup) \bs/ {0}, ...}
 \end{itemize}
 \end{itemize}
 
@@ -877,7 +877,7 @@ bevezetésére fennálló lehetőségek:
     felhasználását biztosítani.
 \item[b.] Minden dominóhoz egy ún. \emph{dominóváltozó}t rendelünk,
     amelynek értéke megmondja, hová kerül az adott dominó. Ezzel a megoldással
-    viszont az a probléma, hogy körülményes a dominók át nem fedését biztosítani. 
+    viszont az a probléma, hogy körülményes a dominók át nem fedését biztosítani.
 \item[{\bf c.}] Mezőkhöz és dominókhoz is rendelünk változókat (a.+b.). Ez az
     \emph{egyik} választott megoldás.
 \item[{\bf d.}] A mezők közötti választóvonalakhoz rendelünk egy 0-1 értékű ún.\
@@ -911,17 +911,17 @@ Egyszerűen az olyan jellegű feltételeket adja meg, mint pl. ,,ha egy irányv�
 mondjuk \cd{n}-nek (dominó északi fele) választjuk, akkor az alatta lévő mező csak
 \cd{s} (dominó déli fele) lehet''.
 \item Dominó-korlát: egy dominó-elhelyezésben a dominóváltozó és a lerakás
-bal vagy felső mezőjének irányváltozója közötti kapcsolat. A korábbi példában pl.\  
+bal vagy felső mezőjének irányváltozója közötti kapcsolat. A korábbi példában pl.\
 \cd{D02\#=1 \#<=> I22\#={\em w}, D02\#=2 \#<=> I34\#={\em n}, D02\#=3 \#<=> I44\#={\em w}}.
 \end{itemize}
 
 Mivel mindegyik megvalósítandó korlát az ,,akkor és csak akkor'' logikai kapcsolatra
 épül, ezért az egyetlen fontos feladatunk, hogy ezt a logikai kapcsolatot hogyan lehet
-a legoptimálisabban megvalósítani. A mintamegoldás három verziót valósít meg a
+az optimálisat megvalósítani. A mintamegoldás három verziót valósít meg a
 \cd{csakkor_egyenlo(X,C,Y,D)} $\equiv$ \cd{X \#= C \#<=> Y \#= D} korlátra:
 
 \begin{itemize}
-        \item \cd{reif}: reifikációval (\cd{X\#=C\#<=>Y\#=D}) 
+        \item \cd{reif}: reifikációval (\cd{X\#=C\#<=>Y\#=D})
         \item \cd{ind1}: az \cd{'x=c=>y=d'} FD predikátum kétszeri hívásával,
         \item \cd{ind2}: az \cd{'x=c<=>y=d'} FD predikátum hívásával.
 \end{itemize}

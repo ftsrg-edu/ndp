@@ -67,11 +67,11 @@ Egy egyszerű \clpfd példa:
 
 \begin{verbatim}
 | ?- X in (10..20)/\ (\{15}), Y in 6..sup, Z #= X+Y.
-X in(10..14)\/(16..20), Y in 6..sup, Z in 16..sup ? 
+X in(10..14)\/(16..20), Y in 6..sup, Z in 16..sup ?
 \end{verbatim}
 \begin{verbatim}
 | ?- X in 10..20, X #\= 15, Y in {2}, Z #= X*Y.
-   Y = 2, X in(10..14)\/(16..20), Z in 20..40 ? 
+   Y = 2, X in(10..14)\/(16..20), Z in 20..40 ?
 \end{verbatim}
 
 A második példán lustaságon kaphatjuk rajta a \clpfd következtető mechanizmust:
@@ -176,7 +176,7 @@ problémakör fogalmait és eredményeit.
 \br
 \definicio egy korlát \emph{élkonzisztens} (\emph{arc consistent}),
   ha egyik változójának tartományában sincs felesleges érték. A CSP
-  \emph{élkonzisztens}, ha minden korlátja élkonzisztens. Az élkonzisztencia 
+  \emph{élkonzisztens}, ha minden korlátja élkonzisztens. Az élkonzisztencia
   szűkítéssel biztosítható.
 \br
 Az \emph{élkonzisztencia} elnevezés onnan ered, hogy ha minden reláció
@@ -296,21 +296,21 @@ bővebben a \ref{fdbg}. fejezetben lesz szó)!
 | ?- fdbg_on, fdbg_assign_name(X, x), fdbg_assign_name(Y, y),
      domain([X,Y], 1, 10), X #> Y, Y #> X.
 
-domain([<x>,<y>], ==> x = inf..sup -> 1..10,     
+domain([<x>,<y>], ==> x = inf..sup -> 1..10,
        1,10)          y = inf..sup -> 1..10
                       Constraint exited.
-                  
+
 <x> #>= <y>+1     ==> x = 1..10 -> 2..10,   y = 1..10 -> 1..9
-                                            
+
 <x>+1 #=< <y>     ==> x = 2..10 -> 2..8,    y = 1..9 -> 3..9
-                                            
+
 <x> #>= <y>+1     ==> x = 2..8 -> 4..8,     y = 3..9 -> 3..7
-                                            
+
 <x>+1 #=< <y>     ==> x = 4..8 -> 4..6,     y = 3..7 -> 5..7
-                                            
-<x> #>= <y>+1     ==> x = 4..6 -> {6},      y = 5..7 -> {5} 
+
+<x> #>= <y>+1     ==> x = 4..6 -> {6},      y = 5..7 -> {5}
                       Constraint exited.
-                  
+
 2 #=< 0           ==> Constraint failed.
 % Valójában a korlát <x>+1 #=< <y>, azaz 6+1 #=< 5
 no
@@ -344,7 +344,7 @@ Először írjuk fel a megfelelő korlátokat leíró \clpfd célsorozatot:
 \begin{alltt}
 | ?- use_module(library(clpfd)).
 ...
-| ?- domain([A,B,C,D,E], 1, 3), 
+| ?- domain([A,B,C,D,E], 1, 3),
      A #> B, A #\bs= C, A #\bs= D, A #\bs= E,
      B #\bs= C, B #\bs= D, C #\bs= E, D #< E.
 A in 2..3, B in 1..2, C in 1..3, D in 1..2, E in 2..3 ? ;
@@ -360,7 +360,7 @@ sorolnunk \cd{A} lehetséges értékeit, ami nagy értékkészletnél kényelmet
 lehet:
 
 \begin{alltt}
-| ?- domain([A,B,C,D,E], 1, 3), 
+| ?- domain([A,B,C,D,E], 1, 3),
      A #> B, A #\bs= C, A #\bs= D, A #\bs= E,
      B #\bs= C, B #\bs= D, C #\bs= E, D #< E,
      member(A, [1,2,3]).
@@ -395,7 +395,7 @@ az \cd{all_distinct/1} predikátumot. Ez egy listát vár paraméterként, és
 \begin{alltt}
 | ?- domain([A,B,C,D,E], 1, 3),
      A #> B, A #\bs= E, B #\bs= C, B #\bs= D, D #< E,
-     all_distinct([A,C,E]). 
+     all_distinct([A,C,E]).
 A = 3, B = 2, C = 1, D = 1, E = 2 ? ; no
 \end{alltt}
 
@@ -413,13 +413,13 @@ SEND+MORE=MONEY egyenlőség igaz legyen. Szám elején nem lehet 0 számjegy.
 \begin{verbatim}
 send(SEND, MORE, MONEY) :-
   length(List, 8),
-  domain(List, 0, 9),               % tartományok 
+  domain(List, 0, 9),               % tartományok
   send(List, SEND, MORE, MONEY),    % korlátok
   labeling([], List).               % címkézés
 \end{verbatim}
 \begin{verbatim}
 send(List, SEND, MORE, MONEY) :-
-  List=[S,E,N,D,M,O,R,Y], 
+  List=[S,E,N,D,M,O,R,Y],
   alldiff(List), S #\= 0, M #\= 0,
   SEND #=  1000*S+100*E+10*N+D,
   MORE #= 1000*M+100*O+10*R+E,
@@ -456,13 +456,13 @@ no
 Nézzük meg azt is, hogy mit adna ki a program, ha elhagynánk a címkézést:
 
 \begin{verbatim}
-| ?- List=[S,E,N,D,M,O,R,Y], domain(List, 0, 9), 
+| ?- List=[S,E,N,D,M,O,R,Y], domain(List, 0, 9),
      send(List, SEND, MORE, MONEY).
         List = [9,E,N,D,1,0,R,Y],
         SEND in 9222..9866,
         MORE in 1022..1088,
         MONEY in 10244..10888,
-        E in 2..8, N in 2..8, D in 2..8, 
+        E in 2..8, N in 2..8, D in 2..8,
         R in 2..8, Y in 2..8 ? ; no
 \end{verbatim}
 
@@ -495,7 +495,7 @@ vagy-kapcsolatban szereplő korlátokat, és minden lehetőségre
 megpróbálja megoldani az aktuális korlát rendszert. Ez nem a legszerencsésebb
 megoldás, mivel sok választási pont esetén rengeteg időt igényelhet. A
 vagylagos szerkezetekről a \clpfd esettanulmányokban (\pageref{diszjunkcio}.
-oldal) még lesz szó. Adott esetben a 
+oldal) még lesz szó. Adott esetben a
 
 \begin{verbatim}
 nextto(A,B):- abs(A-B) #= 1.
@@ -648,8 +648,8 @@ Ezek után fogalmazzuk meg a definícióinkat formálisan is!
 adott $C$ korlát él-konzisztens, azaz bármelyik $X_i$ változójához és annak
 tetszőleges $V_i \in D(X_i,s)$ megengedett értékéhez található a többi
 változónak olyan $V_j \in D(X_j,s)$ értéke ($j = 1, \ldots, i-1,i+1,\ldots, n$),
-hogy $C(V_1, \ldots V_n)$ fennálljon. 
- 
+hogy $C(V_1, \ldots V_n)$ fennálljon.
+
 \item intervallum-szűkítés (interval consistency) \\
 \definicio $C$ \emph{intervallum-szűkítő} ha minden szűkítési lépés lefutása után igaz,
 hogy $C$ bármelyik $X_i$ változója esetén e változó tartományának mindkét
@@ -685,32 +685,32 @@ a szűkítési szinteket.
 Néhány példa a szűkítési szintekre:
 \begin{verbatim}
 | ?- X in {4,9}, Y in {2,3}, Z #= X-Y. % intervallum-szűkítő
-X in {4}\/{9}, Y in 2..3, Z in 1..7 ? 
+X in {4}\/{9}, Y in 2..3, Z in 1..7 ?
 \end{verbatim}
 \begin{verbatim}
 | ?- X in {4,9}, Y in {2,3}, plus(Y, Z, X).
     % plus(A, B, C): A+B=C tartományszűkítő módon
-X in {4}\/{9}, Y in 2..3, Z in(1..2)\/(6..7) ? 
+X in {4}\/{9}, Y in 2..3, Z in(1..2)\/(6..7) ?
 \end{verbatim}
 \begin{verbatim}
 | ?- X in {4,9}, Y in {2}, /* azaz Y=2 */, Z #= X-Y. % tartományszűkítő
-Y = 2, X in {4}\/{9}, Z in {2}\/{7} ? 
+Y = 2, X in {4}\/{9}, Z in {2}\/{7} ?
 \end{verbatim}
 \begin{verbatim}
 | ?- X in {4,9}, Z #= X-Y, Y=2.
     % így csak intervallum-szűkítő!
     % vö. fordítási idejű korlát-kifejtés
-Y = 2, X in {4}\/{9}, Z in 2..7 ? 
+Y = 2, X in {4}\/{9}, Z in 2..7 ?
 \end{verbatim}
 \begin{verbatim}
 | ?-domain([X,Y], -10, 10), X*X+2*X+1 #= Y.
     % Ez nem intervallum-szűkítő, Y<0 nem lehet!
-X in -4..4, Y in -7..10 ? 
+X in -4..4, Y in -7..10 ?
 \end{verbatim}
 \begin{verbatim}
 | ?- domain([X,Y], -10, 10), (X+1)*(X+1) #= Y.
     % garantáltan nem, de intervallum-szűkítő:
-X in -4..2, Y in 0..9 ?   
+X in -4..2, Y in 0..9 ?
 \end{verbatim}
 
 
@@ -771,11 +771,11 @@ egyébként elalszik
 algoritmus segítségével minden olyan értéket elhagy, amelyek esetén a korlát nem
 állhat fenn. Példa:
 \begin{verbatim}
-| ?- A in 2..3, B in 2..3, C in 1..3, 
+| ?- A in 2..3, B in 2..3, C in 1..3,
      all_distinct([A,B,C]).
 \end{verbatim}
 \begin{verbatim}
-                 C = 1, A in 2..3, B in 2..3 ? 
+                 C = 1, A in 2..3, B in 2..3 ?
 \end{verbatim}
 \item {\bf A folytatás menete}: ha már csak egy nem-konstans argumentuma van,
 akkor lefut, különben újra elalszik. Látszólag jobb döntésnek tűnhet, ha a korlát
@@ -788,7 +788,7 @@ csinálja, valószínűleg azért, mert nem éri meg.
 \item {\bf Aktiválás feltétele}: ha bármelyik változó alsó vagy felső határa változik (az
 intervallum-szűkítés miatt nem minden tartományváltozásra ébred fel)
 \item {\bf A szűkítés módja}: \cd{T}-t szűkíti a \cd{({\rm min} X+{\rm min} Y)..({\rm max}
-X+{\rm max} Y)} intervallumra, \cd{X}-t szűkiti a \cd{({\rm min} T-{\rm max} 
+X+{\rm max} Y)} intervallumra, \cd{X}-t szűkiti a \cd{({\rm min} T-{\rm max}
 Y)..({\rm max} T-{\rm min} Y)} intervallumra, \cd{Y}-t analóg módon szűkíti.
 \item {\bf A folytatás menete}: ha (a szűkítés után) mindhárom változó konstans, akkor lefut,
 különben újra elalszik.
@@ -801,10 +801,10 @@ mint ahogy azt a következő példa is mutatja:
 
 \begin{verbatim}
 | ?- domain([X,Y], 0, 100), X+Y #=10, X-Y #=2.
-                X in 2..10, Y in 0..8 ? 
+                X in 2..10, Y in 0..8 ?
 
 | ?- domain([X,Y], 0, 100), X+Y #=10, X+2*Y #=14.
-                X = 6, Y = 4 ? 
+                X = 6, Y = 4 ?
 \end{verbatim}
 
 Az alsó és a felső példának ugyanaz a megoldása, az első esetben az \cd{X-Y \#= 2}
@@ -873,18 +873,18 @@ kap értéket.
 \item Bár a távolság-feltétel itt is fennáll, a rendszer nem veszi észre!
 \begin{alltt}
 | ?- abs(X-Y)#>1 #<=> B, X in \{1,5\}, Y in \{3,7\}.
-             \(\Rightarrow\) B in 0..1 
+             \(\Rightarrow\) B in 0..1
 \end{alltt}
 \item Ennek itt az az oka, hogy az aritmetika nem tartomány-konzisztens.
 \begin{alltt}
-| ?- D #= X-Y, 
-     AD #= abs(D), AD#>1 #<=> B, 
+| ?- D #= X-Y,
+     AD #= abs(D), AD#>1 #<=> B,
      X in \{1,5\}, Y in \{3,7\}.
              \(\Rightarrow\) D in -6..2, AD in 0..6, B in 0..1
 \end{alltt}
 \begin{alltt}
 | ?- plus(Y, D, X),      \(\Leftarrow\){\rm tartomány-konzisztens összegkorlát}
-     AD #= abs(D), AD#>1 #<=> B, 
+     AD #= abs(D), AD#>1 #<=> B,
      X in \{1,5\}, Y in \{3,7\}.
              \(\Rightarrow\) D in \{-6,-2,2\}, AD in \{2,6\}, B = 1
 \end{alltt}
@@ -954,14 +954,14 @@ magikus(N, L) :-
 % Ez a predikátum valósítja meg a fenti előfordulás-sorozat transzformációt
 elofordulasok([], _, _).
 elofordulasok([E|Ek], I, Sor) :-
-        pontosan(I, Sor, E), 
+        pontosan(I, Sor, E),
         J is I+1, elofordulasok(Ek, J, Sor).
 
 % pontosan(I, L, E): Az I szám L-ben E-szer fordul elő.
 pontosan(I, L, 0) :- outof(I, L).
-pontosan(I, [I|L], N) :- 
+pontosan(I, [I|L], N) :-
         N #> 0, N1 #= N-1, pontosan(I, L, N1).
-pontosan(I, [X|L], N) :- 
+pontosan(I, [X|L], N) :-
         N #> 0, X #\bs= I, pontosan(I, L, N).
 
 % outof(I, L): Az I szám L-ben nem fordul elő.
@@ -1017,7 +1017,7 @@ osszege([X|L], X+S) :- osszege(L, S).
 
 % szorzatosszege(L, I, Ossz): Ossz = \(\cd{I}*\cd{L}_1+\cd{(I+1)}*\cd{L}_2+\ldots\)
 szorzatosszege([], _, 0).
-szorzatosszege([X|L], I, I*X+S) :- 
+szorzatosszege([X|L], I, I*X+S) :-
     J is I+1, szorzatosszege(L, J, S).
 \end{alltt}
 
@@ -1038,9 +1038,9 @@ feladatra:
 
 \begin{verbatim}
 magikus3(N, L) :-
-        length(L, N), 
+        length(L, N),
         N1 is N-1, domain(L, 0, N1),
-        osszege(L, S), call(S #= N), 
+        osszege(L, S), call(S #= N),
         szorzatosszege(L, 0, SS), call(SS #= N),
         elofordulasok3(L, 0, L),
         labeling([], L). % most már kell a címkézés!
@@ -1048,7 +1048,7 @@ magikus3(N, L) :-
 % A korábbi elofordulasok/3 másolata
 elofordulasok3([], _, _).
 elofordulasok3([E|Ek], I, Sor) :-
-        pontosan3(I, Sor, E), 
+        pontosan3(I, Sor, E),
         J is I+1, elofordulasok3(Ek, J, Sor).
 
 % pontosan3(I, L, E): L-ben az I E-szer fordul elő.
@@ -1069,7 +1069,7 @@ sikerült készítenünk, ami az alábbi összehasonlító táblázatból is lá
 \begin{tabular}{|l|rrrrrr|}
 \hline
 variáns/adat                   & n=10  & n=20 & n=40  & n=80  & n=160 & n=320 \\
-\hline                         
+\hline
 választós                      & 13.90 & ---  &  ---  &  ---  & ---  & ---    \\
 választós+\cd{osszege}         &  0.22 & ---  &  ---  &  ---  & ---  & ---    \\
 vál.+\cd{szorzatosszege}       &  0.02 & 0.55 & 44.04 &  ---  & ---  & ---    \\
@@ -1084,7 +1084,7 @@ tükr.+\cd{ossz}+\cd{szorzossz} &  0.01 & 0.05 &  0.19 &  0.95 & 4.61 & 23.57  \
 
 \section{Logikai korlátok}
 
-Annak ellenére, hogy a \clpfd könyvtár alapvetően véges, egész értékű tartományok 
+Annak ellenére, hogy a \clpfd könyvtár alapvetően véges, egész értékű tartományok
 kezelésére használatos, lehetőség van logikai korlátok használatára is. Logikai
 korlátokat háromféle alkotóelemből építhetünk fel:
 
@@ -1147,7 +1147,7 @@ tükrözhető, ami megegyezik a hozzájuk rendelt azonosítóval).
 :- use_module(library(clpfd)).
 
 % Bevezetünk néhány operátort az állítások egyszerűbb leírására.
-:- op(700, fy, nem).     :- op(900, yfx, vagy).  
+:- op(700, fy, nem).     :- op(900, yfx, vagy).
 :- op(800, yfx, és).     :- op(950, xfy, mondja).
 
 % A B bennszülött mondhatja az Áll állítást.
@@ -1157,7 +1157,7 @@ B mondja Áll :- értéke(B mondja Áll, 1).
 értéke(X = Y, E) :-
     X in 0..2, Y in 0..2, E #<=> (X #= Y).
 értéke(X mondja M, E) :-
-    X in 0..2, értéke(M, E0), 
+    X in 0..2, értéke(M, E0),
     E #<=> (X #= 2 #\/ E0 #= X).
 értéke(M1 és M2, E) :-
     értéke(M1, E1), értéke(M2, E2), E #<=> E1 #/\ E2.
@@ -1166,7 +1166,7 @@ B mondja Áll :- értéke(B mondja Áll, 1).
 értéke(nem M, E) :-
         értéke(M, E0), E #<=> #\E0.
 
-| ?- all_different([A,B,C]), A mondja A = 2, 
+| ?- all_different([A,B,C]), A mondja A = 2,
      B mondja A = 2, C mondja nem C =2,
      labeling([], [A,B,C]).
 A = 0, B = 2, C = 1 ? ;
@@ -1206,14 +1206,14 @@ A \ref{sendmoremoney}. fejezetben ismertetett kódaritmetika példa egyszerűbb 
 
 \begin{verbatim}
 send(List, SEND, MORE, MONEY) :-
-        List= [S,E,N,D,M,O,R,Y], 
+        List= [S,E,N,D,M,O,R,Y],
         Pow10 = [1000,100,10,1],
         all_different(List), S #\= 0, M#\= 0,
         scalar_product(Pow10, [S,E,N,D], #=, SEND),
         %   SEND #=  1000*S+100*E+10*N+D,
         scalar_product(Pow10, [M,O,R,E], #=, MORE),
         %   MORE #= 1000*M+100*O+10*R+E,
-        scalar_product([10000|Pow10], [M,O,N,E,Y], 
+        scalar_product([10000|Pow10], [M,O,N,E,Y],
                        #=, MONEY),
         %   MONEY #= 10000*M+1000*O+100*N+10*E+Y,
         SEND+MORE #= MONEY.
@@ -1274,14 +1274,14 @@ hívásával magunk is megvizsgálhatjuk:
 | ?- use_module(library(clpfd)).
 | ?- goal_expansion(X*X+2*X+1 #= Y, user, G).
         G = clpfd:('x*x=y'(X,_A),
-            scalar_product([1,-2,-1],[Y,X,_A],#=,1)) ? 
+            scalar_product([1,-2,-1],[Y,X,_A],#=,1)) ?
 
 | ?- goal_expansion((X+1)*(X+1) #= Y, user, G).
-        G = clpfd:('t=u+c'(_A,X,1),'x*x=y'(_A,Y)) ? 
+        G = clpfd:('t=u+c'(_A,X,1),'x*x=y'(_A,Y)) ?
 
 | ?- goal_expansion(abs(X-Y)#>1, user, G).
         G = clpfd:('x+y=t'(Y,_A,X),
-               '|x|=y'(_A,_B),'t>=c'(_B,2)) ? 
+               '|x|=y'(_A,_B),'t>=c'(_B,2)) ?
 
 | ?- goal_expansion(X#=4 #\/ Y#>6, user, G).
         G = clpfd:iff_aux(clpfd:'x=y'(X,4),_A),
@@ -1290,10 +1290,10 @@ hívásával magunk is megvizsgálhatjuk:
 
 | ?- goal_expansion(X*X*X*X #= 16, user, G).
         G = clpfd:('x*x=y'(X,_A),'x*y=z'(_A,X,_B),
-                      'x*y=z'(_B,X,16)) ? 
+                      'x*y=z'(_B,X,16)) ?
 
 | ?- goal_expansion(X in {1,2}, user, G).
-        G = clpfd:propagate_interval(X,1,2) ? 
+        G = clpfd:propagate_interval(X,1,2) ?
 
 | ?- goal_expansion(X in {1,2,5}, user, G).
         G = clpfd:prune_and_propagate(X,[[1|2],[5|5]]) ?
@@ -1305,7 +1305,7 @@ hívásával magunk is megvizsgálhatjuk:
 \begin{itemize}
 \item {\tt fd\_statistics(Kulcs, Érték)}: A \cd{Kulcs}-hoz tartozó
         számláló értékét \cd{Érték}-ben kiadja, és a számlálót lenullázza.
-        Lehetséges kulcsok és számlált események: 
+        Lehetséges kulcsok és számlált események:
 \begin{itemize}
 \item \cd{constraints} --- korlát létrehozása
 \item \cd{resumptions} --- korlát felébresztése
@@ -1339,14 +1339,14 @@ run_queens(Lab, N, Ss, Time, Btrks) :-
         kérdésben előforduló változók tartományát írja ki, az alvó
         korlátokat nem. Ha felveszünk egy ilyen eljárást és az sikeresen
         fut le, akkor a válaszban az összes változó mellett kiírja még a
-        le nem futott összes korlátot is.  
+        le nem futott összes korlátot is.
 \end{itemize}
 
 \begin{alltt}
-| ?- domain([X,Y], 1, 10), X+Y#=5. \(\Rightarrow\) X in 1..4, Y in 1..4 ? 
+| ?- domain([X,Y], 1, 10), X+Y#=5. \(\Rightarrow\) X in 1..4, Y in 1..4 ?
 | ?- assert(clpfd:full_answer).    \(\Rightarrow\) yes
-| ?- domain([X,Y], 1, 10), X+Y#=5. \(\Rightarrow\) clpfd:'t+u=c'(X,Y,5), 
-                                      X in 1..4, Y in 1..4 ? 
+| ?- domain([X,Y], 1, 10), X+Y#=5. \(\Rightarrow\) clpfd:'t+u=c'(X,Y,5),
+                                      X in 1..4, Y in 1..4 ?
 | ?- X+Y #= Z #<=> B.              \(\Rightarrow\) clpfd:'t=u IND'(Z,_A)#<=>B,
                                       clpfd:'x+y=t'(X,Y,_A), B in 0..1, \ldots
 | ?- retract(clpfd:full_answer).   \(\Rightarrow\) yes
@@ -1373,7 +1373,7 @@ változó tartományának felső határával (ez egy szám vagy \cd{sup} lehet).
 \item \cd{fd\_size(X, Size)}: \cd{Size} az \cd{X} tartományának számossága
 (szám vagy \cd{sup}).
 \item \cd{fd\_dom(X, Range)}: \cd{Range} az \cd{X} változó tartománya,
-tartománykifejezés formában 
+tartománykifejezés formában
 \item \cd{fd\_set(X, Set)}: \cd{Set} az \cd{X} tartománya úgynevezett
 \emph{FD-halmaz} formában (ld. lejjebb).
 \item \cd{fd\_degree(X, D)}: \cd{D} az \cd{X}-hez kapcsolódó korlátok
@@ -1384,7 +1384,7 @@ Néhány példa a fentiek használatával:
 
 \begin{verbatim}
 | ?- X in (1..5)\/{9}, fd_min(X, Min), fd_max(X, Max), fd_size(X, Size).
-Min = 1, Max = 9, Size = 6, X in(1..5)\/{9} ? 
+Min = 1, Max = 9, Size = 6, X in(1..5)\/{9} ?
 | ?- X in (1..9)/\ \(6..8), fd_dom(X, Dom), fd_set(X, Set).
 Dom = (1..5)\/{9}, Set = [[1|5],[9|9]], X in ... ?
 | ?- queens_nolab(8, [X|_]), fd_degree(X, Deg).
@@ -1416,14 +1416,14 @@ intervallum elemeit tartalmazza
 \cd{Rest} minden eleme nagyobb \cd{Max+1}-nél. Egyaránt használható
 FD-halmaz szétszedésére és építésére.
 \begin{verbatim}
-| ?- X in (1..9) /\ \(6..8), fd_set(X, _S), 
+| ?- X in (1..9) /\ \(6..8), fd_set(X, _S),
      fdset_parts(_S, Min1, Max1, _).
-         Min1 = 1, 
-         Max1 = 5, 
-         X in(1..5)\/{9} ? 
+         Min1 = 1,
+         Max1 = 5,
+         X in(1..5)\/{9} ?
 \end{verbatim}
 \item \cd{fdset\_union(Set1, Set2, Union)}: \cd{Set1} és \cd{Set2}
-uniója \cd{Union},  
+uniója \cd{Union},
 \cd{fdset\_union(ListOfSets, Union)}: a \cd{ListOfSets} FD halmazokból
 álló lista elemeinek uniója \cd{Union}.
 \item \cd{fdset\_intersection/[3,2]} : Két halmaz, illetve egy listában
@@ -1479,7 +1479,7 @@ következő címkézési lépésben ugyanezt a változót válasszuk)
 
 A keresés célja többféle lehet. Előfordulhat, hogy az \emph{összes} megoldást meg
 szeretnénk keresni, előfordulhat, hogy egy \emph{tetszőleges} megoldásra vagyunk kíváncsiak,
-és az is megeshet, hogy a megoldások közül valamilyen szempontból a \emph{legoptimálisabb}at
+és az is megeshet, hogy a megoldások közül valamilyen szempontból az \emph{optimálisat}
 keressük. Arra azonban mindenképp törekednünk kell, hogy ez(eke)t a megoldás(oka)t a lehető
 legkevesebb visszalépés végrehajtásával, a lehető legrövidebb idő alatt találjuk meg.
 Ebben segít a keresési stratégia testreszabása. A testreszabás három szempont szerint
@@ -1496,19 +1496,19 @@ Nézzük meg egy egyszerű példán, hogy hogyan függ a keresési tér mérete 
 kiválasztásának módjától!
 \br
 {\tt | ?- }\parbox[t]{0.3\textwidth}{\tt
-X in 1..4, 
+X in 1..4,
 Y in 1..2,\\
 indomain(X),\\
 indomain(Y).
-}\raisebox{-1.5ex}{\parbox[c]{0.2\textwidth}{%\vspace*{-1ex} 
+}\raisebox{-1.5ex}{\parbox[c]{0.2\textwidth}{%\vspace*{-1ex}
 \epsfig{file=cimke1.eps,width=0.2\textwidth}}}
 \br
 {\tt | ?- }\parbox[t]{0.3\textwidth}{\tt
-X in 1..4, 
+X in 1..4,
 Y in 1..2,\\
 indomain(Y),\\
 indomain(X).
-}\raisebox{-1.5ex}{\parbox[c]{0.2\textwidth}{%\vspace*{-1ex} 
+}\raisebox{-1.5ex}{\parbox[c]{0.2\textwidth}{%\vspace*{-1ex}
 \epsfig{file=cimke2.eps,width=0.2\textwidth}}}
 \br
 Ha feltételezzük, hogy a fenti keresés során egyes ágak meghiúsulhatnak, akkor könnyen
@@ -1645,8 +1645,8 @@ Ezután mindenképpen folytatjuk az {\bf a.} pontnál.
 Lássunk egy példát az \fdbg nyomkövető könyvtár (\ref{fdbg}. fejezet) használatával!
 \br
 \begin{verbatim}
-| ?- fdbg_assign_name(X, x), fdbg_assign_name(Y, y), 
-     X in 1..3, Y in 1..2, X #>= Y, fdbg_on, 
+| ?- fdbg_assign_name(X, x), fdbg_assign_name(Y, y),
+     X in 1..3, Y in 1..2, X #>= Y, fdbg_on,
      labeling([min], [X,Y]).
 % The clp(fd) debugger is switched on
 Labeling [1, <x>]: starting in range 1..3.
@@ -1718,11 +1718,11 @@ lds(Select, D, Xs) :-
 
 | ?- assumptions(enum, As).          As = [1,1,1,1] ? ; no
 | ?- assumptions(bisect, As).        As = [2,2,2,2] ? ; no
-| ?- assumptions(step, As).          As = [1,2,3,3] ? ; no 
-                                                                          
-| ?- lds(enum, 1, Xs).               Xs = [1,2,3,4] ? ; no 
-| ?- lds(bisect, 1, Xs).             Xs = [1,2,3] ? ; no 
-| ?- lds(step, 1, Xs).               Xs = [1,2] ? ; no 
+| ?- assumptions(step, As).          As = [1,2,3,3] ? ; no
+
+| ?- lds(enum, 1, Xs).               Xs = [1,2,3,4] ? ; no
+| ?- lds(bisect, 1, Xs).             Xs = [1,2,3] ? ; no
+| ?- lds(step, 1, Xs).               Xs = [1,2] ? ; no
 \end{alltt}
 
 Látható, hogy \cd{enum} címkézési módnál minden megoldáshoz 1 hosszú út vezet,
@@ -1760,7 +1760,7 @@ válasszuk ki a változó-listából.
 % A Vars-beli változók között Sel a Hol-adik, ha a lista teljes hosszát
 % 1-nek vesszük (Hol így egy törtszám). Rest a maradék.
 valaszt(Hol, Vars, Sel, Rest) :-
-        szur(Vars, Szurtek), 
+        szur(Vars, Szurtek),
         length(Szurtek, Len), N is integer(Hol*Len),
         nth0(N, Szurtek, Sel, Rest).
 
@@ -1788,14 +1788,14 @@ az értékeket az értéklistában belülről kifelé haladva sorolja fel:
 midout(X, _Rest, BB0, BB) :-
         fd_size(X, Size),
         Mid is (Size+1)//2,
-        fd_set(X, Set), 
+        fd_set(X, Set),
         fdset_to_list(Set, L),
         nth(Mid, L, MidElem),
         (   first_bound(BB0, BB), X = MidElem
         ;   later_bound(BB0, BB), X #\= MidElem
         ).
 
-| ?- X in {1,3,12,19,120}, 
+| ?- X in {1,3,12,19,120},
      labeling([value(midout)], [X]).
 X = 12 ? ;
 X = 3 ? ;
@@ -1892,7 +1892,7 @@ ad.
 {\bcd{all\_different(Vs{\em [}, Options{\em ]})\\
       all\_distinct(Vs{\em [}, Options{\em ]})}}
 
-Jelentése: a \cd{Vs} FD változó-lista elemei páronként különbözőek.  
+Jelentése: a \cd{Vs} FD változó-lista elemei páronként különbözőek.
 A korlát szűkítési mechanizmusát az \cd{Options} opció-lista szabályozza,
 eleme lehet:
 
@@ -1926,7 +1926,7 @@ A különböző ébresztési és szűkítési módok bemutatásához nézzük az
 
 \begin{verbatim}
 pelda(Z, I, On, C) :-
-     L = [X,Y,Z], domain(L, 1, 3), 
+     L = [X,Y,Z], domain(L, 1, 3),
      all_different(L, [on(On),consistency(C)]), X #\= I, Y #\= I.
 \end{verbatim}
 
@@ -1951,9 +1951,9 @@ illetve \cd{bound} algoritmus gyengesége miatt nem végzi el a szűkítést, a 
 Jelentése: \cd{List} \cd{X}-edik eleme \cd{Y} (1-től számozva). Itt \cd{X} és \cd{Y}
 FD változók, \cd{List} FD változókból álló lista. Az \cd{X} változóra nézve
 tartomány-szűkítést, az \cd{Y} és \cd{List} változókra nézve intervallum-szűkítést
-biztosít. 
+biztosít.
 
-Példák: 
+Példák:
 
 \begin{verbatim}
 | ?- element(X, [0,1,2,3,4], Y), X in {2,5}.  % ekvivalens Y #= X-1-gyel
@@ -1963,8 +1963,8 @@ X in {2}\/{5}, Y in {1}\/{4} ?                % tartomány-konzisztens
 
 % X #= C #<=> B megvalósítása, 1=<{X,C}=<6 esetére
 % (C konstans).
-beq(X, C, B) :- 
-        X in 1..6, call(I #= X+6-C), 
+beq(X, C, B) :-
+        X in 1..6, call(I #= X+6-C),
         element(I, [0,0,0,0,0,1,0,0,0,0,0], B).
 \end{verbatim}
 
@@ -1994,7 +1994,7 @@ no
 Jelentése: A \cd{Tuples} lista minden elemét illesztve a \cd{Template}
 mintára, a \cd{DAG} által leírt reláció fennáll. Az ébresztést és a
 szűkítést az \cd{Options} opció-lista szabályozza (hasonló módon, mint
-az \cd{all_distinct} esetén, lásd \pageref{all_distinct}. oldal és 
+az \cd{all_distinct} esetén, lásd \pageref{all_distinct}. oldal és
 SICStus kézikönyv). Alaphelyzetben minden változásra ébred és
 tartomány-szűkítést ad.
 
@@ -2046,14 +2046,14 @@ felemasok_vacak(X, Y, Z) :-
 Az \cd{X} FD-változókból álló lista rendezettje az \cd{Y} FD-változó-lista. Az \cd{I}
 FD-változó-lista írja le a rendezéshez szükséges permutációt. Azaz: mindhárom
 paraméter azonos ($n$) hosszúságú, \cd{Y} rendezett, \cd{I} az \cd{1..$n$} számok
-egy permutációja, és $\forall i \in$ \cd{1..$n$} esetén \cd{X$_i$ =Y$_{\cd{I}_i}$}. 
+egy permutációja, és $\forall i \in$ \cd{1..$n$} esetén \cd{X$_i$ =Y$_{\cd{I}_i}$}.
 
 \medskip
 
 {\bcd{assignment(X, Y{\em [}, Options{\em ]})}}
 
 \cd{X} és \cd{Y} FD változókból alkotott azonos ($n$) hosszúságú listák. Teljesül,
-ha \cd{X$_i$} és \cd{Y$_i$} mind az \cd{1..$n$} tartományban vannak és \cd{X$_i$=$j$} 
+ha \cd{X$_i$} és \cd{Y$_i$} mind az \cd{1..$n$} tartományban vannak és \cd{X$_i$=$j$}
 $\Leftrightarrow$ \cd{Y$_j$=$i$}. Másképpen fogalmazva: \cd{X} egy-egyértelmű
 leképezés az \cd{1..$n$} halmazon (az \cd{1..$n$} számok egy permutációja), és
 \cd{Y} az \cd{X} inverze.
@@ -2087,7 +2087,7 @@ megadja a Hamilton-kört és annak az ellenkező irányban vett bejárását is.
 Példák az \cd{assignment/2} és a \cd{circuit/2} használatára:
 
 \begin{verbatim}
-| ?- length(L, 3), domain(L, 1, 3), assignment(L, LInv), L=[2|_], 
+| ?- length(L, 3), domain(L, 1, 3), assignment(L, LInv), L=[2|_],
      labeling([], L).
 L = [2,1,3], LInv = [2,1,3] ? ;
 L = [2,3,1], LInv = [3,1,2] ? ;
@@ -2113,8 +2113,8 @@ léphetünk (kivéve $n=4$ esetben, innen csak 1-est tartalmazóra). \\
 \end{tabular}
 
 \begin{verbatim}
-| ?- L=[_1,_2,_3,_4,_5,_6,_7,_8,1], _1=2, _2 in {4,6}, _3=6, 
-     _4 in {7,8}, _5 in {2,3}, _6=8, _7=5, _8 in {5,9}, 
+| ?- L=[_1,_2,_3,_4,_5,_6,_7,_8,1], _1=2, _2 in {4,6}, _3=6,
+     _4 in {7,8}, _5 in {2,3}, _6=8, _7=5, _8 in {5,9},
      circuit(L).
 L = [2,4,6,7,3,8,5,9,1] ? ; no
 \end{verbatim}
@@ -2156,7 +2156,7 @@ tsp(Lab, Successor, Cost) :-
         labeling([minimize(Cost)|Lab], All).
 
 | ?- tsp([ff], Succs, Cost).
-Cost = 2276, Succs = [2,4,5,6,7,3,1] ? 
+Cost = 2276, Succs = [2,4,5,6,7,3,1] ?
 \end{verbatim}
 
 \subsection{Ütemezési korlátok}
@@ -2167,7 +2167,7 @@ Jelentése: a \cd{Starts} kezdőidőpontokban elkezdett, \cd{Durations} ideig ta
 és \cd{Resources} erőforrásigényű feladatok bármely időpontban összesített
 erőforrásigénye nem haladja meg a \cd{Limit} határt (és fennállnak az opcionális
 precedencia korlátok). Az első három argumentum FD változókból álló, egyforma ($n$)
-hosszú lista, a negyedik egy FD változó. 
+hosszú lista, a negyedik egy FD változó.
 
 \medskip
 
@@ -2198,7 +2198,7 @@ Az \cd{Opts} opciólista a következő beállításokat tartalmazhatja:
 \item \cd{precedences(Ps)} ---
           \cd{Ps} egy lista, amely precedencia korlátokat ír le. Elemei a következők
           lehetnek (\cd{I} és \cd{J} feladatok sorszámai, \cd{D} egy pozitív
-          egész, \cd{Tart} egy  konstans-tartomány):  
+          egész, \cd{Tart} egy  konstans-tartomány):
 \begin{itemize}
 \item\cd{d(I,J,D)}, jelentése: $S_\cd{I}+\cd{D} \leq S_\cd{J}$ vagy $S_\cd{J} \leq S_\cd{I}$
 (tehát az \cd{I}. és a \cd{J}. feladat közti átállás egy holtidővel modellezhető, és
@@ -2272,10 +2272,10 @@ szerint alakulnak:
 \begin{center}
 \begin{tabular}{|l|r|r|r|r|r|r|r|}
 \hline
-Tevékenység               & t1   & t2    & t3   & t4   & t5   & t6   & t7 \\ 
-\hline                                                         
-Időtartam                 & 16   & 6     & 13   & 7    & 5    & 18   & 4 \\  
-Erőforrásigény            & 2    & 9     & 3    & 7    &10    & 1    &11\\   
+Tevékenység               & t1   & t2    & t3   & t4   & t5   & t6   & t7 \\
+\hline
+Időtartam                 & 16   & 6     & 13   & 7    & 5    & 18   & 4 \\
+Erőforrásigény            & 2    & 9     & 3    & 7    &10    & 1    &11\\
 \hline
 \hline
 Egy megoldás              &0--16 &16--22 &9--22 &9--16 &4--9  &4--22 &0--4\\
@@ -2296,7 +2296,7 @@ schedule(Ss, End) :-
         cumulative(Ss, Ds, Rs, 13),
         labeling([ff,minimize(End)], [End|Ss]).
 
-% after(Ss, Ds, E): Az E időpont az Ss kezdetű Ds időtartamú 
+% after(Ss, Ds, E): Az E időpont az Ss kezdetű Ds időtartamú
 % tevékenységek mindegyikének befejezése után van.
 after([], [], _).
 after([S|Ss], [D|Ds], E) :- E #>= S+D, after(Ss, Ds, E).
@@ -2306,8 +2306,8 @@ after([S|Ss], [D|Ds], E) :- E #>= S+D, after(Ss, Ds, E).
 \begin{alltt}
 | ?- schedule(Ss, End).
 
-Ss = [0,16,9,9,4,4,0], 
-End = 22 ? ;  
+Ss = [0,16,9,9,4,4,0],
+End = 22 ? ;
 no
 \end{alltt}
 \end{minipage}
@@ -2394,7 +2394,7 @@ alapértelmezése \cd{false}):
 | ?- domain([S1,S2,S3], 0, 9), (G = false ; G = true),
      disjoint1([S1-8,S2-2,S3-2], [global(G)]).
        G = false, S1 in 0..9, S2 in 0..9, S3 in 0..9 ? ;
-       G = true,  S1 in 4..9, S2 in 0..7, S3 in 0..7 ? 
+       G = true,  S1 in 4..9, S2 in 0..7, S3 in 0..7 ?
 \end{verbatim}
 
 \item \cd{wrap(Min,Max)}
@@ -2481,7 +2481,7 @@ Prolog kód egy példa egy FD predikátumra:
 
 \begin{alltt}
 % Az X+Y #= T korlát (intervallum szűkítéssel)
-'x+y=t'(X,Y,T) +:  
+'x+y=t'(X,Y,T) +:
         X in min(T) - max(Y)..max(T) - min(Y),
         Y in min(T) - max(X)..max(T) - min(X),
         T in min(X) + min(Y)..max(X) + max(Y).
@@ -2630,14 +2630,14 @@ A reifikáció megvalósítása globális korláttal:
 \begin{verbatim}
 % X #=< Y #<=> B, globális korlátként megvalósítva.
 lseq_reif(X, Y, B) :-
-        B in 0..1, fd_global(lseq_reif(X,Y,B), void,       
+        B in 0..1, fd_global(lseq_reif(X,Y,B), void,
                              [minmax(X),minmax(Y),val(B)]).
 
 clpfd:dispatch_global(lseq_reif(X,Y, B), St, St, Actions) :-
         fd_min(X, MinX), fd_max(X, MaxX),
         fd_min(Y, MinY), fd_max(Y, MaxY),
         (   fdset_interval(_, MaxX, MinY)   % MaxX =< MinY
-        ->  Actions = [exit,B=1]  
+        ->  Actions = [exit,B=1]
         ;   empty_interval(MinX, MaxY)      % MaxY < MinX
         ->  Actions = [exit,B=0]
         ;   B == 1 -> Actions = [exit, call(user:lseq(X,Y))]
@@ -2672,7 +2672,7 @@ exactly(I, Xs, N) :-
 
 % dom_susps(Xs, Susp): Susp dom(X)-ek listája, minden X \(\in\) Xs-re.
 dom_susps([], []).
-dom_susps([X|Xs], [dom(X)|Susp]) :- 
+dom_susps([X|Xs], [dom(X)|Susp]) :-
     dom_susps(Xs, Susp).
 
 clpfd:dispatch_global(exactly(I,_,N), Xs0/Min0, Xs/Min, Actions) :-
@@ -2699,17 +2699,17 @@ ex_filter([_X|Xs], Ys, N0, N, I) :-            % X már nem lehet I
     ex_filter(Xs, Ys, N0, N, I).
 
 % A Ps lista elemei `X in_set S', \(\forall\) X \(\in\) Xs-re, S az \bs\{I\} FD halmaz.
-ex_neq(Xs, I, Ps) :- 
-    fdset_singleton(Set0, I), fdset_complement(Set0, Set), 
+ex_neq(Xs, I, Ps) :-
+    fdset_singleton(Set0, I), fdset_complement(Set0, Set),
     eq_all(Xs, Set, Ps).
 
 % A Ps lista elemei `X in_set S', \(\forall\) X \(\in\) Xs-re, S az \{I\} FD halmaz.
-ex_eq(Xs, I, Ps) :- 
+ex_eq(Xs, I, Ps) :-
     fdset_singleton(Set, I), eq_all(Xs, Set, Ps).
 
 % eq_all(Xs, S, Ps): Ps `X in_set S'-ek listája, minden X \(\in\) Xs-re.
 eq_all([], _, []).
-eq_all([X|Xs], Set, [X in_set Set|Ps]) :- 
+eq_all([X|Xs], Set, [X in_set Set|Ps]) :-
     eq_all(Xs, Set, Ps).
 
 
@@ -2789,12 +2789,12 @@ tárból. Az FD klózok fejében az argumentumok kötelezően csak változók le
         X in (min(Y)+1)..sup,  % azaz az X > Y korlátnak a
         Y in inf..(max(X)-1).  % szűkítései.
 
-'x=<y'(X,Y) +?                 % Ha X tartománya része az 
-        X in inf..min(Y).      % inf..min(Y) intervallumnak, 
+'x=<y'(X,Y) +?                 % Ha X tartománya része az
+        X in inf..min(Y).      % inf..min(Y) intervallumnak,
                                % akkor X =< Y levezethető.
 
-'x=<y'(X,Y) -?                 % Ha X tartománya része a 
-        X in (max(Y)+1)..sup.  % (max(Y)+1)..sup intervallumnak, 
+'x=<y'(X,Y) -?                 % Ha X tartománya része a
+        X in (max(Y)+1)..sup.  % (max(Y)+1)..sup intervallumnak,
                                % akkor X > Y levezethető.
 \end{verbatim}
 
@@ -2810,7 +2810,7 @@ az \cd{X} alsó határának függvényében állít elő egy tartományt, ha \cd
 tudjuk, hogy az \cd{1..10} intervallumban van benne, akkor \cd{min(X)..sup} = \cd{1..sup}
 fog teljesülni. A \cd{{\em Változó} in {\em TKif}} alakú kifejezés \cd{\em Változó}
 értékét a \cd{\em TKif} tartománykifejezés által előállított halmazra szűkíti (bizonyos
-feltételek fennállása esetén, ld. később). 
+feltételek fennállása esetén, ld. később).
 
 Formálisan: az \cd{X in {\em R}(Y,Z,\ldots)} indexikális jelentése a következő
 reláció:
@@ -2830,7 +2830,7 @@ az úgynevezett ,,\emph{társasház-elv}'': az FD predikátum kiértékelésére
 példa FD-klózaiban teljesül-e ez az alapszabály:
 
 \begin{alltt}
-'x=<y'(X, Y) +: 
+'x=<y'(X, Y) +:
     X in inf..max(Y), % \(\{\tuple{x,y}|x\in{}\cd{inf..max(\{}y\cd{\})}\} \equiv \{\tuple{x,y}|x\in{}(-\infty,y]\} \equiv \{\tuple{x,y}|x\leq{}y\}\)
     Y in min(X)..sup. % \(\{\tuple{x,y}|y\in{}\cd{min(\{}x\cd{\})..sup}\} \equiv \{\tuple{x,y}|y\in{}[x,+\infty)\} \equiv \{\tuple{x,y}|y\geq{}x\}\)
 \end{alltt}
@@ -2842,8 +2842,8 @@ alábbi jelöléseket ($s$ továbbra is egy adott korlát-tárat fog jelenteni):
 
 \begin{description}
 \item[$X$] egy korlát-változó, tartománya \domx{X}. \vspace*{-1ex}
-\item[$T$] egy számkifejezés ({\em term}), amelynek jelentése 
-egy egész szám vagy egy végtelen érték, ezt \valx{T}-sel jelöljük. 
+\item[$T$] egy számkifejezés ({\em term}), amelynek jelentése
+egy egész szám vagy egy végtelen érték, ezt \valx{T}-sel jelöljük.
 (Végtelen érték csak \cd{$T_1$..$T_2$}-ben lehet.) \vspace*{-1ex}
 \item[$R$] egy tartománykifejezés ({\em range}), amelynek jelentése
 egy számhalmaz, amit \setx{R}-sel jelölünk.
@@ -2861,8 +2861,8 @@ alábbi táblázatban láthatóak:
 \ \ \ \ \ \ {\em integer}         &   {\em integer} {\rm értéke}                  \\
 \ \ |\ \ \ inf                    &   \(-\infty\)                                 \\
 \ \ |\ \ \ sup                    &   \(+\infty\)                                 \\
-\ \ |\ \ \ $X$                    &   {\rm \(x\) feltéve, hogy \domx{X}\(=\{x\}\).  
-                                      Egyébként az indexikális felfüggesztődik       
+\ \ |\ \ \ $X$                    &   {\rm \(x\) feltéve, hogy \domx{X}\(=\{x\}\).
+                                      Egyébként az indexikális felfüggesztődik
                                       (,,pucér'' változó esete).}                 \\
 \ \ |\ \ \ card($X$)              &   $\left| \domxm{X} \right|$ {\rm(a tartomány elemszáma)}\\
 \ \ |\ \ \ min($X$)               &   \(\min(\domxm{X})\) {\rm(a tartomány alsó határa)} \\
@@ -2880,18 +2880,18 @@ alábbi táblázatban láthatóak:
 \rule{0ex}{3ex}$R$ $\Longrightarrow$  &   \hspace*{-3em}\setx{R} =                \\%[1ex]
 \ \ \ \ \ \ \{$T_1$,$\ldots$,$T_n$\}   &   $\{\valxm{T_1},\ldots,\valxm{T_n}\}$    \\
 \ \ |\ \ \ dom($X$)               &   \domx{X}                                     \\
-\ \ |\ \ \ $T_1$..$T_2$           &   $[\valxm{T_1},\valxm{T_2}]$ 
+\ \ |\ \ \ $T_1$..$T_2$           &   $[\valxm{T_1},\valxm{T_2}]$
                                       {\rm (intervallum)}           \\
 \ \ |\ \ \ $R_1$/\bs{}$R_2$       &   $\setxm{R_1}\cap\setxm{R_2}$  {\rm (metszet)}\\
 \ \ |\ \ \ $R_1$\bs/{}$R_2$       &   $\setxm{R_1}\cup\setxm{R_2}$  {\rm (unió)}\\
 \ \ |\ \ \ \bs{}$R_1$             &   $\setminus\setxm{R_1}$   {\rm (komplementer halmaz) }                  \\
 \ \ |\ \ \ - $R_1$                &   $\{ -x | x \in \setxm{R_1} \}$ {\rm (pontonkénti negáció) }                    \\
-\ \ |\ \ \ $R_1$ + $R_2$          &   $\{ x+y | x \in \setxm{R_1}, y \in \setxm{R_2} \}$ {\rm (pont. összeg)}                \\                                     
+\ \ |\ \ \ $R_1$ + $R_2$          &   $\{ x+y | x \in \setxm{R_1}, y \in \setxm{R_2} \}$ {\rm (pont. összeg)}                \\
 \ \ |\ \ \ $R_1$ + $T_2$          &   $\{ x+t | x \in \setxm{R_1}, t = \valxm{T_2} \}$ \\
-\ \ |\ \ \ $R_1$ - $R_2$          &   $\{ x-y | x \in \setxm{R_1}, y \in \setxm{R_2} \}$ {\rm (p. különbség)}                \\                                     
+\ \ |\ \ \ $R_1$ - $R_2$          &   $\{ x-y | x \in \setxm{R_1}, y \in \setxm{R_2} \}$ {\rm (p. különbség)}                \\
 \ \ |\ \ \ $R_1$ - $T_2$          &   $\{ x-t | x \in \setxm{R_1}, t = \valxm{T_2} \}$ \\
 \ \ |\ \ \ $T_1$ - $R_2$          &   $\{ t-y | t = \valxm{T_1}, y \in \setxm{R_2} \}$ \\
-\ \ |\ \ \ $R_1$ mod $R_2$        &   $\{ x \bmod y | x \in \setxm{R_1}, y \in \setxm{R_2} \}$ {\rm (p. modulo)}                     \\                                     
+\ \ |\ \ \ $R_1$ mod $R_2$        &   $\{ x \bmod y | x \in \setxm{R_1}, y \in \setxm{R_2} \}$ {\rm (p. modulo)}                     \\
 \ \ |\ \ \ $R_1$ mod $T_2$        &   $\{ x \bmod t | x \in \setxm{R_1}, t = \valxm{T_2} \}$ \\
 \ \ |\ \ \ unionof($X$,$R_1$,$R_2$) &   {\rm unió-kifejezés, ld. \pageref{unio:ind}. oldal }                          \\
 \ \ |\ \ \ switch($T$,$MapList$)   &   {\rm kapcsoló-kifejezés, ld. \pageref{kapcs:ind}. oldal}                      \\
@@ -2907,7 +2907,7 @@ kapott párokra, majd az eredményekből egy újabb halmazt képezünk. Példáu
 az alábbi korlátot:
 
 \begin{alltt}
-f(X,Y) +: Y in 5 - dom(X).  {\em%} \(\{ \makebox[2em]{5-x} | \makebox[0.8em]{x}\in{}\cd{dom(X)} \}\) 
+f(X,Y) +: Y in 5 - dom(X).  {\em%} \(\{ \makebox[2em]{5-x} | \makebox[0.8em]{x}\in{}\cd{dom(X)} \}\)
 \end{alltt}
 
 A fenti korlát az \cd{Y \#= 5-X} relációt valósítja meg, tartományszűkítő módon:
@@ -2926,9 +2926,9 @@ való megvalósítása:
 
 \begin{alltt}
 | 'x+y=t tsz'(X, Y, T) +:
-        X in dom(T) - dom(Y), {\em%} \(\{ \makebox[2em]{t-y} | \makebox[0.8em]{t}\in{}\cd{dom(T)}, \makebox[0.8em]{y}\in{}\cd{dom(Y)} \}\) 
-        Y in dom(T) - dom(X), {\em%} \(\{ \makebox[2em]{t-y} | \makebox[0.8em]{t}\in{}\cd{dom(T)}, \makebox[0.8em]{x}\in{}\cd{dom(X)} \}\) 
-        T in dom(X) + dom(Y). {\em%} \(\{ \makebox[2em]{x+y} | \makebox[0.8em]{x}\in{}\cd{dom(X)}, \makebox[0.8em]{y}\in{}\cd{dom(Y)} \}\) 
+        X in dom(T) - dom(Y), {\em%} \(\{ \makebox[2em]{t-y} | \makebox[0.8em]{t}\in{}\cd{dom(T)}, \makebox[0.8em]{y}\in{}\cd{dom(Y)} \}\)
+        Y in dom(T) - dom(X), {\em%} \(\{ \makebox[2em]{t-y} | \makebox[0.8em]{t}\in{}\cd{dom(T)}, \makebox[0.8em]{x}\in{}\cd{dom(X)} \}\)
+        T in dom(X) + dom(Y). {\em%} \(\{ \makebox[2em]{x+y} | \makebox[0.8em]{x}\in{}\cd{dom(X)}, \makebox[0.8em]{y}\in{}\cd{dom(Y)} \}\)
 
 | ?- _X in \{10,20\}, _Y in \{0,5\}, _X+_Y #= Z.
 Z in 10..25 ?
@@ -3007,7 +3007,7 @@ minden $s' \subseteq s$ esetén $S(R,s') \supseteq S(R,s)$.
 már nem változik).
 \br
 \definicio egy indexikálist monotonnak, antimonotonnak, ill. konstansnak nevezünk,
-ha a tartománykifejezése monoton, antimonoton, ill. konstans. 
+ha a tartománykifejezése monoton, antimonoton, ill. konstans.
 
 \enum{Példák}{
 \item \cd{min(X)..max(Y)} egy tetszőleges tárban monoton.
@@ -3022,10 +3022,10 @@ ha a tartománykifejezése monoton, antimonoton, ill. konstans.
 $X$ értéktartománya az $S(R,s)$ tartománnyal szűkíthető.
 \br
 {\bf Bizonyítás} (vázlat): Tegyük fel, hogy $x_0 \in D(X,s)$ egy tetszőleges olyan
-érték, amelyhez találhatók olyan $y_0 \in D(Y,s$), $z_0 \in D(Z,s)$, \ldots értékek, hogy 
+érték, amelyhez találhatók olyan $y_0 \in D(Y,s$), $z_0 \in D(Z,s)$, \ldots értékek, hogy
 $\tuple{x_0,y_0,z_0,\ldots}$ kielégíti az indexikális által definiált relációt. Azaz
 
-\[ \tuple{x_0,y_0,z_0,\ldots} \in Rel(R) \Leftrightarrow x_0 \in S(R, s'), 
+\[ \tuple{x_0,y_0,z_0,\ldots} \in Rel(R) \Leftrightarrow x_0 \in S(R, s'),
 s'= \{Y~\cd{in}~\{y_0\},Z~\cd{in}~\{z_0\},\ldots\} \]
 
 Itt $s' \subseteq s$, hiszen $y_0 \in D(Y,s$), $z_0 \in D(Z,s)$,
@@ -3068,7 +3068,7 @@ szerint (\cd{Y} az \cd{R}-ben előforduló változók egyike):
 \begin{itemize}
         \item \cd{dom(Y), card(Y)} környezetben előforduló \cd{Y} változó esetén az
         indexikális a változó tartományának bármilyen módosulásakor
-        aktiválandó; 
+        aktiválandó;
         \item \cd{min(Y)} környezetben -- alsó határ változásakor
         aktiválandó;
          \item
@@ -3253,7 +3253,7 @@ X = 15, Y = 5 \(\Longrightarrow\) (inf..5)/\bs\{15\} ? (5..sup) = \{\} ? (5..sup
 X = 15, Y in 5..30 \(\Longrightarrow\) (inf..30)/\bs\{15\} ? 5..sup = {15} ? 5..sup = 5..sup
 \end{alltt}
 
-A feltételes kifejezés a kiértékelés késleltetésére is használható, ha 
+A feltételes kifejezés a kiértékelés késleltetésére is használható, ha
 \cd{(Felt?(inf..sup) \bs/ Tart)} alakban használjuk. Ezen tartománykifejezés
 értéke \setx{\cd{Tart}}, ha \setx{\cd{Felt}} üres, egyébként \cd{inf..sup}. Az ilyen
 szerkezetekben \cd{Tart} értékét a rendszer nem értékeli ki, amíg \cd{Felt} nem üres.
@@ -3331,7 +3331,7 @@ feltétel). Az ébresztési feltételek a szűkítő indexikálisokhoz hasonlóa
 	\item \cd{X} tartományának bármilyen változásakor
         \item \cd{dom(Y), card(Y)} környezetben előforduló \cd{Y} változó esetén az
         indexikális a változó tartományának bármilyen módosulásakor
-        aktiválandó; 
+        aktiválandó;
         \item \cd{min(Y)} környezetben -- alsó határ változásakor
         aktiválandó;
          \item
@@ -3346,13 +3346,13 @@ Ha az indexikális felébred, két eset lehetséges:
         \setx{R} monoton is (vagyis konstans, mivel idáig csak akkor juthattunk el,
 	ha antimonoton is), akkor a korlát negáltja levezethetővé vált (emiatt
         felesleges az \cd{'x\bs\bs=y'} FD predikátum 4. klóza).
-	\item Egyébként újra elaltatjuk az indexikálist. 
+	\item Egyébként újra elaltatjuk az indexikálist.
 \end{itemize}
 
 Egy egyszerű példa:
 
 \begin{alltt}
-'x=<y'(X,Y) +?                 
+'x=<y'(X,Y) +?
         X in inf..min(Y).      {\em% (ind1)}
 \end{alltt}
 
