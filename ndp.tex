@@ -1,6 +1,7 @@
 % !TeX spellcheck = hu_HU
 % !TeX encoding = UTF-8
-% !TeX program = xelatex -shell-escape -8bit %.tex
+% !TeX program = xelatex
+% -shell-escape -8bit %.tex
 \documentclass[a4paper,11pt]{report}
 
 \usepackage{ifxetex}
@@ -20,7 +21,7 @@
 \usepackage{epsfig}
 \usepackage{hyperref}
 \usepackage[linewidth=1pt,leftmargin=1pt,skipabove=16pt,innertopmargin=7pt]{mdframed}
-\usepackage{minted}
+%\usepackage{minted}
 
 \graphicspath{ {./figures/} }
 
@@ -177,28 +178,28 @@
 	\immediate\write\FV@OutFile{\detokenize{#1}}}%
 
 % allow minted to handle UTF8
-\newcommand{\minted@FVB@VerbatimOut}[1]{%
-	\@bsphack
-	\begingroup
-	\FV@UseKeyValues
-	\FV@DefineWhiteSpace
-	\def\FV@Space{\space}%
-	\FV@DefineTabOut
-	%\def\FV@ProcessLine{\immediate\write\FV@OutFile}% %Old, non-Unicode version
-	\let\FV@ProcessLine\minted@write@detok %Patch for Unicode
-	\immediate\openout\FV@OutFile #1\relax
-	\let\FV@FontScanPrep\relax
-	%% DG/SR modification begin - May. 18, 1998 (to avoid problems with ligatures)
-	\let\@noligs\relax
-	%% DG/SR modification end
-	\FV@Scan}
-\let\FVB@VerbatimOut\minted@FVB@VerbatimOut
-
-\renewcommand\minted@savecode[1]{
-	\immediate\openout\minted@code\jobname.pyg
-	\immediate\write\minted@code{\expandafter\detokenize\expandafter{#1}}%
-	\immediate\closeout\minted@code}
-\makeatother
+%\newcommand{\minted@FVB@VerbatimOut}[1]{%
+%	\@bsphack
+%	\begingroup
+%	\FV@UseKeyValues
+%	\FV@DefineWhiteSpace
+%	\def\FV@Space{\space}%
+%	\FV@DefineTabOut
+%	%\def\FV@ProcessLine{\immediate\write\FV@OutFile}% %Old, non-Unicode version
+%	\let\FV@ProcessLine\minted@write@detok %Patch for Unicode
+%	\immediate\openout\FV@OutFile #1\relax
+%	\let\FV@FontScanPrep\relax
+%	%% DG/SR modification begin - May. 18, 1998 (to avoid problems with ligatures)
+%	\let\@noligs\relax
+%	%% DG/SR modification end
+%	\FV@Scan}
+%\let\FVB@VerbatimOut\minted@FVB@VerbatimOut
+%
+%\renewcommand\minted@savecode[1]{
+%	\immediate\openout\minted@code\jobname.pyg
+%	\immediate\write\minted@code{\expandafter\detokenize\expandafter{#1}}%
+%	\immediate\closeout\minted@code}
+%\makeatother
 % end of UTF8 section
 
 \begin{document}

@@ -4,9 +4,9 @@
 
 A következő fejezetben a SICStus \clpfd könyvtárával fogunk foglalkozni.
 A \clpfd könyvtárat az alábbi módon lehet használatba venni:
-\begin{minted}{prolog}
+\begin{verbatim}
 :- use_module(library(clpfd)).
-\end{minted}
+\end{verbatim}
 
 \section{A \clpfd könyvtár általános jellemzése}
 
@@ -65,14 +65,14 @@ módszerein alapul.
 
 Egy egyszerű \clpfd példa:
 
-\begin{minted}{prolog}
+\begin{verbatim}
 | ?- X in (10..20)/\ (\{15}), Y in 6..sup, Z #= X+Y.
 X in(10..14)\/(16..20), Y in 6..sup, Z in 16..sup ?
-\end{minted}
-\begin{minted}{prolog}
+\end{verbatim}
+\begin{verbatim}
 | ?- X in 10..20, X #\= 15, Y in {2}, Z #= X*Y.
    Y = 2, X in(10..14)\/(16..20), Z in 20..40 ?
-\end{minted}
+\end{verbatim}
 
 A második példán lustaságon kaphatjuk rajta a \clpfd következtető mechanizmust:
 ugyan kikövetkeztethető lenne, hogy \cd{Z} csak 20 és 40 közötti \emph{páros}
@@ -240,13 +240,13 @@ másik démon felébred, szűkít, erre egy harmadik démon ébred fel
 démon sem tud felébredni, és így esetleg egy nyilvánvaló ellentmondást
 nem vesz észre a rendszer, mint például a következő példában:
 
-\begin{minted}{prolog}
+\begin{verbatim}
 | ?- domain([X,Y,Z], 1, 2), X #\= Y, X #\= Z, Y #\= Z.
 X in 1..2,
 Y in 1..2,
 Z in 1..2 ? ;
 no
-\end{minted}
+\end{verbatim}
 
 Mivel \cd{X}, \cd{Y} és \cd{Z} értékkészlete is az 1 és a 2 számokból
 áll, és az \cd{X \#\bs= Y} jellegű korlátok démonai csak akkor ébrednek fel, ha
@@ -259,39 +259,39 @@ a későbbiekben még részletesen lesz szó (ld. \ref{globalis}. fejezet).
 
 Hasonló szituációt jelent a következő példa is:
 
-\begin{minted}{prolog}
+\begin{verbatim}
 | ?- X #> Y, Y #> X.
 Y in inf..sup,
 X in inf..sup ? ;
 no
-\end{minted}
+\end{verbatim}
 
 Ha ugyanezt a két korlátot úgy vesszük fel, hogy közben \cd{X} és \cd{Y} tartományát
 végesre szűkítjük, akkor már nem jelentkezik a probléma:
 
-\begin{minted}{prolog}
+\begin{verbatim}
 | ?- domain([X,Y], 1, 10), X #> Y, Y #> X.
 no
-\end{minted}
+\end{verbatim}
 
 Azonban ha a tartományt egy picit tágabbra vesszük, újabb problémával találjuk
 szembe magunkat, a meglepően nagy futási idővel:
 
-\begin{minted}{prolog}
+\begin{verbatim}
 | ?- statistics(runtime,_),
      ( domain([X,Y], 1, 100000), X #> Y, Y #> X
      ; statistics(runtime,[_,T])
      ).
 T = 3630 ? ;
 no
-\end{minted}
+\end{verbatim}
 
 Ennek oka ismét abban keresendő, hogy a démonok csak a korlát-táron keresztül
 hatnak egymásra. Nézzük meg ugyanis ennek a példának a futását az \fdbg
 nyomkövető könyvtár használatával, 10-es tartományhatárra (az \fdbg könyvtárról
 bővebben a \ref{fdbg}. fejezetben lesz szó)!
 
-\begin{minted}{prolog}
+\begin{verbatim}
 | ?- use_module(library(fdbg)).
 | ?- fdbg_on, fdbg_assign_name(X, x), fdbg_assign_name(Y, y),
      domain([X,Y], 1, 10), X #> Y, Y #> X.
@@ -314,7 +314,7 @@ domain([<x>,<y>], ==> x = inf..sup -> 1..10,
 2 #=< 0           ==> Constraint failed.
 % Valójában a korlát <x>+1 #=< <y>, azaz 6+1 #=< 5
 no
-\end{minted}
+\end{verbatim}
 
 A kimenetet értelmezve láthatjuk, hogy az \cd{X} és az \cd{Y} változók
 tartománya nagyon lassan szűkül: kezdetben az \cd{X in 1..10} feltétel
@@ -410,14 +410,14 @@ A feladvány: írjon a betűk helyébe tízes számrendszerbeli számjegyeket
 (azonosak helyébe azonosakat, különbözőek helyébe különbözőeket) úgy, hogy a
 SEND+MORE=MONEY egyenlőség igaz legyen. Szám elején nem lehet 0 számjegy.
 
-\begin{minted}{prolog}
+\begin{verbatim}
 send(SEND, MORE, MONEY) :-
   length(List, 8),
   domain(List, 0, 9),               % tartományok
   send(List, SEND, MORE, MONEY),    % korlátok
   labeling([], List).               % címkézés
-\end{minted}
-\begin{minted}{prolog}
+\end{verbatim}
+\begin{verbatim}
 send(List, SEND, MORE, MONEY) :-
   List=[S,E,N,D,M,O,R,Y],
   alldiff(List), S #\= 0, M #\= 0,
@@ -425,17 +425,17 @@ send(List, SEND, MORE, MONEY) :-
   MORE #= 1000*M+100*O+10*R+E,
   MONEY #= 10000*M+1000*O+100*N+10*E+Y,
   SEND+MORE #= MONEY.
-\end{minted}
+\end{verbatim}
 \begin{alltt}
 % alldiff(L): L elemei mind különbözőek (buta megvalósítás).
 % Lényegében azonos a beépített all_different/1 kombinatorikai globális korláttal.
 alldiff([]).
 alldiff([X|Xs]) :- outof(X, Xs), alldiff(Xs).
 \end{alltt}
-\begin{minted}{prolog}
+\begin{verbatim}
 outof(_, []).
 outof(X, [Y|Ys]) :- X #\= Y, outof(X, Ys).
-\end{minted}
+\end{verbatim}
 
 A fenti programon jól látszik a szokásos \clpfd struktúra (tartományok
 felvétele, korlátok felvétele, címkézés). Az ,,azonos betűk azonos számokat,
@@ -447,15 +447,15 @@ ekvivalensek, az előbbi csak páronkénti különbözőséget valósít meg! Gy
 azonban ez is elég, és az \cd{all_different} emellett gyorsabb futást biztosít,
 tehát néha érdemes használni~\cite{DBLP:conf/aaai/Regin94}. Ezen magyarázat után lássuk a program futását:
 
-\begin{minted}{prolog}
+\begin{verbatim}
 | ?- send(SEND, MORE, MONEY).
 MORE = 1085, SEND = 9567, MONEY = 10652 ? ;
 no
-\end{minted}
+\end{verbatim}
 
 Nézzük meg azt is, hogy mit adna ki a program, ha elhagynánk a címkézést:
 
-\begin{minted}{prolog}
+\begin{verbatim}
 | ?- List=[S,E,N,D,M,O,R,Y], domain(List, 0, 9),
      send(List, SEND, MORE, MONEY).
         List = [9,E,N,D,1,0,R,Y],
@@ -464,7 +464,7 @@ Nézzük meg azt is, hogy mit adna ki a program, ha elhagynánk a címkézést:
         MONEY in 10244..10888,
         E in 2..8, N in 2..8, D in 2..8,
         R in 2..8, Y in 2..8 ? ; no
-\end{minted}
+\end{verbatim}
 
 Amint látható, a rendszer helyből rájött arra, hogy mivel az eredmény öt
 számjegyből áll, a két összeadandó viszont csak négyből, ezért \cd{M}
@@ -497,14 +497,14 @@ megoldás, mivel sok választási pont esetén rengeteg időt igényelhet. A
 vagylagos szerkezetekről a \clpfd esettanulmányokban (\pageref{diszjunkcio}.
 oldal) még lesz szó. Adott esetben a
 
-\begin{minted}{prolog}
+\begin{verbatim}
 nextto(A,B):- abs(A-B) #= 1.
-\end{minted}
+\end{verbatim}
 
 megoldás sokkal szerencsésebb lenne, mivel ez nem generál választási
 pontokat.
 
-\begin{minted}{prolog}
+\begin{verbatim}
 :- use_module(library(lists)).
 :- use_module(library(clpfd)).
 
@@ -533,7 +533,7 @@ zebra(ZOwner, All):-
 
 nextto(A, B) :-  A #= B+1.
 nextto(A, B) :-  A #= B-1.
-\end{minted}
+\end{verbatim}
 
 \subsection{N királynő a sakktáblán}
 
@@ -553,7 +553,7 @@ A címkézési módokról később lesz szó.
 
 \label{no:threat}
 
-\begin{minted}{prolog}
+\begin{verbatim}
 :- use_module(library(clpfd)).
 
 % A Qs lista N királynő biztonságos elhelyezését
@@ -584,7 +584,7 @@ no_attack([X|Xs], Y, I):-
 % királynők nem támadják egymást.
 no_threat(X, Y, I) :-
   Y #= X, Y #= X-I, Y #= X+I.
-\end{minted}
+\end{verbatim}
 
 
 
@@ -666,13 +666,13 @@ a már bemutatott \cd{all_different $\longleftrightarrow$ all_distinct} problém
 kihasználjuk, hogy az \cd{all_different} ekvivalens a páronkénti különbözőségek
 felvételével:
 
-\begin{minted}{prolog}
+\begin{verbatim}
 | ?- domain([X,Y,Z], 1, 2), X #\= Y, Y #\= Z, Z #\= X.
 X in 1..2, Y in 1..2, Z in 1..2 ? ;
 no
 | ?- domain([X,Y,Z], 1, 2), all_distinct([X,Y,Z]).
 no
-\end{minted}
+\end{verbatim}
 
 A SICStusban a halmazkorlátok (triviálisan) tartományszűkítők. A
 \emph{lineáris} aritmetikai korlátok legalább intervallum-szűkítők,
@@ -683,35 +683,35 @@ ilyenkor is szűkítenek. A később tárgyalt korlátokra egyenként megadjuk m
 a szűkítési szinteket.
 \br
 Néhány példa a szűkítési szintekre:
-\begin{minted}{prolog}
+\begin{verbatim}
 | ?- X in {4,9}, Y in {2,3}, Z #= X-Y. % intervallum-szűkítő
 X in {4}\/{9}, Y in 2..3, Z in 1..7 ?
-\end{minted}
-\begin{minted}{prolog}
+\end{verbatim}
+\begin{verbatim}
 | ?- X in {4,9}, Y in {2,3}, plus(Y, Z, X).
     % plus(A, B, C): A+B=C tartományszűkítő módon
 X in {4}\/{9}, Y in 2..3, Z in(1..2)\/(6..7) ?
-\end{minted}
-\begin{minted}{prolog}
+\end{verbatim}
+\begin{verbatim}
 | ?- X in {4,9}, Y in {2}, /* azaz Y=2 */, Z #= X-Y. % tartományszűkítő
 Y = 2, X in {4}\/{9}, Z in {2}\/{7} ?
-\end{minted}
-\begin{minted}{prolog}
+\end{verbatim}
+\begin{verbatim}
 | ?- X in {4,9}, Z #= X-Y, Y=2.
     % így csak intervallum-szűkítő!
     % vö. fordítási idejű korlát-kifejtés
 Y = 2, X in {4}\/{9}, Z in 2..7 ?
-\end{minted}
-\begin{minted}{prolog}
+\end{verbatim}
+\begin{verbatim}
 | ?-domain([X,Y], -10, 10), X*X+2*X+1 #= Y.
     % Ez nem intervallum-szűkítő, Y<0 nem lehet!
 X in -4..4, Y in -7..10 ?
-\end{minted}
-\begin{minted}{prolog}
+\end{verbatim}
+\begin{verbatim}
 | ?- domain([X,Y], -10, 10), (X+1)*(X+1) #= Y.
     % garantáltan nem, de intervallum-szűkítő:
 X in -4..2, Y in 0..9 ?
-\end{minted}
+\end{verbatim}
 
 
 
@@ -770,13 +770,13 @@ egyébként elalszik
 \item {\bf A szűkítés módja}: páros gráfokban maximális párosítást kereső
 algoritmus segítségével minden olyan értéket elhagy, amelyek esetén a korlát nem
 állhat fenn. Példa:
-\begin{minted}{prolog}
+\begin{verbatim}
 | ?- A in 2..3, B in 2..3, C in 1..3,
      all_distinct([A,B,C]).
-\end{minted}
-\begin{minted}{prolog}
+\end{verbatim}
+\begin{verbatim}
                  C = 1, A in 2..3, B in 2..3 ?
-\end{minted}
+\end{verbatim}
 \item {\bf A folytatás menete}: ha már csak egy nem-konstans argumentuma van,
 akkor lefut, különben újra elalszik. Látszólag jobb döntésnek tűnhet, ha a korlát
 akkor futna le, amikor a tartományok már mind diszjunktak, de a SICStus nem így
@@ -799,13 +799,13 @@ szűkítést, ezért előfordulhat, hogy ugyanazon változókra megfogalmazott, 
 megegyező, de különböző szintaktikájú korlátok nem azonos mértékben szűkítenek,
 mint ahogy azt a következő példa is mutatja:
 
-\begin{minted}{prolog}
+\begin{verbatim}
 | ?- domain([X,Y], 0, 100), X+Y #=10, X-Y #=2.
                 X in 2..10, Y in 0..8 ?
 
 | ?- domain([X,Y], 0, 100), X+Y #=10, X+2*Y #=14.
                 X = 6, Y = 4 ?
-\end{minted}
+\end{verbatim}
 
 Az alsó és a felső példának ugyanaz a megoldása, az első esetben az \cd{X-Y \#= 2}
 korlát intervallum-szűkítő, és az intervallum-szűkítés a már fennálló \cd{X in 2..10}
@@ -971,7 +971,7 @@ outof(X, [Y|Ys]) :- X #\bs= Y, outof(X, Ys).
 
 Példafutás (csak a \cd{pontosan/3} hívások érdekelnek minket):
 
-\begin{minted}{prolog}
+\begin{verbatim}
 | ?- spy pontosan/3, magikus(4, L).
  +      1      1 Call: pontosan(0,[_A,_B,_C,_D],_A) ? s
 ?+      1      1 Exit: pontosan(0,[1,0,_C,_D],1) ? z
@@ -986,7 +986,7 @@ Példafutás (csak a \cd{pontosan/3} hívások érdekelnek minket):
 ?+      1      1 Exit: pontosan(0,[3,0,0,0],3) ? z
 (...)
 ?+      1      1 Exit: pontosan(0,[2,0,_D,0],2) ?
-\end{minted}
+\end{verbatim}
 
 \subsection{Redundáns korlátok bevezetése}
 
@@ -1036,7 +1036,7 @@ A tükrözés mechanizmusának felhasználásával egy elegáns, ráadásul hat�
 megfogalmazást is adhatunk a \cd{pontosan/3} eljárásra, és ezzel az egész
 feladatra:
 
-\begin{minted}{prolog}
+\begin{verbatim}
 magikus3(N, L) :-
         length(L, N),
         N1 is N-1, domain(L, 0, N1),
@@ -1055,7 +1055,7 @@ elofordulasok3([E|Ek], I, Sor) :-
 pontosan3(_, [], 0).
 pontosan3(I, [X|L], N) :-
         X #= I #<=> B, N #= N1+B, pontosan3(I, L, N1).
-\end{minted}
+\end{verbatim}
 
 A megoldás lényege, hogy a \cd{pontosan3/3} eljárásban az \cd{L} lista
 minden \cd{X} elemére felveszünk egy \cd{X \#= I} korlátot, és ennek igazságértékét
@@ -1143,7 +1143,7 @@ lovag $\to$ \cd{1}, lókötő $\to$ \cd{0} (ez azért jó, mert így minden lova
 állítása az 1-es igazságértékbe, és minden lókötő állítása a 0-s igazságértékbe
 tükrözhető, ami megegyezik a hozzájuk rendelt azonosítóval).
 
-\begin{minted}{prolog}
+\begin{verbatim}
 :- use_module(library(clpfd)).
 
 % Bevezetünk néhány operátort az állítások egyszerűbb leírására.
@@ -1171,7 +1171,7 @@ B mondja Áll :- értéke(B mondja Áll, 1).
      labeling([], [A,B,C]).
 A = 0, B = 2, C = 1 ? ;
 no
-\end{minted}
+\end{verbatim}
 
 \section{További globális aritmetikai korlátok}
 
@@ -1204,7 +1204,7 @@ biztosít.
 A \ref{sendmoremoney}. fejezetben ismertetett kódaritmetika példa egyszerűbb megoldása
 \cd{scalar_product/4} segítségével:
 
-\begin{minted}{prolog}
+\begin{verbatim}
 send(List, SEND, MORE, MONEY) :-
         List= [S,E,N,D,M,O,R,Y],
         Pow10 = [1000,100,10,1],
@@ -1217,7 +1217,7 @@ send(List, SEND, MORE, MONEY) :-
                        #=, MONEY),
         %   MONEY #= 10000*M+1000*O+100*N+10*E+Y,
         SEND+MORE #= MONEY.
-\end{minted}
+\end{verbatim}
 
 \section{A formulakorlátok belső megvalósítása}
 \label{korlatkif}
@@ -1261,16 +1261,16 @@ Lineáris korlátok esetén a kifejtés megőrzi a pont-, illetve az
 intervallum-szűkítést, általános esetben azonban még a pont-szűkítést
 sem őrzi meg, pl:
 
-\begin{minted}{prolog}
+\begin{verbatim}
 | ?- X in 0..10, X*X*X*X #= 16.
 X in 1..4 ? ;
 no
-\end{minted}
+\end{verbatim}
 
 A korlátkifejtés mechanizmusát a \cd{goal_expansion/4} segédeljárás
 hívásával magunk is megvizsgálhatjuk:
 
-\begin{minted}{prolog}
+\begin{verbatim}
 | ?- use_module(library(clpfd)).
 | ?- goal_expansion(X*X+2*X+1 #= Y, user, G).
         G = clpfd:('x*x=y'(X,_A),
@@ -1297,7 +1297,7 @@ hívásával magunk is megvizsgálhatjuk:
 
 | ?- goal_expansion(X in {1,2,5}, user, G).
         G = clpfd:prune_and_propagate(X,[[1|2],[5|5]]) ?
-\end{minted}
+\end{verbatim}
 
 \section{Segédeljárások a \Clpfd -ben}
 
@@ -1382,14 +1382,14 @@ száma.
 
 Néhány példa a fentiek használatával:
 
-\begin{minted}{prolog}
+\begin{verbatim}
 | ?- X in (1..5)\/{9}, fd_min(X, Min), fd_max(X, Max), fd_size(X, Size).
 Min = 1, Max = 9, Size = 6, X in(1..5)\/{9} ?
 | ?- X in (1..9)/\ \(6..8), fd_dom(X, Dom), fd_set(X, Set).
 Dom = (1..5)\/{9}, Set = [[1|5],[9|9]], X in ... ?
 | ?- queens_nolab(8, [X|_]), fd_degree(X, Deg).
 Deg = 21, X in 1..8 ?         % mivel 21 = 7*3
-\end{minted}
+\end{verbatim}
 
 A pár sorral előbb említett \emph{FD-halmaz}ok a \clpfd könyvtárban a
 tartományok belső ábrázolási formáját jelentik. Jelenleg egy FD-halmaz
@@ -1415,13 +1415,13 @@ intervallum elemeit tartalmazza
 \cd{Min..Max} kezdő intervallumból és egy \cd{Rest} maradék FD-halmazból, ahol
 \cd{Rest} minden eleme nagyobb \cd{Max+1}-nél. Egyaránt használható
 FD-halmaz szétszedésére és építésére.
-\begin{minted}{prolog}
+\begin{verbatim}
 | ?- X in (1..9) /\ \(6..8), fd_set(X, _S),
      fdset_parts(_S, Min1, Max1, _).
          Min1 = 1,
          Max1 = 5,
          X in(1..5)\/{9} ?
-\end{minted}
+\end{verbatim}
 \item \cd{fdset\_union(Set1, Set2, Union)}: \cd{Set1} és \cd{Set2}
 uniója \cd{Union},
 \cd{fdset\_union(ListOfSets, Union)}: a \cd{ListOfSets} FD halmazokból
@@ -1644,7 +1644,7 @@ Ezután mindenképpen folytatjuk az {\bf a.} pontnál.
 
 Lássunk egy példát az \fdbg nyomkövető könyvtár (\ref{fdbg}. fejezet) használatával!
 \br
-\begin{minted}{prolog}
+\begin{verbatim}
 | ?- fdbg_assign_name(X, x), fdbg_assign_name(Y, y),
      X in 1..3, Y in 1..2, X #>= Y, fdbg_on,
      labeling([min], [X,Y]).
@@ -1672,7 +1672,7 @@ Labeling [1, <x>]: step: <x> >= 2
         Labeling [12, <x>]: failed.
     Labeling [6, <y>]: failed.
 Labeling [1, <x>]: failed.
-\end{minted}
+\end{verbatim}
 
 A keresési fa:
 
@@ -1682,11 +1682,11 @@ A keresési fa:
 
 Egy másik példa, ezúttal szélsőérték-számításra:
 
-\begin{minted}{prolog}
+\begin{verbatim}
 | ?- _L=[X,Y,Z], domain(_L, 0, 1), V#=Y+Z-X, labeling([minimize(V)], _L).
 V = -1, X = 1, Y = 0, Z = 0 ? ;
 no
-\end{minted}
+\end{verbatim}
 
 A keresési fa (branch-and-bound algoritmussal):
 
@@ -1756,7 +1756,7 @@ a három argumentumot a rendszer fűzi \cd{Sel} argumentumainak végére, így a
 kiválasztást valósít meg, ahol a felhasználó szabályozhatja, hogy hányadik változót
 válasszuk ki a változó-listából.
 
-\begin{minted}{prolog}
+\begin{verbatim}
 % A Vars-beli változók között Sel a Hol-adik, ha a lista teljes hosszát
 % 1-nek vesszük (Hol így egy törtszám). Rest a maradék.
 valaszt(Hol, Vars, Sel, Rest) :-
@@ -1768,7 +1768,7 @@ valaszt(Hol, Vars, Sel, Rest) :-
 szur([], []).
 szur([V|Vk], Szk) :- nonvar(V), !, szur(Vk, Szk).
 szur([V|Vk], [V|Szk]) :- szur(Vk, Szk).
-\end{minted}
+\end{verbatim}
 
 \label{value:enum}
 Lehetőség van a kiválasztott változó tartományának szűkülését is befolyásolni. Ehhez a
@@ -1784,7 +1784,7 @@ kiszolgálására. \cd{Enum} egy meghívható kifejezés, a 4 paramétert a rend
 argumentumlistájának végére. Példaként tekintsünk egy olyan címkéző eljárást, amely
 az értékeket az értéklistában belülről kifelé haladva sorolja fel:
 
-\begin{minted}{prolog}
+\begin{verbatim}
 midout(X, _Rest, BB0, BB) :-
         fd_size(X, Size),
         Mid is (Size+1)//2,
@@ -1802,7 +1802,7 @@ X = 3 ? ;
 X = 19 ? ;
 X = 1 ? ;
 X = 120 ? ; no
-\end{minted}
+\end{verbatim}
 
 Végül, a címkézés testreszabásának fontosságát bizonyítandó, nézzük meg az N királynő
 feladat megoldását különféle címkéző módszerekkel (600 MHz-es Pentium III gépen):
@@ -1924,11 +1924,11 @@ korábban ébreszteni, mert ez a szűkítést nem befolyásolja.
 
 A különböző ébresztési és szűkítési módok bemutatásához nézzük az alábbi predikátumot:
 
-\begin{minted}{prolog}
+\begin{verbatim}
 pelda(Z, I, On, C) :-
      L = [X,Y,Z], domain(L, 1, 3),
      all_different(L, [on(On),consistency(C)]), X #\= I, Y #\= I.
-\end{minted}
+\end{verbatim}
 
 \begin{tabular}{ll}
 \verb'| ?- pelda(Z, 3, dom, local).'    & $\rightarrow$ \verb'  Z in 1..3 '  \\
@@ -1955,7 +1955,7 @@ biztosít.
 
 Példák:
 
-\begin{minted}{prolog}
+\begin{verbatim}
 | ?- element(X, [0,1,2,3,4], Y), X in {2,5}.  % ekvivalens Y #= X-1-gyel
 X in {2}\/{5}, Y in 1..4 ?                    % intervallum-konzisztens
 | ?- element(X, [0,1,2,3,4], Y), Y in {1,4}.
@@ -1966,7 +1966,7 @@ X in {2}\/{5}, Y in {1}\/{4} ?                % tartomány-konzisztens
 beq(X, C, B) :-
         X in 1..6, call(I #= X+6-C),
         element(I, [0,0,0,0,0,1,0,0,0,0,0], B).
-\end{minted}
+\end{verbatim}
 
 \medskip
 {\bcd{relation(X, Rel, Y)}}
@@ -1978,7 +1978,7 @@ ahol \cd{Y} eleme a \cd{Tart}-nak, azaz: \[ \cd{relation(X,H,Y)} \equiv \tuple{\
 \in \{\tuple{x,y}|x-\cd{T} \in \cd{H}, y \in \cd{T}\}\] Tetszőleges bináris reláció
 definiálására használható, tartomány-szűkítést biztosít. Példa:
 
-\begin{minted}{prolog}
+\begin{verbatim}
 'abs(x-y)>1'(X,Y) :-
         relation(X, [0-(2..5), 1-(3..5), 2-{0,4,5},
                      3-{0,1,5}, 4-(0..2), 5-(0..3)], Y).
@@ -1986,7 +1986,7 @@ definiálására használható, tartomány-szűkítést biztosít. Példa:
 | ?- 'abs(x-y)>1'(X,Y), X in 2..3.
 Y in (0..1) \/ (4..5) ? ;
 no
-\end{minted}
+\end{verbatim}
 
 \medskip
 {\bcd{case(Template, Tuples, DAG{\em [}, Options{\em ]})}}
@@ -2018,7 +2018,7 @@ tartományon:
 
 Ennek megvalósítása a \cd{case/3} korláttal:
 
-\begin{minted}{prolog}
+\begin{verbatim}
 felemasok(X, Y, Z) :-
    case(f(A,B,C), [f(X,Y,Z)],
         [node([], A, [(0..1)-x0,(2..3)-x1,(4..5)-x2]),
@@ -2027,17 +2027,17 @@ felemasok(X, Y, Z) :-
          node(x2, B, [(0..1)-x02,(2..3)-x12]),
          node(x01,C,[4..5]), node(x02,C,[2..3]), node(x12,C,[0..1])
         ]).
-\end{minted}
+\end{verbatim}
 
 Példa többszörös mintára: \cd{case(T,[A$_1$,$\ldots$],D)$\equiv$case(T,[A$_1$],D),$\ldots$}
 
-\begin{minted}{prolog}
+\begin{verbatim}
 felemasok_vacak(X, Y, Z) :-
     case(A\=B, [X\=Y,X\=Z,Y\=Z],
      [node(root, A, [(0..1)-0,(2..3)-1,(4..5)-2]),
       node(0,B,[2..5]),node(1,B,[0..1,4..5]),node(2, B, [0..3])
      ], [on(val(X)),on(val(Y)),on(val(Y))/*,prune(val(X)), ...*/]).
-\end{minted}
+\end{verbatim}
 
 \subsection{Leképezések, gráfok}
 
@@ -2086,7 +2086,7 @@ megadja a Hamilton-kört és annak az ellenkező irányban vett bejárását is.
 
 Példák az \cd{assignment/2} és a \cd{circuit/2} használatára:
 
-\begin{minted}{prolog}
+\begin{verbatim}
 | ?- length(L, 3), domain(L, 1, 3), assignment(L, LInv), L=[2|_],
      labeling([], L).
 L = [2,1,3], LInv = [2,1,3] ? ;
@@ -2095,7 +2095,7 @@ no
 | ?- length(L, 3), domain(L, 1, 3), circuit(L, LInv), L=[2|_].
 L = [2,3,1], LInv = [3,1,2] ? ;
 no
-\end{minted}
+\end{verbatim}
 
 Kicsit ,,életszagúbb'' példa:
 
@@ -2112,12 +2112,12 @@ egyszer haladunk át, és $n$-t tartalmazó celláról csak $n+1$-et tartalmazó
 léphetünk (kivéve $n=4$ esetben, innen csak 1-est tartalmazóra). \\
 \end{tabular}
 
-\begin{minted}{prolog}
+\begin{verbatim}
 | ?- L=[_1,_2,_3,_4,_5,_6,_7,_8,1], _1=2, _2 in {4,6}, _3=6,
      _4 in {7,8}, _5 in {2,3}, _6=8, _7=5, _8 in {5,9},
      circuit(L).
 L = [2,4,6,7,3,8,5,9,1] ? ; no
-\end{minted}
+\end{verbatim}
 
 Az eredmény-listában minden elem megadja, hogy az elemnek megfelelő cella után
 melyik cella következik a körben (a cellákat fentről lefelé és balról jobbra
@@ -2125,7 +2125,7 @@ számoztuk be 1-től 9-ig).
 \br
 A \cd{circuit/1} felhasználható az utazó ügynök probléma megoldására is:
 
-\begin{minted}{prolog}
+\begin{verbatim}
 :- module(tsp, [tsp/3]).
 :- use_module(library(clpfd)).
 :- use_module(library(lists), [append/3]).
@@ -2157,7 +2157,7 @@ tsp(Lab, Successor, Cost) :-
 
 | ?- tsp([ff], Succs, Cost).
 Cost = 2276, Succs = [2,4,5,6,7,3,1] ?
-\end{minted}
+\end{verbatim}
 
 \subsection{Ütemezési korlátok}
 
@@ -2235,24 +2235,24 @@ eltelt időnek alsó és felső korlátja is van.
           Ha \cd{Boolean} \cd{true}, akkor, ha bizonyos feladatok sorrendje
           ismert, akkor ennek megfelelően megszorítja azok kezdő
           időpontjait. Alapértelmezésben ki van kapcsolva. Például:
-\begin{minted}{prolog}
+\begin{verbatim}
 | ?- _S = [S1,S2,S3],  domain(_S, 0, 9), (SS = false ; SS = true),
      serialized(_S, [5,2,7], [static_sets(SS),
                               precedences([d(3,1,sup), d(3,2,sup)])]).
 SS=false, S1 in 0..4, S2 in(0..2)\/(5..7), S3 in 5..9 ? ;
 SS=true,  S1 in 0..4, S2 in(0..2)\/(5..7), S3 in 7..9 ? ;
 no
-\end{minted}
+\end{verbatim}
 
 \item \cd{edge\_finder(Boolean)}
           Ha \cd{Boolean} \cd{true}, akkor megpróbálja kikövetkeztetni az egyes
           feladatok sorrendjét. Alapértelmezésben ki van kapcsolva. Példa:
-\begin{minted}{prolog}
+\begin{verbatim}
 | ?- _S = [S1,S2,S3], domain(_S, 0, 9),
       serialized(_S, [8,2,2], [edge_finder(true)]).
 S1 in 4..9, S2 in 0..7, S3 in 0..7 ? ;
 no
-\end{minted}
+\end{verbatim}
 
 \item \cd{bounds_only(Boolean)}
           Ha \cd{Boolean} \cd{true}, akkor a korlát az $S_i$ változóknak
@@ -2283,7 +2283,7 @@ Egy megoldás              &0--16 &16--22 &9--22 &9--16 &4--9  &4--22 &0--4\\
 \end{tabular}
 \end{center}
 
-\begin{minted}{prolog}
+\begin{verbatim}
 % A fenti ütemezési feladatban a tevékenységek kezdőidőpontjait
 % az Ss lista tartalmazza, a legkorábbi végidőpont az End.
 schedule(Ss, End) :-
@@ -2300,7 +2300,7 @@ schedule(Ss, End) :-
 % tevékenységek mindegyikének befejezése után van.
 after([], [], _).
 after([S|Ss], [D|Ds], E) :- E #>= S+D, after(Ss, Ds, E).
-\end{minted}
+\end{verbatim}
 
 \begin{minipage}[c]{0.40\textwidth}
 \begin{alltt}
@@ -2357,7 +2357,7 @@ alapértelmezés: \cd{[first,est]}):
 
 Példa:
 
-\begin{minted}{prolog}
+\begin{verbatim}
 | ?- _S=[S1,S2,S3], domain(_S, 0, 9),
      serialized(_S, [5,2,7],
                 [precedences([d(3,1,sup), d(3,2,sup)]),
@@ -2365,7 +2365,7 @@ Példa:
 S1 in 0..2, S2 in 5..7, S3 in 7..9 ? ;
 S1 in 2..4, S2 in 0..2, S3 in 7..9 ? ;
 no
-\end{minted}
+\end{verbatim}
 
 Látható, hogy az \cd{order_resource/2} csak a lehetséges elrendezésekre vonatkozóan
 címkéz, de az egyes elrendezéseken belül a változók értékeit ,,függőben'' hagyja.
@@ -2390,12 +2390,12 @@ alapértelmezése \cd{false}):
           Ha \cd{Boolean} \cd{true}, akkor egy redundáns algoritmust használ a
           jobb szűkítés érdekében. Példa:
 
-\begin{minted}{prolog}
+\begin{verbatim}
 | ?- domain([S1,S2,S3], 0, 9), (G = false ; G = true),
      disjoint1([S1-8,S2-2,S3-2], [global(G)]).
        G = false, S1 in 0..9, S2 in 0..9, S3 in 0..9 ? ;
        G = true,  S1 in 4..9, S2 in 0..7, S3 in 0..7 ?
-\end{minted}
+\end{verbatim}
 
 \item \cd{wrap(Min,Max)}
           A szakaszok nem egy egyenesen, hanem egy körön helyezkednek el,
@@ -2456,11 +2456,11 @@ az $0 \leq x \leq 2, 0 \leq y \leq 1$ téglalapban legyen. A méretek ($x \times
 sorrendben): 1 $\times$ 3, 2 $\times$ 2, 3 $\times$ 3. Az 1 $\times$ 3-as téglalap
 $x$ koordinátája nem lehet 2.
 
-\begin{minted}{prolog}
+\begin{verbatim}
 | ?- domain([X1,X2,X3], 0, 2), domain([Y1,Y2,Y3], 0, 1), X1 #\= 2,
      disjoint2([r(X1,3,Y1,1),r(X2,2,Y2,2),r(X3,3,0,3)]).
 X1 in 0..1, Y1 = 0,   X2 = 0, Y2 = 1,   X3 = 2, Y3 = 1 ?
-\end{minted}
+\end{verbatim}
 
 \section{Felhasználói korlátok definiálása}
 
@@ -2563,7 +2563,7 @@ mutat (mivel az már betöltéskor le fog fordulni, és így gyorsabb lesz a fut
 \br
 Az alábbi példa az \cd{X \#=< Y} korlát megvalósítása globális korlátként:
 
-\begin{minted}{prolog}
+\begin{verbatim}
 :- multifile clpfd:dispatch_global/4.
 :- discontiguous clpfd:dispatch_global/4.   % nem folytonos eljárás
 
@@ -2585,7 +2585,7 @@ dispatch_lseq(X, Y, Actions) :-
         ->  Actions = [exit]
         ;   Actions = [X in inf..MaxY,Y in MinX..sup]
         ).
-\end{minted}
+\end{verbatim}
 
 A fenti korlát működése igen egyszerű. Először meghatározzuk \cd{X} és \cd{Y} tartományainak
 szélső határait a megfelelő változókba. Ezek után ha \cd{MaxX} és \cd{MinY} is szám
@@ -2627,7 +2627,7 @@ sign_min_max(1, 1, sup).
 
 A reifikáció megvalósítása globális korláttal:
 
-\begin{minted}{prolog}
+\begin{verbatim}
 % X #=< Y #<=> B, globális korlátként megvalósítva.
 lseq_reif(X, Y, B) :-
         B in 0..1, fd_global(lseq_reif(X,Y,B), void,
@@ -2644,7 +2644,7 @@ clpfd:dispatch_global(lseq_reif(X,Y, B), St, St, Actions) :-
         ;   B == 0 -> Actions = [exit, call(user:less(Y,X))]
         ;   Actions = []
         ).
-\end{minted}
+\end{verbatim}
 
 Ehhez hasonló trükkökkel természetesen tetszőleges globális korlátot átírhatunk
 olyan alakba, amely egy 0-1 értékű változóban tükrözi az igazságértékét, de
@@ -2724,11 +2724,11 @@ A in 1..2, B in 1..2, C in 2..3, N in 0..1 ?
 A SICStus 3.8.6-nál és a régebbi verzióknál a fenti megvalósítás kapcsán egy érdekes
 hibával találhatjuk magunkat szemközt:
 
-\begin{minted}{prolog}
+\begin{verbatim}
 | ?- L = [N,1], N in {0,2}, exactly(0, L, N).
 L = [0,1], N = 0 ? ;
 no
-\end{minted}
+\end{verbatim}
 
 Amint látható, a kapott megoldás hibás, hiszen a \cd{[0,1]} listában a \cd{0} elem
 nem 0-szor fordul elő, tehát az \cd{exactly(0, L, N)} korlát nem áll fenn. A probléma
@@ -2780,7 +2780,7 @@ tárból. Az FD klózok fejében az argumentumok kötelezően csak változók le
 és a törzsben is csak ezek a változók szerepelhetnek. Példaként tekintsük az
 \cd{X \#=< Y} korlát FD predikátum változatát:
 
-\begin{minted}{prolog}
+\begin{verbatim}
 'x=<y'(X,Y) +:                 % Az X =< Y korlát szűkítései.
         X in inf..max(Y),      % X szűkítendő az inf..max(Y),
         Y in min(X)..sup.      % Y a min(X)..sup intervallumra.
@@ -2796,7 +2796,7 @@ tárból. Az FD klózok fejében az argumentumok kötelezően csak változók le
 'x=<y'(X,Y) -?                 % Ha X tartománya része a
         X in (max(Y)+1)..sup.  % (max(Y)+1)..sup intervallumnak,
                                % akkor X > Y levezethető.
-\end{minted}
+\end{verbatim}
 
 A fenti példából már láthatjuk, hogy az összes indexikális \cd{{\em Változó} in {\em
 TKif}} alakú, ahol a \cd{{\em TKif}} tartománykifejezés tartalmazza a
@@ -2912,10 +2912,10 @@ f(X,Y) +: Y in 5 - dom(X).  {\em%} \(\{ \makebox[2em]{5-x} | \makebox[0.8em]{x}\
 
 A fenti korlát az \cd{Y \#= 5-X} relációt valósítja meg, tartományszűkítő módon:
 
-\begin{minted}{prolog}
+\begin{verbatim}
 | ?- X in {1, 3, 5}, f(X,Y).
 Y in{0}\/{2}\/{4} ?
-\end{minted}
+\end{verbatim}
 
 Itt a korlát belsejében az \cd{Y in 5 - dom(X)} hívás során minden $x \in$ \domx{X}-re
 végrehajtódik az $y = 5-x$ kivonás, majd ezeket az $y$-okat egy halmazba rakva kapjuk
@@ -3193,13 +3193,13 @@ különböznek (\cd{Range} egy tartománykifejezés). Jelöljük $K$-val \valx{T
 Ha \cd{MapList} tartalmaz egy $K-R$ párt, akkor a kapcsoló-kifejezés értéke
 $S(R,s)$ lesz, egyébként az üres halmaz lesz az értéke. Példa:
 
-\begin{minted}{prolog}
+\begin{verbatim}
 % Ha I páros, Z = X, egyébként Z = Y. Vár míg I értéket nem kap.
 p(I, X, Y, Z) +:   Z in switch(I mod 2, [0-dom(X),1-dom(Y)]).
 
 p2(I, X, Y, Z) +:  % ugyanaz mint p/4, de nem vár.
     Z in unionof(J, dom(I) mod 2, switch(J, [0-dom(X),1-dom(Y)])).
-\end{minted}
+\end{verbatim}
 
 Egy \cd{relation/3} kapcsolat megvalósítható egy \cd{unionof-switch} szerkezettel:
 
@@ -3214,11 +3214,11 @@ Példa: az \cd{Y in \{0,2,4\}} tárban \cd{absdiff1} első indexikálisának
 kiértékelése a következő (jelöljük \cd{MAPL}-lel a
 \cd{[0-\{1\},1-\{0,2\},2-\{1,3\},3-\{2\}]} listát):
 
-\begin{minted}{prolog}
+\begin{verbatim}
 X in unionof(B,{0,2,4},switch(B,MAPL)) =
      switch(0,MAPL) \/ switch(2,MAPL) \/ switch(4,MAPL) =
      {1}            \/ {1,3}          \/ {}             = {1,3}
-\end{minted}
+\end{verbatim}
 
 \label{felt:ind}
 \enumhead{Feltételes kifejezés: \cd{Felt ? Tart}}
@@ -3227,12 +3227,12 @@ X in unionof(B,{0,2,4},switch(B,MAPL)) =
 feltételes kifejezés értéke is üres halmaz, egyébként pedig azonos \setx{\cd{Tart}}
 értékével. Példák:
 
-\begin{minted}{prolog}
+\begin{verbatim}
 % X in 4..8 #<=> B.
 'x in 4..8<=>b'(X, B) +:
         B in (dom(X)/\(4..8)) ? {1} \/ (dom(X)/\ \(4..8)) ? {0},
         X in (dom(B)/\{1}) ? (4..8) \/ (dom(B)/\{0}) ? \(4..8).
-\end{minted}
+\end{verbatim}
 
 A feltételes kifejezés használatával már meg tudjuk fogalmazni az \cd{'x=<y=<z'/3}
 korlátunk helyes szűkítési feltételeit:
@@ -3259,25 +3259,25 @@ A feltételes kifejezés a kiértékelés késleltetésére is használható, ha
 szerkezetekben \cd{Tart} értékét a rendszer nem értékeli ki, amíg \cd{Felt} nem üres.
 Példa:
 
-\begin{minted}{prolog}
+\begin{verbatim}
 % Maximálisan szűkít, kicsit kevésbé lassú
 no_threat_4(X, Y, I) +:
     X in (4..card(Y))?(inf..sup) \/ unionof(B,dom(Y),\{B,B+I,B-I}), % (**)
     Y in (4..card(X))?(inf..sup) \/ unionof(B,dom(X),\{B,B+I,B-I}).
-\end{minted}
+\end{verbatim}
 
 Ez a \cd{no_threat/3} korlát egy olyan megvalósítása, amely csak abban az esetben
 használja az egyik változó esetében az \cd{unionof} szerkezetet, ha a másik változó
 halmazának számossága már 4-nél kisebb. A \cd{(**)} indexikális jobb oldalának
 kiértékelése (\cd{I = 1}):
 
-\begin{minted}{prolog}
+\begin{verbatim}
 Y in 5..8 ---> (4..4)?(inf..sup) \/ unionof(...) = inf..sup
 
 Y in 5..7 ---> (4..3)?(inf..sup) \/ unionof(B,5..7,\{B,B+1,B-1}) =
                 {}?(inf..sup) \/ unionof(B,5..7,\{B,B+1,B-1}) =
                 {} \/ \{5,6,4} \/ \{6,7,5} \/ \{7,8,6} = \{6}
-\end{minted}
+\end{verbatim}
 
 \subsection{Reifikálható FD predikátumok}
 
@@ -3292,7 +3292,7 @@ le a tárból. A kérdező klózban egy \cd{X in R} kérdező indexikális való
 \cd{dom(X)} $\subseteq$ \cd{R} feltételt fejezi ki, mint az FD predikátum (vagy
 negáltja) levezethetőségi feltételét. Például az \cd{X \#\bs= Y} korlát esetén:
 
-\begin{minted}{prolog}
+\begin{verbatim}
 'x\\=y'(X,Y) +:        % 1. a korlátot szűkítő indexikálisok
         X in \{Y},
         Y in \{X}.
@@ -3307,7 +3307,7 @@ negáltja) levezethetőségi feltételét. Például az \cd{X \#\bs= Y} korlát 
 'x\\=y'(X,Y) -?        % 4. a negált levezethetőségét kérdező
         X in {Y}.      % indexikális (itt felesleges, az okot
                        % lásd később)
-\end{minted}
+\end{verbatim}
 
 Egy \cd{X \#\bs= Y \#<=> B} reifikáció ezek után a következőképpen megy végbe: a
 3. klóz folyamatosan figyeli, hogy \cd{X} és \cd{Y} tartományai diszjunktak-e
