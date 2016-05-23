@@ -1,2 +1,2 @@
-compiler: pdflatex
+compiler: xelatex
 root_file: ndp.tex
