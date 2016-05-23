@@ -1,6 +1,6 @@
 % !TeX spellcheck = hu_HU
 % !TeX encoding = UTF-8
-% !TeX program = pdflatex -shell-escape %.tex
+% !TeX program = xelatex -shell-escape -8bit %.tex
 \documentclass[a4paper,11pt]{report}
 
 \usepackage{ifxetex}
@@ -13,7 +13,6 @@
 \fi
 
 \usepackage[magyar]{babel}
-%\usepackage{times}
 \usepackage{latexsym}
 \usepackage{prolog}
 \usepackage{alltt}
@@ -22,6 +21,8 @@
 \usepackage{hyperref}
 \usepackage[linewidth=1pt,leftmargin=1pt,skipabove=16pt,innertopmargin=7pt]{mdframed}
 \usepackage{minted}
+
+\graphicspath{ {./figures/} }
 
 \newcommand{\kieg}{\textsuperscript{$\ast$}}
 

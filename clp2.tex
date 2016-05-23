@@ -31,27 +31,27 @@ folytatódik, ha az első vagy a harmadik argumentum nem-változó értéket
 kap. Ha a futás végén maradtak felfüggesztett hívások, akkor azokat a Prolog
 rendszer kiírja. Lehetőség van vagylagos blokkolási feltétel megadására is:
 
-\begin{verbatim}
+\begin{minted}{prolog}
 :- block p(-, ?), p(?, -).
-\end{verbatim}
+\end{minted}
 
 Jelentése: a \cd{p} hívás csak akkor futhat le, ha az első \emph{és} a
 második argumentum is behelyettesítődik, tehát ha az első \emph{vagy} a
 második argumentum behelyettesítetlen, akkor a hívás felfüggesztődik.
 
 \pelda{biztonságos \cd{append/3} hívás megvalósítása}
-\begin{verbatim}
+\begin{minted}{prolog}
 :- block append(-, ?, -).
 % blokkol, ha az első és a harmadik argumentum 
 % egyaránt behelyettesítetlen
 append([], L, L).
 append([X|L1], L2, [X|L3]) :-
     append(L1, L2, L3).
-\end{verbatim}
+\end{minted}
 
 \pelda{többirányú összeadás}
 \label{plusz3}
-\begin{verbatim}
+\begin{minted}{prolog}
 % X+Y=Z, ahol X, Y és Z természetes számok.
 % Bármelyik argumentum lehet behelyettesítetlen.
 plusz(X, Y, Z) :-
@@ -86,7 +86,7 @@ X = 4 ? ;
 no
 | ?- plusz(X, 1, Y), plusz(X, Y, 20).
 no
-\end{verbatim}
+\end{minted}
 
 \subsection{Blokkolás alkalmazása: végtelen választási pontok kiküszöbölése}
 \br
@@ -112,7 +112,7 @@ hogy logikus lenne, ha bármelyik argumentum lehetne a bemenő (a
 permutáció kölcsönös). A {\tt perm} eljárás
 blokk-deklarációval kiegészítve visszafelé is működik:
 
-\begin{verbatim}
+\begin{minted}{prolog}
 | ?- perm(L, [1,2]).
    1  1  Call: perm(_69,[1,2]) ? 
    -  -  Block: pick(_363,1,_368)
@@ -129,7 +129,7 @@ blokk-deklarációval kiegészítve visszafelé is működik:
    2  2  Exit: perm([2],[2]) ? 
    1  1  Exit: perm([1,2],[1,2]) ? 
 L = [1,2] ? 
-\end{verbatim}
+\end{minted}
 
 \subsection{Blokkolás alkalmazása: generál-és-ellenőriz típusú
 programok gyorsítása
@@ -198,11 +198,11 @@ felfüggesztés megvalósítására a \cd{when(Feltétel, Hívás)} eljárás ha
 Ez mindaddig felfüggeszti \cd{Hívás}t, amíg \cd{Feltétel} nem teljesül. A
 \cd{Feltétel} egy nagyon leegyszerűsített Prolog cél lehet, amely szintaxisa:
 
-\begin{verbatim}
+\begin{minted}{prolog}
     CONDITION ::=  nonvar(X) | ground(X) | ?=(X,Y) |
                    CONDITION, CONDITION |
                    CONDITION; CONDITION
-\end{verbatim}
+\end{minted}
 
 Ebben a fenti szintaxisban a \cd{nonvar(X)} jelentése: X nem változó. A
 \cd{ground(X)} feltétel azt várja el, hogy \cd{X} tömör legyen, azaz ne
@@ -211,9 +211,9 @@ tartalmazzon behelyettesítetlen változót. \cd{?=(X,Y)} jelentése:
 feltételek konjunkcióba, a pontosvesszővel elválasztottak diszjunkcióba
 kerülnek egymással. Egy egyszerű példa a \cd{when/2} használatára:
 
-\begin{verbatim}
+\begin{minted}{prolog}
 | ?- when( ((nonvar(X); ?=(X,Y)), ground(T)), process(X,Y,T)).
-\end{verbatim}
+\end{minted}
 
 A fenti példában a \cd{process(X,Y,T)} cél akkor fut le, ha \cd{T} nem
 tartalmaz behelyettesítetlen változót, és vagy \cd{X} nem változó, vagy
@@ -226,11 +226,11 @@ változó miatt felfüggesztett hívásokat, és azokat egyesíti \cd{Hívás}
 végrehajtás után felfüggesztve maradt eljárásokat pedig \cd{Maradék}ban adja
 vissza. Például:
 
-\begin{verbatim}
+\begin{minted}{prolog}
 | ?- call_residue((dif(X,f(Y)), X=f(Z)), Maradek).
 X = f(Z),
 Maradek = [[Y,Z]-(prolog:dif(f(Z),f(Y)))] ?
-\end{verbatim}
+\end{minted}
 
 Látható, hogy a \cd{Maradek} változó egyúttal feltünteti azt is, hogy melyik
 hívás melyik változók miatt maradt felfüggesztve.
@@ -243,12 +243,12 @@ korlát, mint a legtöbb programozási nyelvben. Például ha írtunk egy
 \cd{fakt/2} eljárást, amely minden $n$ egész számra kiszámítja $n!$-t, akkor
 semmi akadálya annak, hogy nagy $n$-ekre is lefuttassuk az eljárást:
 
-\begin{verbatim}
+\begin{minted}{prolog}
 | ?- fakt(100,F).
 F = 93326215443944152681699238856266700490715968264381
 621468592963895217599993229915608941463976156518286253
 697920827223758251185210916864000000000000000000000000 ? 
-\end{verbatim}
+\end{minted}
 
 \enumhead{Visszaléptethető módon változtatható kifejezések (mutábilisek)}
 
@@ -298,7 +298,7 @@ végrehajtja \cd{Kif}-et. Például:
       \cd{'\{\}'/1} struktúrát takarja
 }
 \enumhead{Példafutás}
-\begin{verbatim}
+\begin{minted}{prolog}
 | ?- {2*X+3*Y=8}.
 X = 1, Y = 2 ? ; 
 X = 4, Y = 0 ? ;
@@ -309,7 +309,7 @@ no
 X = 4, Y = 3 ? ; 
 X = 5, Y = 0 ? ;
 no
-\end{verbatim}
+\end{minted}
 
 \subsection{Számábrázolás}
 
@@ -332,7 +332,7 @@ az általunk megvalósítandó CLP(MiniNat)-ban, tehát \cd{0=0}, \cd{1=s(0)},
 Az előző fejezetben vázolt számábrázolási mód segítségével az összeadás
 és a kivonás megvalósítása:
 
-\begin{verbatim}
+\begin{minted}{prolog}
 % plusz(X, Y, Z): X+Y=Z (Peano számokkal).
 :- block plusz(-, ?, -).
 plusz(0, Y, Y).
@@ -350,7 +350,7 @@ plusz(s(X), Y, s(Z)) :-
 % X-Y=Z (Peano számokkal).
 -(X, Y, Z) :-
       +(Y, Z, X).
-\end{verbatim}
+\end{minted}
 
 A \cd{plusz/3} predikátum itt elvárja, hogy a két bemenő és egy kimenő
 paraméter közül vagy az első bemenő, vagy a kimenő behelyettesített legyen.
@@ -375,7 +375,7 @@ behelyettesítjük 1-et, 2-t, \ldots, $N$-et (ahol $N$ a szorzat), majd mindegyi
 lehetőséget ismételt összeadásra vezetjük vissza.
 \end{itemize}
 
-\begin{verbatim}
+\begin{minted}{prolog}
 % X*Y=Z. Blokkol, ha nincs tömör argumentuma.
 *(X, Y, Z) :-
         when( (ground(X);ground(Y);ground(Z)),
@@ -401,7 +401,7 @@ szor(0, _X, 0).
 szor(s(X), Y, Z) :-
         +(Z1, Y, Z),
         szor(X, Y, Z1).
-\end{verbatim}
+\end{minted}
 
 \subsection{Korlátok lefordítása célsorozatokra}
 
@@ -418,14 +418,14 @@ korlátokra: az \cd{X =< Y}-t az \cd{X+_=Y}, az \cd{X < Y}-t pedig az
 Először felveszünk egy eljárást, amely lehetővé teszi, hogy a korlátokat
 \cd{\{Korlát\}} alakú kifejezésekkel vehessük fel:
 
-\begin{verbatim}
+\begin{minted}{prolog}
 % {Korlat}: Korlat fennáll
 {Korlat} :- korlat_cel(Korlat, Cel), call(Cel).
-\end{verbatim}
+\end{minted}
 
 A korlátok fordításához három eljárásra lesz szükségünk:
 
-\begin{verbatim}
+\begin{minted}{prolog}
 % korlat_cel(Korlat, Cel): Korlat végrehajtható
 % alakja a Cel célsorozat.
 korlat_cel(Kif1=Kif2, (C1,C2)) :-
@@ -462,7 +462,7 @@ int_to_peano(0, 0).
 int_to_peano(N, s(P)) :- 
         N > 0, N1 is N-1,  
         int_to_peano(N1, P).
-\end{verbatim}
+\end{minted}
 
 Amint látható, egy \cd{Kif1} $Op$ \cd{Kif2} kifejezés lefordított alakja
 egy három részből álló célsorozat, amely egy \var{E} változóban állítja
@@ -492,7 +492,7 @@ eljárást a Peano-számok formázására, akkor ezzel el is értük az első
 bekezdésben felvázolt célt. Hasonló módon felvehetünk még egy \cd{portray}
 predikátumot a felfüggesztett célok kiírásának formázására is.
 
-\begin{verbatim}
+\begin{minted}{prolog}
 % Peano számok kiírásának formázása
 user:portray(Peano) :-
         peano_to_int(Peano, 0, N), write(N).
@@ -512,7 +512,7 @@ user:portray(user:Rel) :-
         (   Op = (+) ; Op = (-) ; Op = (*) ),
         Fun =.. [Op,A,B],
         print({Fun=C}).
-\end{verbatim}
+\end{minted}
 
 \subsection{Klózok fordítási időben történő átalakítása}
 
@@ -542,14 +542,14 @@ ilyen jellegű átalakítást. Ezeket a műveleteket a \cd{term_expansion/2} és
 A \cd{goal_expansion/2} használatával a korlátok fordítási idejű átalakítása
 a következőképpen írható le:
 
-\begin{verbatim}
+\begin{minted}{prolog}
 goal_expansion({Korlat}, _, Cel) :- korlat_cel(Korlat, Cel).
-\end{verbatim}
+\end{minted}
 
 Érdemes összehasonlítani egy egyszerű faktoriálisszámító CLP(MiniNat)
 program korlátokkal leírt és lefordított változatát:
 
-\begin{verbatim}
+\begin{minted}{prolog}
 :- block fact(-, -).          :- block fact(-, -).
 
 fact(N, F) :-                 fact(0, s(0)).
@@ -559,56 +559,56 @@ fact(N, F) :-                 fact(N, F) :-
                                   -(N, s(0), N1),
     fact(N1, F1),                 fact(N1, F1),
     {F = N*F1}.                   *(N, F1, F).
-\end{verbatim}
+\end{minted}
 
 Amint látható, a második példa már nem foglalkozik a számok Peano-alakra
 hozásával, azt nekünk kell külön elvégezni:
 
-\begin{verbatim}
+\begin{minted}{prolog}
 | ?- fact(N, 120).          --> no 
 | ?- {F=120}, fact(N, F).   --> F = 120, N = 5 ?
-\end{verbatim}
+\end{minted}
 
 \subsection{További problémák a CLP(MiniNat)-ban}
 
 Kis kísérletezés után könnyen rátalálhatunk a CLP(MiniNat) alábbi problémájára
 (amit a nulla szorzat problémájának nevezhetünk):
 
-\begin{verbatim}
+\begin{minted}{prolog}
 | ?- {X*X=0}.
 X = 0 ? ; X = 0 ? ; no
-\end{verbatim}
+\end{minted}
 
 A Prolog programokban a kétszeresen adódó megoldások általában nemkívánatosak.
 A probléma kiküszöböléséhez kicsit módosítanunk kell a \cd{szorzatuk_nulla/2}
 eljárásunkat:
 
-\begin{verbatim}
+\begin{minted}{prolog}
 % X*Y=0, ahol X és Y Peano számok.
 szorzatuk_nulla(X, Y) :-
         (   X = 0 
         ;   X \== Y, Y = 0 
         ).
-\end{verbatim}
+\end{minted}
 
 Amint az alábbi példák mutatják, ez a kezdeti problémánkat megoldja, de
 még mindig nem tökéletes, ugyanis ha X és Y egyesíthetősége a korlát hívása
 után dönthető csak el, akkor a kettőzött megoldás ugyanúgy előadódik:
 
-\begin{verbatim}
+\begin{minted}{prolog}
 | ?- {X*X=0}.
 X = 0 ? ; no
 
 | ?- {X*Y=0}, X=Y.
 X = 0, Y = 0 ? ;
 X = 0, Y = 0 ? ; no
-\end{verbatim}
+\end{minted}
 
 A végleges javításhoz fel kell használnunk a \cd{dif/2} eljárást, amely
 felfüggeszti a \cd{szorzatuk_nulla/2} eljárás második ágát addig, amíg
 az egyesíthetőség el nem dönthető:
 
-\begin{verbatim}
+\begin{minted}{prolog}
 % X*Y=0, ahol X és Y Peano számok.
 szorzatuk_nulla(X, Y) :-
         (   X = 0 
@@ -617,7 +617,7 @@ szorzatuk_nulla(X, Y) :-
 
 | ?- {X*Y=0}, X=Y.
 X = 0, Y = 0 ? ; no
-\end{verbatim}
+\end{minted}
 
 A másik problémát erőforrás problémának hívjuk. Ez a rekurzív \cd{fact/2}
 eljárás használata esetén adódik. Tekintsük például a \cd{fact(X,11)} hívást,
@@ -632,7 +632,7 @@ egyesítené az eredményt 1-gyel, 10! azonban Peano-szám formában nem
 a szorzat-feltétel felvételét még a rekurzív hívás elé kell tenni a \cd{fact/2}
 eljárás második klózában:
 
-\begin{verbatim}
+\begin{minted}{prolog}
 :- block fact(-,-).
 fact(N, F) :- {N = 0, F = 1}.
 fact(N, F) :-
@@ -640,7 +640,7 @@ fact(N, F) :-
         fact(N1, F1).
 
 | ?- fact(N, 24).    -------->   N = 4 ? ; no
-\end{verbatim}
+\end{minted}
 
 Általános szabályként megállapíthatjuk, hogy egy korlát-programban célszerű
 minél kevesebb választási pontot csinálni, és éppen ezért az összes korlátot
