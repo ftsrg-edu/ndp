@@ -42,8 +42,6 @@ második argumentum behelyettesítetlen, akkor a hívás felfüggesztődik.
 \pelda{biztonságos \cd{append/3} hívás megvalósítása}
 \begin{minted}{prolog}
 :- block append(-, ?, -).
-% blokkol, ha az első és a harmadik argumentum 
-% egyaránt behelyettesítetlen
 append([], L, L).
 append([X|L1], L2, [X|L3]) :-
     append(L1, L2, L3).
