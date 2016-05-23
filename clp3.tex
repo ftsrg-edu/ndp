@@ -18,10 +18,10 @@ használhatjuk (\cd{= =:= < > =< >= =\bs=}). Egyszerű korlátoknak a lineáris
 a Gauss-elimináción és a szimplex módszeren alapul. A könyvtárakat az alábbi
 parancsokkal vehetjük használatba:
 
-\begin{verbatim}
+\begin{minted}{prolog}
 :- use_module(library(clpq)).
 :- use_module(library(clpr)).
-\end{verbatim}
+\end{minted}
 
 A korlát-tárat a CLP(MiniNat)-hoz hasonlóan a \cd{\{Korlát\}} alakú
 kifejezésekkel bővíthetjük, ahol \cd{Korlát} egy változókból és egész vagy
@@ -39,27 +39,27 @@ könyvtár használatát.
 \br
 Először be kell töltenünk a \clpq könyvtárat, hogy használatba vehessük:
 
-\begin{verbatim}
+\begin{minted}{prolog}
 | ?- use_module(library(clpq)).
 { loading ../library/clpq.ql.. }
 .. .. ..
-\end{verbatim}
+\end{minted}
 
 Egyszerű korlátok felvétele (lineáris egyenletrendszer megoldása):
 
-\begin{verbatim}
+\begin{minted}{prolog}
 | ?- {X=Y+4, Y=Z-1, Z=2*X-9}.   
 X = 6, Y = 2, Z = 3 ?
-\end{verbatim}
+\end{minted}
 
 Ha a beadott korlátoknak még nincs egyértelmű megoldása, akkor a
 \clpq rendszer a fennálló relációkat (a korlát-tár állapotát)
 írja ki, mint például az alábbi lineáris egyenlőtlenségnél:
 
-\begin{verbatim}
+\begin{minted}{prolog}
 | ?- {X+Y+9<4*Z, 2*X=Y+2, 2*X+4*Z=36}.  
 {X<29/5}, {Y= -2+2*X}, {Z=9-1/2*X} ?    
-\end{verbatim}
+\end{minted}
 
 Mint már említettük, a \clpq rendszer csak lineáris korlátokat
 tud felvenni a korlát-tárba, előfordulhat azonban, hogy egy nemlineáris
@@ -68,7 +68,7 @@ megfelelője be tud kerülni a korlát-tárba. Az alábbi példa egy olyan esete
 mutat, amikor egy kifejezés két különböző, de ekvivalens alakját beadva az
 egyik a linearizálás miatt be tud kerülni a korlát-tárba, míg a másik nem:
 
-\begin{verbatim}
+\begin{minted}{prolog}
 | ?- {(Y+X)*(X+Y)/X = Y*Y/X+100}.       
 {X=100-2*Y} ?            % lineárissá válik
 
@@ -78,28 +78,28 @@ clpq:{2*(X*Y)-100*X+X^2=0} ?
                          % a clpq modul-prefix jelzi,
                          % hogy felfüggesztett összetett
                          % hívásról van szó
-\end{verbatim}
+\end{minted}
 
 Tisztán nemlineáris korlátok minden esetben a táron kívül maradnak, persze
 előfordulhat, hogy a nemlineáris korlát egy későbbi egyesítés vagy
 változóbehelyettesítés miatt lineárissá válik, mint ahogy az alábbi
 példa is mutatja:
 
-\begin{verbatim}
+\begin{minted}{prolog}
 | ?- {exp(X+Y+1,2) = 3*X*X+Y*Y}.        
                          % nem lineáris...
 clpq:{1+2*X+2*(Y*X)-2*X^2+2*Y=0} ? 
 
 | ?- {exp(X+Y+1,2) = 3*X*X+Y*Y}, X=Y.   
 X = -1/4, Y = -1/4 ?     % így már igen...
-\end{verbatim}
+\end{minted}
 
 Persze a nemlineáris korlátok is megoldhatóak:
 
-\begin{verbatim}
+\begin{minted}{prolog}
 | ?- {2 = exp(8, X)}.
 X = 1/3 ?
-\end{verbatim}
+\end{minted}
 
 \section{Összetett korlátok kezelése \Clpq-ban}
 
@@ -121,31 +121,31 @@ a további következtetésekhez.
 \br
 Lássunk egy további példát az összetett korlátokra vonatkozóan!
 
-\begin{verbatim}
+\begin{minted}{prolog}
 | ?- {X =< Y}, {X*(Y+1) > X*X+Z}, 
        (   Z = X*(Y-X), {Y < 0}
        ;   Y = X
        ).
                         Y = X,  {X-Z>0} ? ; no
-\end{verbatim}
+\end{minted}
 
 Nézzük meg, hogyan jött ki a fenti eredmény! A rendszer a fenti célsorozat
 futtatásakor választási pont létrehozása nélkül felveszi az első két korlátot
 a korlát-tárba, ezt az alábbi célsorozat futtatásával ellenőrizhetjük:
 
-\begin{verbatim}
+\begin{minted}{prolog}
 | ?- {X =< Y}, {X*(Y+1) > X*X+Z}.
                         {X-Y=<0}, clpq:{Z-X-Y*X+X^2<0} ?
-\end{verbatim}
+\end{minted}
 
 A sor végén jól látható a várakozó démon is. Ezek után egy választási pont
 következik, és az első ágon továbbhaladva felvesszük a \cd{Z}-re vonatkozó
 korlátot:
 
-\begin{verbatim}
+\begin{minted}{prolog}
 | ?- {X =< Y}, {X*(Y+1) > X*X+Z}, Z = X*(Y-X).
                         Z = X*(Y-X), {X-Y=<0}, {X>0} ? 
-\end{verbatim}
+\end{minted}
 
 Látható, hogy a démonunk felébredt, és egyszerű korláttá válva bekerült a
 korlát-tárba. Ha ezek után megérkezik az \cd{Y}-ra vonatkozó korlát, akkor
@@ -155,23 +155,23 @@ negatív, akkor \cd{X-Y} mindenképp pozitív, ami ellentmondásban van azzal
 a korláttal, hogy \cd{X-Y=<0}. Ezt a rendszer egy meghiúsulás formájában
 ,,éli át'':
 
-\begin{verbatim}
+\begin{minted}{prolog}
 | ?- {X =< Y}, {X*(Y+1) > X*X+Z}, Z = X*(Y-X), {Y < 0}.
                         no
-\end{verbatim}
+\end{minted}
 
 A meghiúsulás miatt a korlát-tár tartalma visszafejtődik egészen a választási
 pontnál fennálló helyzetig, ahonnan a másik ágon fut tovább, és ott meg is
 találjuk az egyetlen megoldást:
 
-\begin{verbatim}
+\begin{minted}{prolog}
 | ?- {X =< Y}, {X*(Y+1) > X*X+Z}, Y = X.
                         Y = X, {X-Z>0} ? 
-\end{verbatim}
+\end{minted}
 
 \section{Bonyolultabb \clpq példa: hiteltörlesztés}
 
-\begin{verbatim}
+\begin{minted}{prolog}
 % Hiteltörlesztés számítása: P összegű hitelt
 % Time hónapon át évi IntRate kamat mellett havi MP
 % részletekben törlesztve Bal a maradványösszeg.
@@ -182,7 +182,7 @@ mortgage(P, Time, IntRate, Bal, MP):-
      {Time > 1},
      mortgage(P*(1+IntRate/1200)-MP, 
               Time-1, IntRate, Bal, MP).
-\end{verbatim}
+\end{minted}
 
 A fenti \clpq példa további magyarázatot nem igényel, érdemes azonban
 megfigyelnünk, hogy a \clpq természetéből adódóan az eljárás hívásakor
@@ -190,7 +190,7 @@ nem kötelező úgy kitöltenünk a paramétereket, hogy azokból egyértelműen
 következzen a megoldás, ugyanis ha ez nem teljesül, akkor a \clpq
 kifejezi a hiányzó adatokat a megadottak függvényében:
 
-\begin{verbatim}
+\begin{minted}{prolog}
 | ?- mortgage(100000,180,12,0,MP).
                         % 100000 Ft hitelt 180        
                         % hónap alatt törleszt 12%-os 
@@ -211,7 +211,7 @@ Time = 147.3645 ?
 
 | ?- mortgage(P,180,12,Bal,MP), ordering([P,Bal,MP]).
 {P=0.1668*Bal+83.3217*MP} ? 
-\end{verbatim}
+\end{minted}
 
 Az \cd{ordering/1} predikátum egy listát vár paraméterként, és ezzel a
 listával megadhatjuk, hogy az eredményben milyen sorrendben szerepeljenek
@@ -229,30 +229,30 @@ jelenlegi tárból, meghiúsul, ha nem
 illetve szuprémumát, és egyesíti \cd{Inf}-fel, illetve \cd{Sup}-pal.
 Példa:
 
-\begin{verbatim}
+\begin{minted}{prolog}
 | ?- { 2*X+Y =< 16, X+2*Y =< 11, X+3*Y =< 15, Z = 30*X+50*Y }, sup(Z, Sup).
 Sup = 310, {....}
-\end{verbatim}
+\end{minted}
 
 \item \cd{minimize(Kif), maximize(Kif)} --- kiszámolja \cd{Kif} infimumát,
 illetve szuprémumát, és egyesíti \cd{Kif}-fel. Példa:
 
-\begin{verbatim}
+\begin{minted}{prolog}
 | ?- { 2*X+Y =< 16, X+2*Y =< 11, X+3*Y =< 15, Z = 30*X+50*Y }, maximize(Z).
 X = 7, Y = 2, Z = 310 ?
-\end{verbatim}
+\end{minted}
 
 \item \cd{bb_inf(Egészek, Kif, Inf)} --- kiszámolja \cd{Kif} infimumát,
 azzal a további feltétellel, hogy az \cd{Egészek} listában levő minden
 változó egész (ún. ,,Mixed Integer Optimisation Problem'').
 
-\begin{verbatim}
+\begin{minted}{prolog}
 | ?- {X >= 0.5, Y >= 0.5}, inf(X+Y, I).
 I = 1, {Y>=1/2}, {X>=1/2} ?
 
 | ?- {X >= 0.5, Y >= 0.5}, bb_inf([X,Y], X+Y, I).
 I = 2, {X>=1/2}, {Y>=1/2} ?
-\end{verbatim}
+\end{minted}
 
 \item \cd{ordering(V1 < V2)} --- A \cd{V1} változó előbb szerepeljen az
 eredmény-korlátban mint a \cd{V2} változó.
@@ -270,7 +270,7 @@ számokkal dolgozik, és ezeket a számokat egy \cd{rat(Számláló,Nevező)}
 alakú struktúrával ábrázolja, ahol a tört számlálója és nevezője mindig
 relatív prím. Ennek bizonyítására tekintsük az alábbi \clpq példákat:
 
-\begin{verbatim}
+\begin{minted}{prolog}
 | ?- {X=0.5}, X=0.5.
 no
 | ?- {X=0.5}, X=1/2.
@@ -283,7 +283,7 @@ X = 1/2 ?
 no
 | ?- {X=5}, X=rat(5,1).
 X = 5 ?
-\end{verbatim}
+\end{minted}
 
 \section{Egy nagyobb \clpq feladat: tökéletes téglalapok}
 
@@ -337,28 +337,28 @@ A fentiekhez még annyi kiegészítés szükséges, hogy a programban a
 négyzet függőleges oldalát mindig 1-nek választjuk, így csak a vízszintes
 oldal méretével kell variálni. A megoldáshoz használt predikátumok:
 
-\begin{verbatim}
+\begin{minted}{prolog}
 % Colmerauer A.: An Introduction to Prolog III, 
 % Communications of the ACM, 33(7), 69-90, 1990. 
-\end{verbatim}
-\begin{verbatim}
+\end{minted}
+\begin{minted}{prolog}
 % Rectangle 1 x Width is covered by distinct 
 % squares with sizes Ss.
 filled_rectangle(Width, Ss) :-
        { Width >= 1 }, distinct_squares(Ss),
        filled_hole([-1,Width,1], _, Ss, []).
-\end{verbatim}
-\begin{verbatim}
+\end{minted}
+\begin{minted}{prolog}
 % distinct_squares(Ss): All elements of Ss are distinct.
 distinct_squares([]).
 distinct_squares([S|Ss]) :-
        { S > 0 }, outof(Ss, S), distinct_squares(Ss).
-\end{verbatim}
-\begin{verbatim}
+\end{minted}
+\begin{minted}{prolog}
 outof([],     _).
 outof([S|Ss], S0) :- { S =\= S0 }, outof(Ss, S0).
-\end{verbatim}
-\begin{verbatim}
+\end{minted}
+\begin{minted}{prolog}
 % filled_hole(L0, L, Ss0, Ss): Hole in line L0
 % filled with squares Ss0-Ss (diff list) gives line L.
 % Def: h(L): sum of lengths of vertical segments in L.
@@ -370,8 +370,8 @@ filled_hole([V|HL], L, [S|Ss0], Ss) :-
        { V < 0 }, placed_square(S, HL, L1),
        filled_hole(L1, L2, Ss0, Ss1), { V1=V+S },
        filled_hole([V1,S|L2], L, Ss1, Ss).
-\end{verbatim}
-\begin{verbatim}
+\end{minted}
+\begin{minted}{prolog}
 % placed_square(S, HL, L): placing a square size S on
 % horizontal line HL gives (vertical) line L.
 % Pre: all elems in HL >=0
@@ -382,7 +382,7 @@ placed_square(S, [H,V,H1|L], L1) :-
 placed_square(S, [S,V|L], [X|L]) :- { X=V-S }.
 placed_square(S, [H|L], [X,Y|L]) :- 
        { S < H, X= -S, Y=H-S }.
-\end{verbatim}
+\end{minted}
 
 A program belépési pontja a \cd{filled_rectangle/2} predikátum, amely
 a \cd{Width} paraméterében fogja megadni a téglalap szélességét, \cd{Ss}-ben
@@ -399,7 +399,7 @@ mégpedig azt, hogy ilyen esetben a határoló vonal milyen szabályok szerint
 változik.
 \br
 Lássunk egy példafuttatást:
-\begin{verbatim}
+\begin{minted}{prolog}
 % 600 MHz Pentium III
 | ?-    length(Ss, N), N > 1, statistics(runtime, _),
         filled_rectangle(Width, Ss), 
@@ -413,7 +413,7 @@ Ss = [33/61,36/61,28/61,5/61,2/61,9/61,25/61,7/61,16/61] ? ;
 
 N = 9, MSec = 10930, Width = 33/32,
 Ss = [9/16,15/32,7/32,1/4,7/16,1/8,5/16,1/32,9/32] ? 
-\end{verbatim}
+\end{minted}
 Amint látható, 9-nél kevesebb négyzettel nem lehet lefedni a téglalapot,
 9-re viszont máris három megoldást talált a program, ebből az első és
 a harmadik csak a négyzetek elhelyezésében különbözik.
@@ -424,7 +424,7 @@ korlátokat generál a program! Kommentként közöljük az adott ágon generál
 korlátokat és lefedést, a rendundáns korlátok elhagyásával. A
 \cd{filled_rectangle/3} \cd{[eqsq]} paramétere jelzi, hogy most megengedünk
 azonos méretű négyzeteket.
-\begin{verbatim}
+\begin{minted}{prolog}
 | ?- filled_rectangle(W, [S1,S2,S3], [eqsq]).
 
 S1 = 1/2, S2 = 1, S3 = 1/2, W = 3/2 ? ;    % 3 3 2 2 2 2
@@ -441,5 +441,5 @@ S1 = 1, S2 = 1, S3 = 1, W = 3 ? ; no
 
 % {W=S1+S2+S3}, {S3=<1}, {S3>=S2},         % 1 1 2 2 3 3 
 % {S2>=S1}, {S1>=1}.                       % 1 1 2 2 3 3 
-\end{verbatim}
+\end{minted}
 
