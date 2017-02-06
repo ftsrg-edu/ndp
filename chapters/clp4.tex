@@ -4,9 +4,9 @@
 
 A következő fejezetben a SICStus \clpb könyvtárával fogunk foglalkozni.
 A \clpb könyvtárat az alábbi módon lehet használatba venni:
-\begin{verbatim}
+\begin{prologcode}
 :- use_module(library(clpb)).
-\end{verbatim}
+\end{prologcode}
 
 \section{A \clpb könyvtár általános jellemzése}
 
@@ -58,7 +58,7 @@ elemét 1-re vagy 0-ra úgy, hogy a korlát-tár teljesüljön. Visszalépésre 
 
 \section{Példafutások a \clpb könyvtár segítségével}
 
-\begin{verbatim}
+\begin{prolog}
 | ?- sat(X + Y).
 sat(X=\=_A*Y#Y) ? 
 
@@ -79,7 +79,7 @@ no
 
 | ?- sat(A =< B), sat(B =< C), taut(A =< C, T).
 T = 1, sat(A=:=_A*_B*C), sat(B=:=_B*C) ? 
-\end{verbatim}
+\end{prolog}
 
 Látható, hogy a \clpb a korlát-tár tartalmát \cd{sat(Kifejezés)} alakú
 struktúrák konjunkciójaként jeleníti meg, ahol \cd{Kifejezés} mindig egy
@@ -102,14 +102,14 @@ sat(X=:=_A*y) ? ; no
 Nézzünk most egy picit komplikáltabb \clpb példát, amely egy egy bites
 összeadó áramkör működését próbálja modellezni \clpb korlátok segítségével:
 
-\begin{verbatim}
+\begin{prologcode}
 | ?- [user].
 | adder(X, Y, Sum, Cin, Cout) :-
      sat(Sum =:= card([1,3],[X,Y,Cin])),
      sat(Cout =:= card([2-3],[X,Y,Cin])).
 | {user consulted, 40 msec 576 bytes}
 yes
-\end{verbatim}
+\end{prologcode}
 
 Az összeadó működése a \cd{card/2} segítségével nagyon egyszerűen leírható:
 az összeg értéke akkor 1, ha az \cd{[X,Y,Cin]} listában (\cd{Cin} a carry in,
@@ -118,11 +118,11 @@ tehát a bemenő átvitel rövidítése) 1 vagy 3 db egyes van, \cd{Cout}
 két db egyes van. Nézzük meg, hogy ezeket a korlátokat milyen formában tárolja
 a \clpb rendszer!
 
-\begin{verbatim}
+\begin{prologcode}
 | ?- adder(x, y, Sum, cin, Cout).
 sat(Sum=:=cin#x#y),
 sat(Cout=:=x*cin#x*y#y*cin) ?
-\end{verbatim}
+\end{prologcode}
 
 Látható, hogy a \cd{card/2} itt is konjunkciók kizáró vagy kapcsolatára
 vezetődött vissza. Mivel csak a \cd{Sum} és \cd{Cout} változók viselkedésére
@@ -130,22 +130,22 @@ voltunk kíváncsiak, ezért a másik három változót egzisztenciálisan
 kvantifikáltuk. Nézzük meg azt az egyszerűsített esetet is, amikor \cd{Cin}-t
 0-ra kötjük, tehát nincs bemenő átvitel:
 
-\begin{verbatim}
+\begin{prologcode}
 | ?- adder(x, y, Sum, 0, Cout).
 sat(Sum=:=x#y),
 sat(Cout=:=x*y) ?
-\end{verbatim}
+\end{prologcode}
 
 Ha a megoldás nem egyértelmű, akkor a \cd{labeling} eljárással tudjuk
 felsoroltatni az összes lehetséges megoldást:
 
-\begin{verbatim}
+\begin{prologcode}
 | ?- adder(X, Y, 0, Cin, 1), labeling([X,Y,Cin]).
 Cin = 0, X = 1, Y = 1 ? ; 
 Cin = 1, X = 0, Y = 1 ? ;
 Cin = 1, X = 1, Y = 0 ? ;
 no
-\end{verbatim}
+\end{prologcode}
 
 \section{A Boole-egyesítés}
 
@@ -255,7 +255,7 @@ hibásan, ha feltételezzük, hogy egyszerre csak egy hibásodik meg!
 
 \begin{center}\insertfig{adder1}{10cm}\end{center}
 
-\begin{verbatim}
+\begin{prologcode}
 fault([F1,F2,F3,F4,F5], [X,Y,Cin], [Sum,Cout]) :-
         sat(
                     card([0-1],[F1,F2,F3,F4,F5]) *
@@ -265,47 +265,47 @@ fault([F1,F2,F3,F4,F5], [X,Y,Cin], [Sum,Cout]) :-
                     (F4 + (U3 =:= X # Cin)) *
                     (F5 + (Sum =:= Y # U3))
                 ).
-\end{verbatim}
+\end{prologcode}
 
 Amint látható, a \cd{fault/3} predikátumban semmi mást nem tettünk, mint
 specifikáltuk az egyes áramköri elemek működését, valamint a \cd{card}
 segítségével megadtuk azt a tényt is, hogy egyszerre legfeljebb egy
 áramköri elem hibás. Lássunk néhány példát a \cd{fault} működésére!
 
-\begin{verbatim}
+\begin{prologcode}
 | ?- fault(L, [1,1,0], [1,0]).
                             L = [0,0,0,1,0] ? ;  no
-\end{verbatim}
+\end{prologcode}
 
 Itt a \cd{fault} helyesen kikövetkeztette, hogy ilyen bemenet-kimenet
 pár esetén csak a 4. funkcionális elem, azaz a programkód alapján
 az \cd{X}-re és \cd{Cin}-re kapcsolódó XOR kapu lehet hibás.
 
-\begin{verbatim}
+\begin{prologcode}
 | ?- fault(L, [1,0,1], [0,0]).
                             L = [_A,0,_B,0,0],
                             sat(_A=\=_B) ? ; no
-\end{verbatim}
+\end{prologcode}
 
 Itt a \cd{fault} úgy gondolja, hogy vagy az első, vagy a harmadik funkcionális
 elem a hibás, ezt a korlát-tárban lévő \cd{sat(_A=\bs=_B)} fejezi ki. Ha
 ehelyett látni szeretnénk a két lehetőséget teljesen behelyettesített
 változókkal, akkor szükséges a \cd{labeling} használata is:
 
-\begin{verbatim}
+\begin{prologcode}
 | ?- fault(L, [1,0,1], [0,0]), labeling(L).
                             L = [1,0,0,0,0] ? ;
                             L = [0,0,1,0,0] ? ; no
-\end{verbatim}
+\end{prologcode}
 
 Végül megkérdezhetjük a \cd{fault}-tól, hogy helyes áramköri működést
 feltételezve mik az egyes kimenetekhez rendelhető logikai egyenletek:
 
-\begin{verbatim}
+\begin{prologcode}
 | ?- fault([0,0,0,0,0], [x,y,cin], [Sum,Cout]).
                             sat(Cout=:=x*cin#x*y#y*cin),
                             sat(Sum=:=cin#x#y) ? ; no
-\end{verbatim}
+\end{prologcode}
 
 Tekintsünk most egy XOR kaput megvalósító tranzisztoros áramkört, és
 valósítsuk meg ennek a verifikációját \clpb programmal!
@@ -313,18 +313,18 @@ valósítsuk meg ennek a verifikációját \clpb programmal!
 \begin{center}\insertfig{xor}{8cm}\end{center}
 
 Először leírjuk az npn és pnp tranzisztorok működését \clpb kifejezésekkel:
-\begin{verbatim}
+\begin{prologcode}
 n(D, G, S) :-    % Gate => Drain = Source
         sat( G*D =:= G*S).
 
 p(D, G, S) :-    % ~ Gate => Drain = Source
         sat( ~G*D =:= ~G*S).
-\end{verbatim}
+\end{prologcode}
 
 Ezek segítségével megfogalmazhatjuk az XOR kapu működését, ha a földelést
 0-val, a tápfeszültséget 1-gyel jelöljük:
 
-\begin{verbatim}
+\begin{prologcode}
 xor(A, B, Out) :-
         p(1, A, X),
         n(0, A, X),
@@ -332,74 +332,74 @@ xor(A, B, Out) :-
         n(B, X, Out),
         p(A, B, Out),
         n(X, B, Out).
-\end{verbatim}
+\end{prologcode}
 
 Ellenőrizzük, hogy az npn és pnp tranzisztorokra felírt egyenleteink
 helyesen működnek-e a gate feszültség ki- és bekapcsolására:
 
-\begin{verbatim}
+\begin{prologcode}
 | ?- n(D, 1, S).                 S = D ?
 | ?- n(D, 0, S).                 true ?
 | ?- p(D, 0, S).                 S = D ?
 | ?- p(D, 1, S).                 true ?
-\end{verbatim}
+\end{prologcode}
 
 A fentiek szerint a tranzisztorok logikai felírása helyes, így nem
 maradt más hátra, mint hogy ellenőrizzük, hogy az XOR kapu ténylegesen
 az XOR függvényt valósítja-e meg:
 
-\begin{verbatim}
+\begin{prologcode}
 | ?- xor(a, b, X).               sat(X=:=a#b) ?
-\end{verbatim}
+\end{prologcode}
 
 \section{Aknakereső játék \Clpb -ben}
 
 Az alábbi programkód egy aknakereső játékot valósít meg \clpb programkód
 formájában.
 
-\begin{verbatim}
+\begin{prologcode}
 :- use_module([library(clpb),library(lists)]).
-\end{verbatim}
-\begin{verbatim}
+\end{prologcode}
+\begin{prologcode}
 mine(Rows, Cols, Mines, Bd) :-
         length(Bd, Rows), all_length(Bd, Cols), 
         append_lists(Bd, All),
         sat(card([Mines], All)), play_mine(Bd, []).
-\end{verbatim}
-\begin{verbatim}
+\end{prologcode}
+\begin{prologcode}
 all_length([], _).
 all_length([L|Ls], Len) :- 
         length(L, Len), all_length(Ls, Len).
-\end{verbatim}
-\begin{verbatim}
+\end{prologcode}
+\begin{prologcode}
 append_lists([], []).
 append_lists([L|Ls], Es) :-
         append_lists(Ls, Es0), append(L, Es0, Es).
-\end{verbatim}
-\begin{verbatim}
+\end{prologcode}
+\begin{prologcode}
 play_mine(Bd, Asked) :- 
         select_field(Bd, Asked, R, C, E), !,
         format('Row ~w, col ~w (m for mine)? ', [R,C]), 
         read(Ans), process_ans(Ans, E, R, C, Bd), 
         play_mine(Bd, [R-C|Asked]).
 play_mine(_Bd, _Asked).
-\end{verbatim}
-\begin{verbatim}
+\end{prologcode}
+\begin{prologcode}
 select_field(Bd, Asked, R, C, E) :-
         nth(R, Bd, L), nth(C, L, E), 
         non_member(R-C, Asked), taut(E, 0), !.
 select_field(Bd, Asked, R, C, E) :-
         nth(R, Bd, L), nth(C, L, E), 
         non_member(R-C, Asked), \+ taut(E,1), !.
-\end{verbatim}
-\begin{verbatim}
+\end{prologcode}
+\begin{prologcode}
 process_ans(m, 1, _, _, _) :- 
         format('Mine!~n', []), !, fail.
 process_ans(Ans, 0, R, C, Bd) :-
         integer(Ans), neighbs(n(R, C, Bd), Ns), 
         sat(card([Ans], Ns)).
-\end{verbatim}
-\begin{verbatim}
+\end{prologcode}
+\begin{prologcode}
 neighbs(RCB, N7) :-
         neighbour(-1,-1, RCB, [], N0), 
         neighbour(-1, 0, RCB, N0, N1),
@@ -409,13 +409,13 @@ neighbs(RCB, N7) :-
         neighbour( 1,-1, RCB, N4, N5),
         neighbour( 1, 0, RCB, N5, N6), 
         neighbour( 1, 1, RCB, N6, N7).
-\end{verbatim}
-\begin{verbatim}
+\end{prologcode}
+\begin{prologcode}
 neighbour(ROf, COf, n(R0, C0, Bd), Nbs, [E|Nbs]) :-
         R is R0+ROf, C is C0+COf, 
         nth(R, Bd, Row), nth(C, Row, E), !.
 neighbour(_, _, _, Nbs, Nbs).
-\end{verbatim}
+\end{prologcode}
 
 A játék belépési pontja a \cd{mine(Rows,Cols,Mines,Bd)} eljárás, amely
 egy \cd{Rows} $\times$ \cd{Cols} méretű táblát készít el a \cd{Bd}
@@ -433,7 +433,7 @@ nem talál, akkor pedig egy olyat, amelyről nem tudja biztosan, hogy aknát tar
 (2. klóz). Egy egyszerű példajáték ($3 \times 3$-as tábla, akna a 2. sor 1. mezőjén
 és a 3. sor 3. mezőjén van):
 
-\begin{verbatim}
+\begin{prologcode}
 | ?- mine(3,3,2,Bd).
 % az első két lépésben a program csak reménykedik abban, hogy
 % nem lép aknára
@@ -455,18 +455,18 @@ Row 3, col 1 (m for mine)? 1.
 Row 3, col 2 (m for mine)? 2.
 Bd = [[0,0,0],[1,0,0],[0,0,1]] ? ;
 no
-\end{verbatim}
+\end{prologcode}
 
 Vegyük észre, hogy a program inkonzisztens adatok esetén meghiúsulást produkál:
 
-\begin{verbatim}
+\begin{prologcode}
 | ?- mine(3,3,2,Bd).
 Row 1, col 1 (m for mine)? 1.
 Row 1, col 2 (m for mine)? 1.
 Row 1, col 3 (m for mine)? 0.
 Row 2, col 2 (m for mine)? 1.
 no
-\end{verbatim}
+\end{prologcode}
 
 A \clpb mohósága miatt azonban a program egy $20 \times 20$-as aknamezőre már
 nagyon hosszú ideig veszi fel a \cd{mine/4}-ben szereplő \cd{sat(card...)}

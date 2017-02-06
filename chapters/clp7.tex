@@ -57,7 +57,7 @@ is feltüntetjük.
 Az alábbi program Colmerauer \clpr megoldásán alapul, a működési elve hasonlít a
 \pageref{teglalap:clpqr}. oldalon található téglalap-lefedő feladathoz.
 
-\begin{verbatim}
+\begin{prologcode}
 % A Limit méretű négyzet lefedhető diszjunkt, Ss oldalhosszúságú
 % négyzetekkel, amelyek X és Y kooridnátáit az Xs és Ys lista tartalmazza
 squares_prolog(Ss, Limit, Xs, Ys) :-
@@ -95,7 +95,7 @@ placed_square(S, [H,V|L], [X|L]) :-
         S = H, !, X is V-S.
 placed_square(S, [H|L], [X,Y|L]) :-
         S < H, X is -S, Y is H-S.
-\end{verbatim}
+\end{prologcode}
 
 \begin{center}
 \begin{tabular}{|l|rr|rr|rr|rr|rr|}
@@ -116,7 +116,7 @@ minden négyzet-párra felveszi a \cd{no\_overlap/6} constraintet,
 ami azt írja le Prolog választási pontok segítségével, hogy a két
 négyzet nem fedi egymást. Végül címkézéssel megadja az eredményt.
 
-\begin{verbatim}
+\begin{prologcode}
 % A feladatra adott egyszerű megoldás spekulatív diszjunkció használatával
 squares_spec(Sizes, Limit, Xs, Ys) :-
         generate_coordinates(Xs, Ys, Sizes, Limit),
@@ -159,7 +159,7 @@ no_overlap_spec(_X1, Y1, _S1, _X2, Y2, S2) :-
         Y2+S2 #=< Y1.   % SQ1 is to the right of SQ2
 no_overlap_spec(_X1, Y1, S1, _X2, Y2, _S2) :-
         Y1+S1 #=< Y2.   % SQ1 is to the left of SQ2
-\end{verbatim}
+\end{prologcode}
 
 Ezzel a megoldással sokkal kevésbé hatékony változatot kaptunk:
 
@@ -187,20 +187,20 @@ Az előző variánsban gondot okozó spekulatív diszjunkció kiváltására tö
 van, ezeket egy egyszerűbb példán fogjuk megnézni. Legyen ez az egyszerűbb példa a
 következő:
 
-\begin{verbatim}
+\begin{prologcode}
 | ?- domain([X,Y], 0, 6), ( X+5 #=< Y ; Y+5 #=< X).
 X in 0..1, Y in 5..6 ? ;
 X in 5..6, Y in 0..1 ? ;
 no
-\end{verbatim}
+\end{prologcode}
 
 A diszjunkció megvalósítására kézenfekvő megoldás, ha tükrözést használunk:
 
-\begin{verbatim}
+\begin{prologcode}
 | ?- domain([X,Y], 0, 6), X+5 #=< Y #\/ Y+5 #=< X.
 X in 0..6, Y in 0..6 ? ;
 no
-\end{verbatim}
+\end{prologcode}
 
 Amint látjuk, ennek az a hátránya, hogy nem hajt végre maximális szűkítést, nem jön
 rá, hogy \cd{X} és \cd{Y} semmiképpen nem lehet 2, 3 vagy 4. A korlát-megoldó ugyanis
@@ -209,23 +209,23 @@ korlátok közül egyet kivéve már az összesről eldőlt, hogy nem állhat fe
 tehát további megoldásokon gondolkoznunk. A jelen esetben például kikerülhetjük a
 diszjunkciót az \cd{abs} korlát használatával:
 
-\begin{verbatim}
+\begin{prologcode}
 | ?- domain([X,Y], 0, 6), 'x+y=t tsz'(Y, D, X), abs(D) #>= 5.
 X in(0..1)\/(5..6), Y in(0..1)\/(5..6) ? ;
 no
-\end{verbatim}
+\end{prologcode}
 
 Ezt azonban nagyon sok esetben nem tehetjük meg. Átírhatjuk viszont a diszjunkciót
 indexikálissá:
 
-\begin{verbatim}
+\begin{prologcode}
 ix_disj(X, Y) +:
         X in \(max(Y)-4..min(Y)+4), Y in \(max(X)-4..min(X)+4).
 
 | ?- ix_disj(X, Y).
 X in(0..1)\/(5..6), Y in(0..1)\/(5..6) ? ;
 no
-\end{verbatim}
+\end{prologcode}
 
 Sajnos az indexikálisokra fennálló korlátozások (pl. fix számú változó) miatt ezt
 is csak speciális esetekben tehetjük meg. Most egy általános szűkítési módszert,
@@ -237,7 +237,7 @@ $S_1, \ldots, S_n$-nel. Ekkor minden változó a vagylagos tárakban kapott tart
 uniójára szűkíthető: \cd{X in_set $\cup D({\tt X}, S_i)$}. A konstruktív diszjunkciót
 általánosan az alábbihoz hasonló módon lehet megvalósítani:
 
-\begin{verbatim}
+\begin{prologcode}
 cdisj(Cs, Var) :-
         empty_fdset(S0), cdisj(Cs, Var, S0, S),
         Var in_set S.
@@ -250,21 +250,21 @@ cdisj([], _, Set, Set).
 
 | ?- domain([X,Y], 0, 6), cdisj([X+5 #=< Y,Y+5 #=< X], X).
 X in(0..1)\/(5..6), Y in 0..6 ?
-\end{verbatim}
+\end{prologcode}
 
 A konstruktív diszjunkció akár erősebb is lehet, mint a tartomány-szűkítés, mert más
 korlátok hatását is figyelembe tudja venni, lásd az alábbi példát:
 
-\begin{verbatim}
+\begin{prologcode}
 | ?- domain([X,Y], 0, 20), X+Y #= 20, cdisj([X#=<5,Y#=<5],X).
 X in(0..5)\/(15..20), Y in(0..5)\/(15..20) ?
-\end{verbatim}
+\end{prologcode}
 
 \subsection{\clpfd megvalósítás reifikációval és indexikálissal}
 
 \enumhead{Számosság-alapú \cd{no\_overlap} változatok}
 
-\begin{verbatim}
+\begin{prologcode}
 no_overlap_card1(X1, Y1, S1, X2, Y2, S2) :-
         X1+S1 #=< X2 #<=> B1,
         X2+S2 #=< X1 #<=> B2,
@@ -275,7 +275,7 @@ no_overlap_card1(X1, Y1, S1, X2, Y2, S2) :-
 no_overlap_card2(X1, Y1, S1, X2, Y2, S2) :-
   call( abs(2*(X1-X2)+(S1-S2)) #>= S1+S2 #\/
         abs(2*(Y1-Y2)+(S1-S2)) #>= S1+S2 ).
-\end{verbatim}
+\end{prologcode}
 
 \enumhead{Indexikális \cd{no\_overlap} (,,gyenge'' konstruktív diszjunkció)}
 \br
@@ -346,7 +346,7 @@ $$\sum  \{ \cd{S}_i | p \in [\cd{X}_i,\cd{X}_i+\cd{S}_i) \} =
 
 A kapacitás-korlátok az alábbi kódrészlettel felvehetőek:
 
-\begin{verbatim}
+\begin{prologcode}
 % A feladatra adott egyszerű megoldás kapacitás-korlátok használatával
 squares_cap(Lab, Sizes, Limit, Xs, Ys) :-
         generate_coordinates(Xs, Ys, Sizes, Limit),
@@ -355,8 +355,8 @@ squares_cap(Lab, Sizes, Limit, Xs, Ys) :-
         state_capacity(1, Xs, Sizes, Limit),
         state_capacity(1, Ys, Sizes, Limit),
         labeling(Lab, Xs), labeling(Lab, Ys).
-\end{verbatim}
-\begin{verbatim}
+\end{prologcode}
+\begin{prologcode}
 % Kapacitás-korlát a Cs koordinátákra Sizes oldalhosszúságú
 % kis négyzetek és Limit méretű nagy négyzet esetén a
 % Pos..Limit intervallum összes elemére
@@ -365,7 +365,7 @@ state_capacity(Pos, Limit, Cs, Sizes) :-
         scalar_product(Sizes, Bs, #=, Limit),
         Pos1 is Pos+1, state_capacity(Pos1, Limit, Cs, Sizes).
 state_capacity(_Pos, _Limit, _, _).
-\end{verbatim}
+\end{prologcode}
 \begin{alltt}
 % accumulate(C, S, Pos, B): B, C és S ugyanolyan hosszú listák,
 % \cd{B}\(_i\)-k B elemei, \(\cd{B}_i=1 \Leftrightarrow \cd{Pos} \in [\cd{C}_i,\cd{C}_i+\cd{S}_i)\),
@@ -405,7 +405,7 @@ diszjunkt téglalapok problémája esetén pedig a \cd{disjoint2/2} korlátot (i
 \br
 A két újabb változat:
 
-\begin{verbatim}
+\begin{prologcode}
 squares_cum(Lab, Opts, Sizes, Limit, Xs, Ys) :-
         generate_coordinates(Xs, Ys, Sizes, Limit),
         state_asymmetry(Xs, Ys, Sizes, Limit),
@@ -426,7 +426,7 @@ squares_dis(Lab, Opts, Sizes, Limit, Xs, Ys) :-
 disjoint2_data([], [], [], []).
 disjoint2_data([X|Xs], [Y|Ys], [S|Ss], [r(X,S,Y,S)|Rects]) :-
         disjoint2_data(Xs, Ys, Ss, Rects).
-\end{verbatim}
+\end{prologcode}
 
 Az alábbi tesztek során mindig \cd{[min]} címkézést használtunk, és a globális
 korlátok paraméterezésével variáltunk. Rövidítések: \cd{e = edge_finder(true)},
@@ -462,7 +462,7 @@ az értéket,
 Növekvő értéksorrend esetén a keresési tér meg fog egyezni a \cd{[min, step]} beépített
 címkézés keresési terével.
 
-\begin{verbatim}
+\begin{prologcode}
 % dual_labeling(L, Min, Max): címkézi az L lista elemeit, ahol
 % minden L-beli X változóra X in Min..Max fennáll.
 % A programban használt hívási formátum:
@@ -485,7 +485,7 @@ dual_labeling([X|L0], L, I, Min0, Min) :-
             fd_min(X, Min1), Min2 is min(Min0,Min1),
             L = [X|L1], dual_labeling(L0, L1, I, Min2, Min)
         ).
-\end{verbatim}
+\end{prologcode}
 
 \begin{center}
 \begin{tabular}{|l|rr|rr|rr|rr|rr|}
@@ -619,14 +619,14 @@ az orr-elemek helyettesítődnek be)
 $i$ hosszú hajó $j$-edik darabja, \cd{v$ij$} = vertikális (függőleges) hajó megfelelő
 darabja, stb. A kódkiosztás:
 
-\begin{verbatim}
+\begin{prologcode}
 0:       tenger
 1:       h11 = v11      % 1-hosszú hajó
 2..4     v33  h22 h32   % nem-orr-elemek
 5..7     v32 v22  h33   % nem-orr-elemek
 8..9     h21 v21        % orr-elemek
 10..11   h31 v31        % orr-elemek
-\end{verbatim}
+\end{prologcode}
 \end{itemize}
 
 \subsection{Alapvető korlátok}
@@ -638,11 +638,11 @@ A feladat megoldásához két alapvető korlátra lesz szükségünk:
 \cd{Dir} irányú szomszédja \cd{CF1}, ahol \cd{Dir} lehet \cd{horiz,
 vert, diag}. Például:
 
-\begin{verbatim}
+\begin{prologcode}
 | ?- coded_field_neighbour(horiz, 0, R).
 R in \{3,4,7} ? ;
 no
-\end{verbatim}
+\end{prologcode}
 
 \item \cd{group\_count(Group, CFs, Count, Env):} a \cd{Group} csoportba
 tartozó elemek száma a \cd{CFs} listában \cd{Count}, ahol a futási
@@ -732,7 +732,7 @@ akkor nincs borotválás, \cd{on} esetén egyszeres borotválás van, \cd{repeti
 pedig minden borotválásnál ismételten szűrünk addig, amíg az újabb korlátokat eredményez.
 \br
 A borotválás egy lépését az alábbi programkóddal végezhetjük el:
-\begin{verbatim}
+\begin{prologcode}
 % filter_count_vars(Vars0, Vars, Cnt0, Cnt): Vars0 megszűrve
 % Vars-t adja. A megszűrt változók száma Cnt-Cnt0.
 filter_count_vars([], [], Cnt, Cnt).
@@ -743,7 +743,7 @@ filter_count_vars([V|Vs], [V|Fs], Cnt0, Cnt) :-
         ;   \+ (V = 0) -> V #\= 0, Cnt1 is Cnt0+1
         ;   Cnt1 = Cnt0
         ), filter_count_vars(Vs, Fs, Cnt1, Cnt).
-\end{verbatim}
+\end{prologcode}
 
 \subsection{További finomhangolási lehetőségek}
 
@@ -929,7 +929,7 @@ Ezek közül az opciólista \cd{csakkor=Cs} paraméterével választhatunk, ahol
 kell írni a megfelelő variáns nevét. Az \cd{ind1}, illetve \cd{ind2} variánshoz használt
 FD predikátumok:
 
-\begin{verbatim}
+\begin{prologcode}
 'x=c=>y=d'(X, C, Y, D) +:
         X in (dom(Y) /\ {D}) ? (inf..sup) \/ \({C}),
         Y in ({X} /\  \({C})) ? (inf..sup) \/ {D}.
@@ -939,7 +939,7 @@ FD predikátumok:
              ((dom(Y) /\ \({D})) ? (inf..sup) \/ {C}),
         Y in ((dom(X) /\ {C}) ? (inf..sup) \/ \({D})) /\
              ((dom(X) /\ \({C})) ? (inf..sup) \/ {D}).
-\end{verbatim}
+\end{prologcode}
 
 A címkézésnél két, lényegében különböző lehetőségünk van: címkézhetünk az irányváltozók és
 a dominóváltozók szerint. Ezeken belül még variálhatunk a \cd{labeling/2} paraméterezésével
@@ -986,12 +986,12 @@ keresztül választhatunk közöttük):
 Mivel az FD predikátumok kötött számú változóval dolgoznak, ezért az \cd{Ossz=ind(N)}
 esetben szét kell választanunk az egyes eseteket, valahogy így:
 
-\begin{verbatim}
+\begin{prologcode}
 osszege1(A, B) +:              A+B #= 1.
 osszege1(A, B, C) +:           A+B+C #= 1.
 osszege1(A, B, C, D) +:        A+B+C+D #= 1.
 (...)
-\end{verbatim}
+\end{prologcode}
 
 \subsection{Futási eredmények}
 

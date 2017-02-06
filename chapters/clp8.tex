@@ -38,7 +38,7 @@ A program funkciója: a \cd{Pattern1} mintára az összes lehetséges módon ill
 a \cd{Name} nevet, a \cd{*} és \cd{?} karakterek helyére kerülő szöveget \cd{Pattern2}-be
 behelyettesíti, és az így kapott neveket kiírja.
 
-\begin{verbatim}
+\begin{prologcode}
 :- module match.
 /*-----------------------------------------------------*/
 :- interface.
@@ -87,10 +87,10 @@ match_list([\, C|Ps],  [C|Cs], L) :-
 match_list([C|Ps], [C|Cs], L) :-
     C \= (*), C \= ?, C \= (\), 
     match_list(Ps, Cs, L).
-\end{verbatim}
+\end{prologcode}
 
 \enumhead{A program egy futása}
-\begin{verbatim}
+\begin{prologcode}
 # ./match **z?c  foozkc '|*|*|?'
 Pattern '**z?c' matches 'foozkc' as '|*|*|?' matches the following:
 
@@ -100,7 +100,7 @@ Pattern '**z?c' matches 'foozkc' as '|*|*|?' matches the following:
     ||foo|k
 
 *** No (more) solutions
-\end{verbatim}
+\end{prologcode}
 
 \section{A Mercury modul-rendszere}
 
@@ -167,10 +167,10 @@ jelképezi az üres fát), \cd{leaf(int)} (ez jelképez egy levelet, a levél é
 típusa \cd{int}) és \cd{branch(itree, itree)} (ez egy elágazó csomópontot jelképez,
 ahol mindkét ág egy-egy újabb \cd{itree} típusú objektum).
 \item \emph{Polimorfikus típus} \\
-\begin{verbatim}
+\begin{prologcode}
 :- type list(T) ---> [] ; [T|list(T)].
 :- type pair(T1, T2) ---> T1 - T2.
-\end{verbatim}
+\end{prologcode}
 A \cd{list(T)} típus egy \cd{T} típusú elemekből álló lista, ahol \cd{T} maga
 egy \emph{típusváltozó}. Így például a \cd{list(int)} \cd{int} típusú elemek
 listáját adja, \cd{list(char)} karakterlistát, és így tovább. A \cd{pair(T1, T2)}
@@ -207,10 +207,10 @@ implementációs részben el van rejtve.
 A típusoknak a predikátum- és függvényleírásoknál van szerepe: egy predikátum
 vagy függvény leírásánál mindig meg kell adni a paraméterek típusát. Például:
 
-\begin{verbatim}
+\begin{prologcode}
 :- pred is_all_uppercase(string).
 :- func length(list(T)) = int.
-\end{verbatim}
+\end{prologcode}
 
 \section{Módok és behelyettesítettség}
 
@@ -227,41 +227,41 @@ Saját adattípusainkhoz különböző, részleges behelyettesítettséget leír
 Az állapot leírásakor a típust tartalmazó (,,vagy'') csúcsokhoz rendelünk
 behelyettesítettségi állapotot. A deklarációban a \cd{bound/1}, a \cd{free/0} és a
 \cd{ground/0} funktorokat használhatjuk. Például:
-\begin{verbatim}
+\begin{prologcode}
 :- inst bs = bound(empty; leaf(free); branch(bs,bs)).
-\end{verbatim}
+\end{prologcode}
 A fenti deklaráció alapján \cd{bs} behelyettesítettségű az olyan bináris fa, amely
 vagy üres (\cd{empty}), vagy egy szabad változót tartalmazó levél (\cd{leaf(free)}),
 vagy egy olyan elágazás, amely mindkét fele \cd{bs} behelyettesítettségű. Lehetőség
 van parametrizált \cd{inst}-ek készítésére is:
-\begin{verbatim}
+\begin{prologcode}
 :- inst bs(Inst) = bound(empty ; leaf(Inst) ; branch(bs(Inst),bs(Inst))).
 :- inst listskel(Inst) = bound([] ; [Inst|listskel(Inst)]).
-\end{verbatim}
+\end{prologcode}
 
 Egy mód leírása a behelyettesítettségi állapotok alapján a következőképpen néz ki:
 \cd{:- mode} \meta{m} \cd{==} \meta{inst1} \verb`>>` \meta{inst2}\cd{.}, ahol
 \meta{m} a mód neve, \meta{inst1} és \meta{inst2} pedig behelyettesítettségi állapotok
 nevei. Az \cd{in} és az \cd{out} mód leírása például így néz ki:
 
-\begin{verbatim}
+\begin{prologcode}
 :- mode in == ground >> ground.
 :- mode out == free >> ground.
-\end{verbatim}
+\end{prologcode}
 
 Lehetőség van módok átnevezésére is: \cd{:- mode} \meta{m1} \cd{==} \meta{m2}\cd{.}
 
-\begin{verbatim}
+\begin{prologcode}
 :- mode (+) == in.
 :- mode (-) == out.
-\end{verbatim}
+\end{prologcode}
 
 Természetesen a parametrizálás lehetősége a móddeklarációknál is adott:
 
-\begin{verbatim}
+\begin{prologcode}
 :- mode in(Inst) == Inst -> Inst.
 :- mode out(Inst) == free -> Inst.
-\end{verbatim}
+\end{prologcode}
 
 A módokat a predikátum-mód deklarációkban lehet hasznosítani. Itt egy predikátumról
 azt írjuk le, hogy milyen mód-kombinációkban szabad használni a predikátum paramétereit.
@@ -272,28 +272,28 @@ eljárás listák összefűzésére szolgál. A másik módban az első két par
 a harmadik bemeneti, és így az eljárás a harmadik listát az összes lehetséges módon
 szétszedi. Ezt predikátum-mód deklarációval a következőképpen lehet leírni:
 
-\begin{verbatim}
+\begin{prologcode}
 :- pred append(list(T), list(T), list(T)).
 :- mode append(in, in, out).
 :- mode append(out, out, in).
-\end{verbatim}
+\end{prologcode}
 
 Ha csak egyetlen mód van, akkor azt össze lehet vonni a \cd{pred} deklarációval:
 
-\begin{verbatim}
+\begin{prologcode}
 :- pred append(list(T)::in, list(T)::in, list(T)::out).
-\end{verbatim}
+\end{prologcode}
 
 Amire még figyelni kell a predikátum-mód deklarációkkal kapcsolatban:
 
 \begin{itemize}
 \item \cd{free} változókat még egymással sem lehet összekapcsolni, ezért az
 alábbi példa hibás:
-\begin{verbatim}
+\begin{prologcode}
 :- mode append(in(listskel(free)),
                 in(listskel(free)),
                 out(listskel(free))).
-\end{verbatim}
+\end{prologcode}
 \item Ha egy predikátumnak nincs predikátum-mód deklarációja, akkor a
 fordító kitalálja az összes szükségeset (\verb'--infer-all' kapcsoló), 
 de függvényeknél ilyenkor felteszi, hogy minden argumentuma \cd{in}
@@ -332,18 +332,18 @@ Egy determinizmus-deklaráció formailag majdnem megegyezik egy egyszerű predik
 deklarációval, a különbség mindössze annyi, hogy a deklaráció végén egy \cd{is} kulcsszó
 után oda kell írni a megfelelő determinizmus kategóriát is. Például az \cd{append/3}-ra:
 
-\begin{verbatim}
+\begin{prologcode}
 :- mode append(in, in, out) is det.
 :- mode append(out, out, in) is multi.
 :- mode append(in, in, in) is semidet.
-\end{verbatim}
+\end{prologcode}
 
 Ha csak egyetlen mód van, akkor azt össze lehet vonni a \cd{pred} deklarációval:
 
-\begin{verbatim}
+\begin{prologcode}
 :- pred p(int::in) is det.
 p(_).
-\end{verbatim}
+\end{prologcode}
 
 Felvetődik a kérdés, hogy mi értelme van a két ,,egzotikus'' determinizmusnak, a
 \cd{failure}-nak és az \cd{erroneous}-nak. A \cd{failure} egy olyan predikátumot
@@ -353,9 +353,9 @@ amely hibaüzenetek kijelzésére alkalmas (az \cd{erroneous} determinizmus elvi
 olyan eljárást jelent, amely soha nem ad megoldást, de nem is hiúsul meg). Ez a két
 determinizmus például hibakezelésre alkalmazható:
 
-\begin{verbatim}
+\begin{prologcode}
 :- mode append(out, out, out) is erroneous.
-\end{verbatim}
+\end{prologcode}
 
 Ehhez természetesen írni kell egy olyan klózt is, amely mindhárom paraméter
 behelyettesítetlensége esetén a \cd{require\_error/1} használatával hibát jelez.
@@ -374,19 +374,19 @@ bevezették a \cd{call/2}, \cd{call/3} \ldots eljárásokat is, amelyek segíts�
 úgy hívhatunk meg egy eljárást, hogy annak paraméterlistáját a \cd{call}-ban
 átadott paraméterekkel kiegészítjük. Például a \cd{call/4} definíciója Prologban:
 
-\begin{verbatim}
+\begin{prologcode}
 % Pred az A, B és C utolsó argumentumokkal meghívva igaz.
 call(Pred, A, B, C) :- 
     Pred =.. FArgs, 
     append(FArgs, [A,B,C], FArgs3), 
     Pred3 =.. FArgs3,
     call(Pred3).
-\end{verbatim}
+\end{prologcode}
 
 Az ilyen jellegű \cd{call} hívások segítségével lehetőség nyílik magasabb rendű
 eljárások egyszerű megvalósítására. Például az SML-ből ismert \cd{map} funkció:
 
-\begin{verbatim}
+\begin{prologcode}
 % map(Pred, Xs, Ys): Az Xs lista elemeire 
 % a Pred transzformációt alkalmazva kapjuk az Ys listát.
 :- pred map(pred(X, Y), list(X), list(Y)).
@@ -399,7 +399,7 @@ map(P, [H|T], [X|L]) :-
          call(P, H, X),
          map(P, T, L).
 map(_, [], []).
-\end{verbatim}
+\end{prologcode}
 
 Itt \cd{Pred} egy olyan eljárás, amelynek két paramétere van, és amely a két
 paraméter között egy transzformációt valósít meg. A \cd{map} eljárás módjai
@@ -409,7 +409,7 @@ is rendre \cd{in} és \cd{out} lesz, \cd{map} determinizmusát pedig \cd{Pred}
 determinizmusa fogja megszabni. Néhány (szám szerint 5) lehetőség leírása a
 fenti programkódban is megtalálható. A \cd{map} használata:
 
-\begin{verbatim}
+\begin{prologcode}
 :- import_module int.
 
 :- pred negyzet(int::in, int::out) is det.
@@ -418,7 +418,7 @@ negyzet(X, X*X).
 :- pred p(list(int)::out) is det.
 p(L) :-
          map(negyzet, [1,2,3,4], L).
-\end{verbatim}
+\end{prologcode}
 
 Itt \cd{negyzet/2} egy olyan predikátum, amely a négyzetre emelés transzformációját
 valósítja meg. Érdemes észrevenni, hogy a Mercury-ban kikerülhetjük az aritmetikai
@@ -430,11 +430,11 @@ jelent, hanem egy szorzást.
 Az SML-ből ismert $\lambda$ (\emph{lambda}) kifejezés Mercury-ban is használható,
 így a fenti két predikátumot egyetlen predikátumba vonhatjuk össze:
 
-\begin{verbatim} 
+\begin{prologcode} 
 :- pred p1(list(int)::out) is det.
 p1(L) :-
          map((pred(X::in, Y::out) is det :- Y = X*X), [1,2,3,4], L).
-\end{verbatim}
+\end{prologcode}
 
 Itt a négyzetre emelés predikátumát a \cd{map} hívásba ágyazottan egy névtelen
 $\lambda$-függvény segítségével valósítjuk meg.
@@ -443,18 +443,18 @@ Magasabbrendű kifejezéseket háromféleképpen hozhatunk létre:
 
 \begin{itemize}
 \item tegyük fel, hogy létezik
-\begin{verbatim}
+\begin{prologcode}
 :- pred sum(list(int)::in, int::out) is det.
-\end{verbatim}
+\end{prologcode}
 \item $\lambda$-kifejezéssel:
-\begin{verbatim}
+\begin{prologcode}
 X = (pred(Lst::in, Len::out) is det :- sum(Lst, Len))
-\end{verbatim}
+\end{prologcode}
 \item az eljárás nevét használva (a nevezett dolognak csak egyféle módja lehet
 és nem lehet 0 aritású függvény):
-\begin{verbatim}
+\begin{prologcode}
 Y = sum
-\end{verbatim}
+\end{prologcode}
 \end{itemize}
 
 \cd{X} és \cd{Y} típusa a fenti példákban \cd{pred(list(int), int)}.
@@ -463,19 +463,19 @@ Magasabbrendű függvények létrehozására is háromféle lehetőség van:
 
 \begin{itemize}
 \item ha adott
-\begin{verbatim}
+\begin{prologcode}
 :- func mult_vec(int, list(int)) = list(int).
-\end{verbatim}
+\end{prologcode}
 \item $\lambda$-kifejezéssel:
-\begin{verbatim}
+\begin{prologcode}
 X = (func(N, Lst) = NLst :- NLst = mult_vec(N, Lst))
 Y = (func(N::in, Lst::in) = (NLst::out) is det
          :- NLst = mult_vec(N, Lst))
-\end{verbatim}
+\end{prologcode}
 \item a függvény nevét használva:
-\begin{verbatim}
+\begin{prologcode}
 Z = mult_vec
-\end{verbatim}
+\end{prologcode}
 \end{itemize}
 
 
@@ -492,14 +492,14 @@ list(int)}
 A DCG nyelvtanok leírásánál külön szintaxis van az olyan eljárásokra, amelyek
 egy akkumulátor-párt is használnak:
 
-\begin{verbatim}
+\begin{prologcode}
 Pred = (pred(Strings::in, Num::out, di, uo) is det -->
     io__write_string("The strings are: "),
     { list__length(Strings, Num) },
     io__write_strings(Strings),
     io__nl
 )
-\end{verbatim}
+\end{prologcode}
 
 Magasabbrendű eljárásokat kétféleképpen hívhatunk meg:
 
@@ -521,10 +521,10 @@ argumentumlistája kiegészül az \cd{Arg$_1$, \dots, Arg$_n$} argumentumokkal,
 A magasabbrendű kifejezések determinizmusa a módjuk része (és nem a típusuké).
 Például:
 
-\begin{verbatim}
+\begin{prologcode}
 :- pred map(pred(X, Y), list(X), list(Y)).
 :- mode map(pred(in, out) is det, in, out) is det.
-\end{verbatim}
+\end{prologcode}
 
 \enumhead{Beépített behelyettesítettségek}
 \begin{itemize}
@@ -542,19 +542,19 @@ Például:
 \item A nevük megegyezik a behelyettesítettségek nevével, és a pár mindkét
 tagja ugyanolyan, a névnek megfelelő behelyettesítettségű.
 \item Egy lehetséges definíció lenne:
-\begin{verbatim}
+\begin{prologcode}
 :- mode (pred(Inst) is Det) == in(pred(Inst) is Det).
-\end{verbatim}
+\end{prologcode}
 \end{itemize}
 
 \enumhead{Amire figyelni kell}
 \begin{itemize}
 \item Magasabbrendű kimenő paraméter:
-\begin{verbatim}
+\begin{prologcode}
 :- pred foo(pred(int)).
 :- mode foo(free -> pred(out) is det) is det.
 foo(sum([1,2,3])).
-\end{verbatim}
+\end{prologcode}
 \item Magasabbrendű kifejezések nem egyesíthetők:\\
 \cd{foo((pred(X::out) is det :- X = 6))} hibás.
 \end{itemize}
@@ -598,7 +598,7 @@ kiválasztása nyilvánvalóan többféleképpen is sikerülhet, ezért valamily
 (például a \cd{cc\_multi} determinizmus használatával) ki kell küszöbölni a
 nemdeterminizmust:
 
-\begin{verbatim}
+\begin{prologcode}
 :- module resze.
 
 :- interface.
@@ -625,12 +625,12 @@ read_int_listset(L, S) -->
          {   R = ok(L0) -> L = L0, set__list_to_set(L, S)
          ;   set__init(S), L = []
          }.
-\end{verbatim}
+\end{prologcode}
 
 A \cd{resze(S)} a halmazokat \cd{set} absztrakt adattípussal fogja ábrázolni,
 az \cd{lresze(L)} pedig \cd{list} adattípussal. A kétféle megoldás:
 
-\begin{verbatim}
+\begin{prologcode}
 :- pred resze(set(T)::in, set(T)::out) is multi.
 resze(A, B) :-
          set__init(Fix),
@@ -658,14 +658,14 @@ lresze(A, B, Fix) :-
              )
          ;   A = [], B = Fix
          ).
-\end{verbatim}
+\end{prologcode}
 
 A \cd{set\_\_member/2} felsoroló jellege miatt nem teljesíti azt a feltételt, hogy
 minden megoldás pontosan egyszer jelenjen meg, a lista fejének leválasztása viszont
 (szemi)determinisztikus, ezért a \cd{set}-ekkel operáló verzió többször is kiad
 egy megoldást, míg a listákkal operáló nem:
 
-\begin{verbatim}
+\begin{prologcode}
 benko:~/mercury$ ls resze*
 resze.m
 benko:~/mercury$ mmake resze.dep
@@ -688,13 +688,13 @@ Set version:
 List version:
 [2, 1] [1] [2] []
 benko:~/mercury$
-\end{verbatim}
+\end{prologcode}
 
 Egy másik \cd{cc\_multi} példa az N királynő feladat megoldására (egyszerű
 generate-and-test jellegű megoldás, ahol \cd{perm/2} generálja a királynők
 elrendezéseit, \cd{safe/1} pedig ellenőriz):
 
-\begin{verbatim}
+\begin{prologcode}
 :- module queens.
 
 :- interface.
@@ -725,4 +725,4 @@ nodiag(_, _, []).
 nodiag(B, D, [N|L]) :-
          D \= N-B, D \= B-N,
          nodiag(B, D+1, L).
-\end{verbatim}
+\end{prologcode}

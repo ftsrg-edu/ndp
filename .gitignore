@@ -128,3 +128,5 @@ sympy-plots-for-*.tex/
 ndp.pdf
 *.mintedcmd
 *.mintedmd5
+
+enable-minted.tex

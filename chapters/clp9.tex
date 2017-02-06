@@ -13,9 +13,9 @@ A nyelv-kiterjesztés honlapja:
 \verb'http://www.pst.informatik.uni-muenchen.de/~fruehwir/chr-intro.html'.
 \br
 SICStus Prologban a CHR kiterjesztést a következő paranccsal vehetjük használatba:
-\begin{verbatim}
+\begin{prologcode}
 :- use_module(library(chr)).
-\end{verbatim}
+\end{prologcode}
 
 \section{CHR szabályok}
 
@@ -129,7 +129,7 @@ Két fontosabb pragmát érdemes ismerni:
 \section{CHR példák}
 
 Az alábbi példa az $X \leq Y$ relációt valósítja meg CHR-ben.
-\begin{verbatim}
+\begin{prologcode}
 :- use_module(library(chr)).
 
 handler leq.
@@ -149,7 +149,7 @@ transitivity @ X leq Y , Y leq Z ==> X leq Z.
 % Z leq Y, Y leq Z  <---> (antisymmetry) Z = Y
 
 Y = X, Z = X ? 
-\end{verbatim}
+\end{prologcode}
 
 A $\leq$ reláció leírásához négy szabályt vezetünk be, mindegyik egy-egy elég
 triviális tulajdonságot ír le:
@@ -213,7 +213,7 @@ eljárás írja le:
 \item nem csak numerikus tartományokra jó.
 \end{itemize}
 
-\begin{verbatim}
+\begin{prologcode}
 handler dom_consistency.
 constraints dom/2, con/3.
 % dom(X,D) - az X változó a D listából veheti az értékeit
@@ -247,13 +247,13 @@ constraints labeling/0.
 
 labeling, dom(X, L) #Id <=> member(X, L), labeling
         pragma passive(Id).
-\end{verbatim}
+\end{prologcode}
 
 A \cd{passive(Id)} úgynevezett \cd{pragma} direktíva jelentése: az \cd{\#Id}
 jelöléssel hivatkozott fej csak passzív szerepű lehet. A fenti keretrendszer
 alkalmazásával az N királynő példa megoldása:
 
-\begin{verbatim}
+\begin{prologcode}
 
 % Qs az N-királynő feladat megoldása
 queens(N, Qs) :-
@@ -295,11 +295,11 @@ test(no_threat(I), X, Y) :-
 | ?- queens(4, Qs).
                                 Qs = [3,1,4,2], labeling ? ;
                                 Qs = [2,4,1,3], labeling ? ; no
-\end{verbatim}
+\end{prologcode}
 
 Egy nem korlát-jellegű példa: az eratoszthenészi prímszita CHR-ben:
 
-\begin{verbatim}
+\begin{prologcode}
 handler eratosthenes.
 constraints primes/1,prime/1.
 
@@ -309,11 +309,11 @@ primes(N) <=> N>1 |
 
 absorb(J) @ prime(I) \ prime(J) <=> 
         J mod I =:= 0 | true.
-\end{verbatim}
+\end{prologcode}
 
 Boole-korlátok (ld. még \cd{library('chr/examples/bool.pl')}):
 
-\begin{verbatim}
+\begin{prologcode}
 handler bool.
 constraints and/3, labeling/0. 
 
@@ -337,11 +337,11 @@ label_and(1,X,X).
   X = 0, labeling ? ;          
   X = 1, Y = 0, labeling ? ;
   no
-\end{verbatim}
+\end{prologcode}
 
 Számosság-korlát megvalósítása 0-1 értékű változókra:
 
-\begin{verbatim}
+\begin{prologcode}
 constraints card/4.
 
 % L-ben a 1-ek száma >= A és =< B.
@@ -378,7 +378,7 @@ L = [0,0,1,1] , labeling ? ;
 L = [0,1,0,1] , labeling ? ; 
 L = [0,1,1,_A] , labeling ? ;  
 % ...
-\end{verbatim}
+\end{prologcode}
 
 \section{Egy nagyobb CHR példa kezdeménye}
 
@@ -391,7 +391,7 @@ a négyzet oldalhossza, az \cd{Adottak} egy lista, amelynek elemei
 \cd{t(O,S,M)} alakú struktúrák. Egy ilyen struktúra azt jelenti, hogy a
 négyzet \cd{S}. sorának \cd{O}. oszlopában az \cd{M} szám áll.
 
-\begin{verbatim}
+\begin{prologcode}
 handler terulet.
 constraints orszag/3, tabla/1, cimkez/0.
 
@@ -515,4 +515,4 @@ Mtx = [[2,4,4,3,3],
 cimkez,
 tabla([[2,4,4,3,3],[2,1,4,4,3],[3,5,5,2,2],...]) ? ;
 no
-\end{verbatim}
+\end{prologcode}

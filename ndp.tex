@@ -1,7 +1,7 @@
+% !TeX document-id = {291f084b-777e-4fb4-8c51-0bffb8b330cb}
 % !TeX spellcheck = hu_HU
 % !TeX encoding = UTF-8
-% !TeX program = xelatex
-% -shell-escape -8bit %.tex
+% !TeX program = xelatex -interaction=batchmode -shell-escape -8bit %.tex
 \documentclass[a4paper,11pt]{report}
 
 \usepackage{ifxetex}
@@ -21,7 +21,6 @@
 \usepackage{epsfig}
 \usepackage{hyperref}
 \usepackage[linewidth=1pt,leftmargin=1pt,skipabove=16pt,innertopmargin=7pt]{mdframed}
-%\usepackage{minted}
 
 \graphicspath{ {./figures/} }
 
@@ -173,10 +172,10 @@
 
 \providecommand{\ifnotdefined}[1]{ }
 
-\makeatletter
-\newcommand{\minted@write@detok}[1]{%
-	\immediate\write\FV@OutFile{\detokenize{#1}}}%
-
+%\makeatletter
+%\newcommand{\minted@write@detok}[1]{%
+%	\immediate\write\FV@OutFile{\detokenize{#1}}}%
+%
 % allow minted to handle UTF8
 %\newcommand{\minted@FVB@VerbatimOut}[1]{%
 %	\@bsphack
@@ -201,6 +200,13 @@
 %	\immediate\closeout\minted@code}
 %\makeatother
 % end of UTF8 section
+
+\IfFileExists{./enable-minted}{
+	\usepackage{minted}
+	\newenvironment{prologcode}{\VerbatimEnvironment\begin{minted}{prolog}}{\end{minted}}
+}{
+	\newenvironment{prologcode}{\VerbatimEnvironment\begin{Verbatim}}{\end{Verbatim}}
+}
 
 \begin{document}
 

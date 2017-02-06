@@ -47,9 +47,9 @@ megjelenítéséhez, valamint jelmagyarázat előkészítéséhez és kiírásá
 \br
 Az \fdbg könyvtár szolgáltatásait az alábbi paranccsal lehet igénybe venni:
 
-\begin{verbatim}
+\begin{prologcode}
 | ?- use_module(library(fdbg)).
-\end{verbatim}
+\end{prologcode}
 
 \section{A nyomkövetés be- és kikapcsolása}
 
@@ -85,17 +85,17 @@ output stream}) lesz. Legfontosabb opciók:\\
 
 Kimenet átirányítása, beépített megjelenítő, nincs címkézési nyomkövetés:
 
-\begin{verbatim}
+\begin{prologcode}
 | ?- fdbg_on([file('my_log.txt', append), no_labeling_hook]).
-\end{verbatim}
+\end{prologcode}
 
 Kimenet átirányítása szabványos folyamra, saját és beépített
 megjelenítő együttes használata:
 
-\begin{verbatim}
+\begin{prologcode}
 | ?- fdbg_on([constraint_hook(fdbg_show), constraint_hook(my_show),
               stream(user_error)]).
-\end{verbatim}
+\end{prologcode}
 
 \section{Kifejezések elnevezése}
 
@@ -142,7 +142,7 @@ generálódnak:
 
 \section{Egyszerűbb \fdbg nyomkövetési példák}
 
-\begin{verbatim}
+\begin{prologcode}
 | ?- use_module([library(clpfd),library(fdbg)]).
 
 | ?- fdbg_on.
@@ -150,8 +150,8 @@ generálódnak:
 % advice
 | ?- Xs=[X1,X2], fdbg_assign_name(Xs, 'X'),
      domain(Xs, 1, 6), X1+X2 #= 8, X2 #>= 2*X1+1.
-\end{verbatim}
-\begin{verbatim}
+\end{prologcode}
+\begin{prologcode}
 domain([<X_1>,<X_2>],1,6)           X_1 = inf..sup -> 1..6
                                     X_2 = inf..sup -> 1..6
                                     Constraint exited.    
@@ -168,12 +168,12 @@ domain([<X_1>,<X_2>],1,6)           X_1 = inf..sup -> 1..6
 
 X1 = 2, X2 = 6 ?
 % advice
-\end{verbatim}
+\end{prologcode}
 
 A \cd{(*)} olvashatóbb alak a \cd{library(fdbg)} négy sorának kikommentezésével
 állitható elő.
 
-\begin{verbatim}
+\begin{prologcode}
 | ?- X in 1..4, labeling([bisect], [X]).
 
 <fdvar_1> in 1..4                   fdvar_1 = inf..sup -> 1..4
@@ -196,7 +196,7 @@ X = 4 ? ;
         Labeling [8, <fdvar_1>]: failed.
 Labeling [2, <fdvar_1>]: failed.
 no
-\end{verbatim}
+\end{prologcode}
 
 \section{Beépített megjelenítők}
 
@@ -214,7 +214,7 @@ ennek alapján megjeleníti a korlátot és a hozzá tartozó jelmagyarázatot.
 
 ,,Szimulált'' példa-hívás \cd{X1=3} és \cd{X2=3} szűkítésekkel:
 
-\begin{verbatim}
+\begin{prologcode}
 | ?- Xs=[X1,X2,X3], fdbg_assign_name(Xs, 'X'), 
      domain(Xs, 1, 3), X3 #\= 3, fdbg_on, 
      fdbg_show(exactly(3,Xs,2),[exit,X1=3,X2=3]).
@@ -224,7 +224,7 @@ exactly(3,[<X_1>,<X_2>,<X_3>],2)
     X_2 = 1..3 -> {3}
     X_3 = 1..2
     Constraint exited.
-\end{verbatim}
+\end{prologcode}
 
 \item \bcd{fdbg\_label\_show(+{\em Event}, +\em{ID}, +\em{Variable})}\\
 Beépített címkézés-megjelenítő. Címkézési eseménykor (kezdet, szűkítés,
@@ -234,7 +234,7 @@ pedig magát a címkézendő változót. \cd{\em Event} megegyezik a
 \cd{start} atommal, ha a kiváltó esemény a címkézés kezdete, megegyezik a \cd{fail}
 atommal, ha a kiváltó esemény a címkézés meghiúsulása. Példa:
 
-\begin{verbatim}
+\begin{prologcode}
 | ?- fdbg_assign_name(X, 'X'), X in {1,3}, fdbg_on,
      indomain(X).
 % The clp(fd) debugger is switched on
@@ -248,18 +248,18 @@ X = 3 ? ;
 Labeling [1, <X>]: failed.
 
 no
-\end{verbatim}
+\end{prologcode}
 
 \end{itemize}
 
 A fenti kimenet elkészítése során végrehajtott megjelenítő-hívások:
 
-\begin{verbatim}
+\begin{prologcode}
 fdbg_label_show(start,1,X)
 fdbg_label_show(step('$labeling_step'(X,=,1,indomain_up)),1,X)
 fdbg_label_show(step('$labeling_step'(X,=,3,indomain_up)),1,X)
 fdbg_label_show(fail,1,X)
-\end{verbatim}
+\end{prologcode}
 
 \section{Testreszabás kampó-eljárásokkal}
 
@@ -281,13 +281,13 @@ A kampó-eljárások felülbírálásához azokat \emph{multifile} eljáráskén
   között. Az alábbi példa a változó neve mellett a változó régi tartományát is
   kiírja:
 
-\begin{verbatim}
+\begin{prologcode}
 :- multifile fdbg:fdvar_portray/3.
 
 fdbg:fdvar_portray(Name, Var, _) :-
        fd_set(Var, Set), fdset_to_range(Set, Range),
        format('<~p = ~p>', [Name,Range]).
-\end{verbatim}
+\end{prologcode}
 
 \item \bcd{fdbg:legend\_portray(+{\em Name}, +{\em Variable}, +{\em FDSetAfter})}\\
   A jelmagyarázat minden sorára meghívódik, és így végigfut a jelmagyarázatban
@@ -295,7 +295,7 @@ fdbg:fdvar_portray(Name, Var, _) :-
   újsor karakter zárja, ezeket nem kell kiírni, de nem is lehet őket felülbírálni.
   Az alábbi példa a változó tartományának szűkülését lista formában tünteti fel:
 
-\begin{verbatim}
+\begin{prologcode}
 :- multifile fdbg:legend_portray/3.
 
 fdbg:legend_portray(Name, Var, Set) :-
@@ -305,7 +305,7 @@ fdbg:legend_portray(Name, Var, Set) :-
         ;   fdset_to_list(Set, L),
             format("~p = ~p -> ~p", [Name,L0,L])
         ).
-\end{verbatim}
+\end{prologcode}
 \end{itemize}
 
 A példák kimenete összevetve az alapértelmezettel:
@@ -351,32 +351,32 @@ címkézés-megjelenítő nevét és paraméterlistáját (az utolsó kettő kiv
 Érdemes egy pillantást vetni az \cd{fdbg\_show/2} beépített megjelenítő kódjára is,
 mert ez irányelvet adhat saját megjelenítő írásához:
 
-\begin{verbatim}
+\begin{prologcode}
 fdbg_show(Constraint, Actions) :-
         fdbg_annotate(Constraint, Actions, AnnotC, CVars),
         print(fdbg_output, AnnotC),
         nl(fdbg_output),
         fdbg_legend(CVars, Actions),
         nl(fdbg_output).
-\end{verbatim}
+\end{prologcode}
 
 Gyakran szükség lehet arra, hogy csak bizonyos korlátok működését vizsgáljuk,
 ilyenkor jön jól egy saját \cd{fdbg\_show/2} eljárás:
 
-\begin{verbatim}
+\begin{prologcode}
 filtered_show(Constraint, Actions) :-
         Constraint = scalar_product(_,_,_,_),
         fdbg_show(Constraint, Actions).
-\end{verbatim}
+\end{prologcode}
 
 A fenti predikátum meghiúsulhat, ha \cd{Constraint} nem \cd{scalar\_product/4} korlát,
 de a megjelenítők esetében a meghiúsulás nem okozza automatikusan az egész Prolog
 végrehajtás meghiúsulását, ezért az ilyen jellegű megoldás megengedett. A
 megjelenítő használata:
 
-\begin{verbatim}
+\begin{prologcode}
 :- fdbg_on([constraint_hook(filtered_show), file('fdbg.log', write)]).
-\end{verbatim}
+\end{prologcode}
 
 \section{Egyéb segéd-predikátumok}
 
@@ -401,7 +401,7 @@ kívülről is. Ebben az alfejezetben ezeket a predikátumokat ismertetjük.
 
 Példa az \cd{fdbg\_annotate/3} használatára:
 
-\begin{verbatim}
+\begin{prologcode}
 | ?- length(L, 2), domain(L, 0, 10), fdbg_assign_name(L, x), 
      L=[X1,X2], fdbg_annotate(lseq(X1,X2), Goal, _), 
      format('write(Goal) --> ~w~n', [Goal]),
@@ -409,7 +409,7 @@ Példa az \cd{fdbg\_annotate/3} használatára:
 
 write(Goal) --> lseq(fdvar(x_1,_2,[[0|10]]),fdvar(x_2,_2,[[0|10]]))
 print(Goal) --> lseq(<x_1>,<x_2>)
-\end{verbatim}
+\end{prologcode}
 
 Látható, hogy az \cd{fdvar/3} struktúrákra az \fdbg modul definiál egy saját
 \cd{portray/1} megjelenítő eljárást, ezért ha a \cd{print/1} használatával
@@ -434,7 +434,7 @@ Ebben az alfejezetben a mágikus sorozatok feladat egy lehetséges megoldásán
 mutatjuk be az \fdbg nyomkövető csomag kimenetét. A programkódban csak a 
 nyomkövetés megértéséhez szükséges predikátumokat tüntettük fel:
 
-\begin{verbatim}
+\begin{prologcode}
 magic(N, L) :-
         length(L, N),
         fdbg_assign_name(L, x), % <--- !!!
@@ -451,44 +451,44 @@ occurrences([E|Ek], I, List) :-
         occurrences(Ek, J, List).
 
 | ?- fdbg_on, magic(4, L).
-\end{verbatim}
+\end{prologcode}
 
 A kimenet vége, az utolsó címkézési lépés után:
 
-\begin{verbatim}
+\begin{prologcode}
 exactly(0,[1,2,<x_3>,<x_4>],1)          x_3 = 0..3
                                         x_4 = 0..3
-\end{verbatim}
-\begin{verbatim}
+\end{prologcode}
+\begin{prologcode}
 exactly(2,[1,2,<x_3>,<x_4>],<x_3>)      x_3 = 0..3 -> 1..3
                                         x_4 = 0..3        
-\end{verbatim}
-\begin{verbatim}
+\end{prologcode}
+\begin{prologcode}
 exactly(3,[1,2,<x_3>,<x_4>],<x_4>)      x_3 = 1..3        
                                         x_4 = 0..3 -> 0..2
-\end{verbatim}
-\begin{verbatim}
+\end{prologcode}
+\begin{prologcode}
 exactly(1,[1,2,<x_3>,<x_4>],2)          x_3 = 1..3
                                         x_4 = 0..2
-\end{verbatim}
-\begin{verbatim}
+\end{prologcode}
+\begin{prologcode}
 exactly(2,[1,2,<x_3>,<x_4>],<x_3>)      x_3 = 1..3
                                         x_4 = 0..2
-\end{verbatim}
-\begin{verbatim}
+\end{prologcode}
+\begin{prologcode}
 exactly(0,[1,2,<x_3>,<x_4>],1)          x_3 = 1..3        
                                         x_4 = 0..2 -> {0} 
                                         Constraint exited.
-\end{verbatim}
-\begin{verbatim}
+\end{prologcode}
+\begin{prologcode}
 exactly(1,[1,2,<x_3>,0],2)              x_3 = 1..3 -> {1} 
                                         Constraint exited.
-\end{verbatim}
-\begin{verbatim}
+\end{prologcode}
+\begin{prologcode}
 exactly(2,[1,2,1,0],1)                  Constraint exited.
-\end{verbatim}
-\begin{verbatim}
+\end{prologcode}
+\begin{prologcode}
 exactly(3,[1,2,1,0],0)                  Constraint exited.
 
 L = [1,2,1,0] ? 
-\end{verbatim}
+\end{prologcode}
