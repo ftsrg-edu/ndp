@@ -1,5 +1,7 @@
 # Nagyhatékonyságú deklaratív programozás jegyzet
 
+[![Build Status](https://travis-ci.org/FTSRG/ndp.svg?branch=master)](https://travis-ci.org/FTSRG/ndp)
+
 A tárgy honlapja: http://cs.bme.hu/~szeredi/ndp/
 
 ## Fordítás
