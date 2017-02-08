@@ -1,0 +1,19 @@
+sudo: required
+dist: trusty
+env:
+  global:
+  - GH_REF: github.com/FTSRG/ndp.git
+  - secure:
+branches:
+  only:
+    - master
+script:
+- sudo apt-get update -qq
+- sudo apt-get install -qq -y texlive-base texlive-science texlive-xetex texlive-fonts-recommended texlive-latex-extra texlive-lang-hungarian texlive-fonts-extra
+- ./use-minted.sh
+- ./build.sh
+#- ./deploy.sh
+#notifications:
+#  slack: ftsrg:BtaOO3xw6rmfcFhEFNj6XJ29
+#  on_success: change
+#  on_failure: always
