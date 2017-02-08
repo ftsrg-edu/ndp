@@ -1,3 +1,3 @@
 #!/bin/bash
 
-rm -f enable-minted.tex
+rm -f use-minted.tex

@@ -129,4 +129,4 @@ ndp.pdf
 *.mintedcmd
 *.mintedmd5
 
-enable-minted.tex
+use-minted.tex

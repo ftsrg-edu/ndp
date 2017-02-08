@@ -2,4 +2,4 @@
 
 # create a temporary file (that is in .gitignore) to turn off
 # building the appendix with the acceptance tests
-touch enable-minted.tex
+touch use-minted.tex
