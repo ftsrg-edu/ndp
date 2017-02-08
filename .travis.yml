@@ -9,6 +9,7 @@ branches:
     - master
 script:
 - sudo apt-get update -qq
+- sudo apt-get install -qq -y python-pygments
 - sudo apt-get install -qq -y texlive-base texlive-science texlive-xetex texlive-fonts-recommended texlive-latex-extra texlive-lang-hungarian texlive-fonts-extra
 - ./enable-minted.sh
 - ./build.sh
