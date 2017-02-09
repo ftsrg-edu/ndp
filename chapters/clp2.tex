@@ -89,21 +89,18 @@ no
 \end{prologcode}
 
 \subsection{Blokkolás alkalmazása: végtelen választási pontok kiküszöbölése}
-\br
 
-\halfpage{\disprol{
-:- block pick(-, ?, -).\\[0.5ex]
+\begin{prologcode}
+:- block pick(-, ?, -).
 
-pick([X|L], X, L).\\
-pick([Y|L], X, [Y|L1]):-\\
-   \>   pick(L, X, L1).}}\hspace*{3mm}\rule[-5ex]{0.3mm}{11ex}\hspace*{-3mm}\halfpage{\disprol{
-\\[0.5ex]
+pick([X|L], X, L).
+pick([Y|L], X, [Y|L1]) :-
+    pick(L, X, L1).
 
-perm([], []).\\
-perm(L, [X|P]):-\\
-   \>   pick(L, X, L1), perm(L1, P).}}
-
-\br
+perm([], []).
+perm(L, [X|P]) :-
+   pick(L, X, L1), perm(L1, P).
+\end{prologcode}
 
 A {\tt perm} eljárás a egy adott lista permutációját állítja
 elő. Normál esetben (blokkolás nélkül) az első paramétere a
