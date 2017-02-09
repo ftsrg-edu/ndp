@@ -1,6 +1,6 @@
 #!/bin/bash
 
-xelatex -interaction=batchmode -shell-escape -8bit ndp
+xelatex -interaction=batchmode ndp
 bibtex ndp
-xelatex -interaction=batchmode -shell-escape -8bit ndp
-xelatex -interaction=batchmode -shell-escape -8bit ndp
+xelatex -interaction=batchmode ndp
+xelatex -interaction=batchmode ndp
