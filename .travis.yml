@@ -14,3 +14,7 @@ script:
 - ./enable-minted.sh
 - ./build.sh
 - ./deploy.sh
+notifications:
+  slack: ftsrg:LmlejdbTuVLmWRHE0jCSIOvI
+  on_success: change
+  on_failure: always
