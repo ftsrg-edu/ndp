@@ -1,0 +1,5 @@
+# Site settings
+title: Nagyhatékonyságú deklaratív programozás jegyzet
+baseurl: "/ndp" # the subpath of your site, e.g. /blog/
+url: "http://docs.inf.mit.bme.hu/" # the base hostname & protocol for your site
+repo: https://github.com/FTSRG/ndp

@@ -3,18 +3,14 @@ dist: trusty
 env:
   global:
   - GH_REF: github.com/FTSRG/ndp.git
-  - secure:
+  - secure: gWUbZjkmClaECHSvy9yLaI9Mz5loqyFakmKWTYuDKT0C020eISpFeUQn7EnnuiqHXf18BOEb0EpummHGJkJ3ptGlhI+rGaVGcC7jPfnLg7zsDIcMofnuTawSvj5T/xt/5op4TG0rQYtxKapEqX+VRAxAZyZ1vhx9SJIP74pwiQh+QNCAuS3cD/3QJdMNQOIAOemztHuAmgqoAI9T9lHrRSSB+M+dAYNo2TvqySoTriioBehle0zusXYfbULuOj4bfWxabqK2DSRW6vh7naK5kq3KuB0c4Ft08sbNOHzHAIOco7uqxiXeSSvwtdZsRcpSH/VvKYYO7Nt1b7494ihg7eYUF7tf3vSRl2gfHIVBF4F5Pj9ZY7RoH4Y2IQo7Qh02Fi8GtamX9pgu2YiaVsij9u1xhm40EIpG3hEatl2qvXXTwFT7NqulpLzWC8n6wGA8F7JEyKo83jFKRKrogvk3/KiJkQnwMA7LeF1OXr3lqXzNXa9gIlmPXyT1GeMv3pxRdwGoFfI0FSXtFt/P7W2vHwa+rFBoEAhGLvc4sx+2a8wpflfaobjxRgXlIWtG7+ICDWaLfkoeXr3QUmZYZmGRxc2Ekqsc5EUN6AdGUpFe9r5o6ZIfYi9kSMEHAs7YT1AtRDDUAPuiep3UCl96HD0e/AN8TvqR2JQ4JtdYSMtk1dQ=
 branches:
   only:
-    - master
+  - master
 script:
 - sudo apt-get update -qq
 - sudo apt-get install -qq -y python-pygments
 - sudo apt-get install -qq -y texlive-base texlive-science texlive-xetex texlive-fonts-recommended texlive-latex-extra texlive-lang-hungarian texlive-fonts-extra
 - ./enable-minted.sh
 - ./build.sh
-#- ./deploy.sh
-#notifications:
-#  slack: ftsrg:BtaOO3xw6rmfcFhEFNj6XJ29
-#  on_success: change
-#  on_failure: always
+- ./deploy.sh

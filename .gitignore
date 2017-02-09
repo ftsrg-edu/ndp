@@ -130,3 +130,4 @@ ndp.pdf
 *.mintedmd5
 
 use-minted.tex
+out/
