@@ -144,19 +144,19 @@ algoritmust javít fel viszonylag elfogadható sebességűre. A
 rendezés alapja: generáljuk a rendezendő lista összes
 permutációját, majd ellenőrizzük, hogy rendezett-e.
 
-\disprol{
-\ttacvi{\% az egyszerű generál-és-ellenőriz típusú programhoz\\
-\% a sorted és a perm felcserélendő\\
-sort(L, S) :- sorted(S), perm(L, S).\\[1ex]
+\begin{prologcode}
+% az egyszerű generál-és-ellenőriz típusú programhoz
+% a sorted és a perm felcserélendő
+sort(L, S) :- sorted(S), perm(L, S).
 
-sorted([]).\\
-sorted([\_\,]).\\
-sorted([X,Y|L]):- sorted(L, X, Y).\\[1ex]
+sorted([]).
+sorted([\_\,]).
+sorted([X,Y|L]):- sorted(L, X, Y).
 
-:- block sorted(?, -, ?), sorted(?, ?, -). \\
-sorted([], X, Y) :- X =< Y.\\
+:- block sorted(?, -, ?), sorted(?, ?, -).
+sorted([], X, Y) :- X =< Y.
 sorted([Z|L], X, Y) :- X =< Y, sorted(L, Y, Z).
-}}
+\end{prologcode}
 
 {\bf Futási idők}
 
@@ -183,10 +183,10 @@ Prolog \cd{call/1} eljárásával hajtódik végre, és ez elég nagy overhead-d
 rendelkezik, célszerű a \cd{freeze} \cd{block}-kal való helyettesítése, ahol
 csak lehet. A \cd{freeze(X,Hívás)} egy lehetséges megvalósítása:
 
-\disprol{\ttacvi{
-:- block freeze(-,?).\\
+\begin{prologcode}
+:- block freeze(-,?).
 freeze(_,Hivas) :- call(Hivas).
-}}
+\end{prologcode}
 
 A \cd{dif(X,Y)}
 egy olyan cél, amely akkor sikerül, ha \cd{X} és \cd{Y} nem egyesíthető, de
@@ -279,7 +279,9 @@ hívásba kell ágyazni, és beleírni a Prolog kódba. Az \cd{undo(Kif)} felté
 és mellékhatás nélkül mindig sikerül, de ha visszalépés történik, akkor
 végrehajtja \cd{Kif}-et. Például:
 
-\disprol{assert_b(Cl) :- assert(Cl), undo(retract(Cl)).}
+\begin{prologcode}
+assert_b(Cl) :- assert(Cl), undo(retract(Cl)).
+\end{prologcode}
 
 \section{A CLP(MiniNat) nyelv megvalósítása}
 
